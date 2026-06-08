@@ -1078,10 +1078,13 @@ window.ATLAS_DATA = (() => {
   // ─────────────────────────────────────────────────────────────────────
   //  RADAR DE FOMENTO — chamadas abertas (placeholder, atualizar via JSON)
   // ─────────────────────────────────────────────────────────────────────
-  const today = new Date('2026-05-23');
+  const today = new Date();
   const addDays = (d, n) => { const x = new Date(d); x.setDate(x.getDate()+n); return x.toISOString().slice(0,10); };
 
   const CHAMADAS = [
+    // CONVENCAO: datas em ISO fixo 'YYYY-MM-DD' (salvas no cadastro da chamada).
+    // NAO definir 'status'/'urgente' manualmente — sao calculados automaticamente
+    // a partir das datas vs. a data real de hoje (ver script RADAR-STATUS-AUTO).
     {
       id: 'c-finep-clima-2026',
       titulo: 'FINEP Mais Inovação — Transição Climática 2026',
@@ -1094,8 +1097,8 @@ window.ATLAS_DATA = (() => {
       valorTotal: 800,
       moeda: 'R$ mi',
       publico: 'Empresas',
-      abertura: addDays(today, -20),
-      encerramento: addDays(today, 18),
+      abertura: '2026-05-03',
+      encerramento: '2026-06-10',
       status: 'aberta',
       resumo: 'Subvenção econômica para projetos de descarbonização, transição energética e captura de carbono em parceria com ICTs.',
       destaque: true,
@@ -1113,8 +1116,8 @@ window.ATLAS_DATA = (() => {
       valorTotal: 120,
       moeda: 'R$ mi',
       publico: 'Empresas + Unidades Embrapii',
-      abertura: addDays(today, -10),
-      encerramento: addDays(today, 65),
+      abertura: '2026-05-13',
+      encerramento: '2026-07-27',
       status: 'aberta',
       resumo: 'Chamada temática para saúde digital, dispositivos médicos conectados e IA aplicada ao diagnóstico.',
       tags: ['saúde digital','IA']
@@ -1131,8 +1134,8 @@ window.ATLAS_DATA = (() => {
       valorTotal: 300,
       moeda: 'R$ mi',
       publico: 'ICTs + empresa âncora',
-      abertura: addDays(today, -5),
-      encerramento: addDays(today, 90),
+      abertura: '2026-05-18',
+      encerramento: '2026-08-21',
       status: 'aberta',
       resumo: 'Apoio a projetos de pesquisa aplicada com bioativos amazônicos, processos sustentáveis e novas cadeias produtivas.',
       destaque: true,
@@ -1150,8 +1153,8 @@ window.ATLAS_DATA = (() => {
       valorTotal: 450,
       moeda: 'R$ mi',
       publico: 'ICTs credenciadas + concessionárias',
-      abertura: addDays(today, 0),
-      encerramento: addDays(today, 45),
+      abertura: '2026-05-23',
+      encerramento: '2026-07-07',
       status: 'aberta',
       resumo: 'Recuperação avançada de óleo (EOR), monitoramento e descarbonização em campos do pré-sal.',
       tags: ['pré-sal','EOR']
@@ -1168,8 +1171,8 @@ window.ATLAS_DATA = (() => {
       valorTotal: 200,
       moeda: 'R$ mi',
       publico: 'Concessionárias + ICTs',
-      abertura: addDays(today, -30),
-      encerramento: addDays(today, 7),
+      abertura: '2026-04-23',
+      encerramento: '2026-05-30',
       status: 'aberta',
       resumo: 'Cadeia do H2V — produção, armazenamento, integração à rede elétrica e usos finais.',
       destaque: true,
@@ -1188,8 +1191,8 @@ window.ATLAS_DATA = (() => {
       valorTotal: 60,
       moeda: 'R$ mi',
       publico: 'Empresas com pesquisadores',
-      abertura: addDays(today, 15),
-      encerramento: addDays(today, 75),
+      abertura: '2026-06-07',
+      encerramento: '2026-08-06',
       status: 'em-breve',
       resumo: 'Aloca pesquisadores em empresas para desenvolver projetos de inovação tecnológica.',
       tags: ['RHAE','talento']
@@ -1206,8 +1209,8 @@ window.ATLAS_DATA = (() => {
       valorTotal: 3500,
       moeda: 'R$ mi',
       publico: 'Cadeia automotiva',
-      abertura: addDays(today, 20),
-      encerramento: addDays(today, 110),
+      abertura: '2026-06-12',
+      encerramento: '2026-09-10',
       status: 'em-breve',
       resumo: 'Suprimento crítico para eletrificação: baterias, semicondutores de potência, motores e tração.',
       tags: ['eletromobilidade','baterias']
@@ -1224,8 +1227,8 @@ window.ATLAS_DATA = (() => {
       valorTotal: 1000,
       moeda: 'R$ mi',
       publico: 'Empresas e consórcios',
-      abertura: addDays(today, -8),
-      encerramento: addDays(today, 2),
+      abertura: '2026-05-15',
+      encerramento: '2026-05-25',
       status: 'aberta',
       urgente: true,
       resumo: 'Aplicação de IA em chão de fábrica, manutenção preditiva, qualidade e cadeia logística.',
@@ -1244,8 +1247,8 @@ window.ATLAS_DATA = (() => {
       valorTotal: 80,
       moeda: 'R$ mi',
       publico: 'Startups com sede em SP',
-      abertura: addDays(today, -2),
-      encerramento: addDays(today, 35),
+      abertura: '2026-05-21',
+      encerramento: '2026-06-27',
       status: 'aberta',
       resumo: 'Apoio à fase de tração de startups de base tecnológica com PMV validado.',
       tags: ['startup','PIPE']
@@ -1262,8 +1265,8 @@ window.ATLAS_DATA = (() => {
       valorTotal: 100,
       moeda: 'R$ mi',
       publico: 'Empresas + Unidades Embrapii',
-      abertura: addDays(today, 5),
-      encerramento: addDays(today, 95),
+      abertura: '2026-05-28',
+      encerramento: '2026-08-26',
       status: 'em-breve',
       resumo: 'Tecnologias duais com aplicação civil e de defesa: sensoriamento, comunicação segura, materiais.',
       tags: ['defesa','tecnologias duais']
@@ -1280,8 +1283,8 @@ window.ATLAS_DATA = (() => {
       valorTotal: 5000,
       moeda: 'R$ mi',
       publico: 'Empresas industriais',
-      abertura: addDays(today, -120),
-      encerramento: addDays(today, 245),
+      abertura: '2026-01-23',
+      encerramento: '2027-01-23',
       status: 'aberta',
       resumo: 'Modernização industrial com manufatura aditiva, sensoriamento, automação e IA aplicada.',
       tags: ['I4.0','crédito']
@@ -1507,7 +1510,7 @@ window.ATLAS_DATA = (() => {
   <script>
   ;(function () {
     var A = window.ATLAS_DATA;
-    var today = new Date('2026-05-23');
+    var today = new Date();
     function addDays(d, n) { var x = new Date(d); x.setDate(x.getDate() + n); return x.toISOString().slice(0, 10); }
 // Instrumentos adicionais (subagente pastas FINEP/BNDES/EMBRAPII/SENAI/etc.)
 const INSTRUMENTOS_EXTRAS = [
@@ -1737,8 +1740,8 @@ const CHAMADAS_EXTRAS = [
     valorTotal: 600,
     moeda: 'R$ mi',
     publico: 'Médias e grandes empresas com ICT parceira',
-    abertura: addDays(today, -40),
-    encerramento: addDays(today, 45),
+    abertura: '2026-04-13',
+    encerramento: '2026-07-07',
     status: 'aberta',
     resumo: 'Subvenção para produtos e processos inovadores em agroindústria, agricultura de precisão e biocombustíveis (edital 774).',
     destaque: true,
@@ -1757,8 +1760,8 @@ const CHAMADAS_EXTRAS = [
     valorTotal: 450,
     moeda: 'R$ mi',
     publico: 'Empresas médias/grandes',
-    abertura: addDays(today, -25),
-    encerramento: addDays(today, 70),
+    abertura: '2026-04-28',
+    encerramento: '2026-08-01',
     status: 'aberta',
     resumo: 'Apoio a soluções para tratamento de resíduos, saneamento básico e eficiência energética em habitação.',
     destaque: false,
@@ -1777,8 +1780,8 @@ const CHAMADAS_EXTRAS = [
     valorTotal: 60,
     moeda: 'R$ mi',
     publico: 'Microempresas e startups (até EPP)',
-    abertura: addDays(today, -8),
-    encerramento: addDays(today, 12),
+    abertura: '2026-05-15',
+    encerramento: '2026-06-04',
     status: 'aberta',
     resumo: 'Subvenção integral para startups com soluções de IA, ML e visão computacional (edital 676).',
     destaque: true,
@@ -1797,8 +1800,8 @@ const CHAMADAS_EXTRAS = [
     valorTotal: 2000,
     moeda: 'R$ mi',
     publico: 'Micro, pequenas e médias empresas inovadoras',
-    abertura: addDays(today, -180),
-    encerramento: addDays(today, 200),
+    abertura: '2025-11-24',
+    encerramento: '2026-12-09',
     status: 'aberta',
     resumo: 'Linha contínua de crédito a partir de 0,93% a.m. para MPME com histórico comprovado de inovação.',
     destaque: false,
@@ -1817,8 +1820,8 @@ const CHAMADAS_EXTRAS = [
     valorTotal: 80,
     moeda: 'R$ mi',
     publico: 'Pequenas empresas paulistas egressas do PIPE Fase 2',
-    abertura: addDays(today, 20),
-    encerramento: addDays(today, 110),
+    abertura: '2026-06-12',
+    encerramento: '2026-09-10',
     status: 'em-breve',
     resumo: 'Cofinanciamento de scale-up comercial para empresas que concluíram pesquisa de viabilidade na FAPESP.',
     destaque: true,
@@ -1837,8 +1840,8 @@ const CHAMADAS_EXTRAS = [
     valorTotal: 35,
     moeda: 'R$ mi',
     publico: 'Pesquisadores fluminenses em parceria com empresas',
-    abertura: addDays(today, -55),
-    encerramento: addDays(today, -5),
+    abertura: '2026-03-29',
+    encerramento: '2026-05-18',
     status: 'encerrada',
     resumo: 'Projetos de pesquisa aplicada em ICTs do Rio com contrapartida empresarial.',
     destaque: false,
@@ -1857,8 +1860,8 @@ const CHAMADAS_EXTRAS = [
     valorTotal: 300,
     moeda: 'R$ mi',
     publico: 'Micro e pequenas empresas via parceiros estaduais',
-    abertura: addDays(today, 35),
-    encerramento: addDays(today, 130),
+    abertura: '2026-06-27',
+    encerramento: '2026-09-30',
     status: 'em-breve',
     resumo: 'Programa descentralizado operado por FAPs e instituições estaduais para subvenção a MPEs inovadoras.',
     destaque: true,
@@ -1877,8 +1880,8 @@ const CHAMADAS_EXTRAS = [
     valorTotal: 110,
     moeda: 'R$ mi',
     publico: 'Empreendedores em ideação e startups nascentes',
-    abertura: addDays(today, -15),
-    encerramento: addDays(today, 14),
+    abertura: '2026-05-08',
+    encerramento: '2026-06-06',
     status: 'aberta',
     resumo: 'FINEP/SEBRAE/FAPs apoiam ideias inovadoras em fase pré-operacional com bolsas e capacitação.',
     destaque: false,
@@ -1897,8 +1900,8 @@ const CHAMADAS_EXTRAS = [
     valorTotal: 95,
     moeda: 'R$ mi',
     publico: 'Empresas com projeto de P&D que demandem pesquisadores',
-    abertura: addDays(today, 60),
-    encerramento: addDays(today, 150),
+    abertura: '2026-07-22',
+    encerramento: '2026-10-20',
     status: 'em-breve',
     resumo: 'Segunda janela do RHAE em 2026, focada em projetos colaborativos com ICTs.',
     destaque: false,
@@ -1917,8 +1920,8 @@ const CHAMADAS_EXTRAS = [
     valorTotal: 220,
     moeda: 'R$ mi',
     publico: 'Empresas industriais em parceria com Institutos SENAI ISI/IST',
-    abertura: addDays(today, -10),
-    encerramento: addDays(today, 80),
+    abertura: '2026-05-13',
+    encerramento: '2026-08-11',
     status: 'aberta',
     resumo: 'Cofinanciamento de projetos de P,D&I industriais executados em parceria com a rede SENAI de inovação.',
     destaque: true,
@@ -1937,8 +1940,8 @@ const CHAMADAS_EXTRAS = [
     valorTotal: 45,
     moeda: 'R$ mi',
     publico: 'MPEs mineiras com projeto de inovação',
-    abertura: addDays(today, 45),
-    encerramento: addDays(today, 135),
+    abertura: '2026-07-07',
+    encerramento: '2026-10-05',
     status: 'em-breve',
     resumo: 'Operação estadual do Tecnova em Minas Gerais via FAPEMIG, foco em cadeias industriais regionais.',
     destaque: false,
@@ -1957,8 +1960,8 @@ const CHAMADAS_EXTRAS = [
     valorTotal: 180,
     moeda: 'R$ mi',
     publico: 'PPGs em parceria com empresas para missões internacionais',
-    abertura: addDays(today, -90),
-    encerramento: addDays(today, -30),
+    abertura: '2026-02-22',
+    encerramento: '2026-04-23',
     status: 'encerrada',
     resumo: 'Edital de internacionalização da pesquisa aplicada com cofinanciamento industrial (ciclo encerrado).',
     destaque: false,
@@ -2613,7 +2616,7 @@ const GLOSSARIO_EXTRA = [
    ────────────────────────────────────────────────────────────────── */
 ;(function () {
   var A = window.ATLAS_DATA;
-  var today = new Date('2026-05-23');
+  var today = new Date();
   function addDays(d, n) { var x = new Date(d); x.setDate(x.getDate() + n); return x.toISOString().slice(0, 10); }
   function mergeById(target, extras) {
     var have = {}; target.forEach(function (i) { have[i.id] = true; });
@@ -2788,49 +2791,49 @@ const GLOSSARIO_EXTRA = [
   var CHAMADAS_AGENT = [
     { id:'c-finep-mib-defesa-728', titulo:'FINEP MIB — Soberania e Defesa Nacional (edital 728)', agencia:'finep', instrumento:'finep-mais-inovacao', categoria:'Subvenção',
       dominios:['aero','semic','tic','materiais'], regiao:'Nacional', valor:'até R$ 30 mi/projeto', valorTotal:500, moeda:'R$ mi',
-      publico:'Empresas + ICTs em consórcio', abertura:addDays(today,-30), encerramento:addDays(today,60), status:'aberta', urgente:false, destaque:true,
+      publico:'Empresas + ICTs em consórcio', abertura:'2026-04-23', encerramento:'2026-07-22', status:'aberta', urgente:false, destaque:true,
       resumo:'Subvenção para tecnologias críticas de soberania (defesa, semicondutores, comunicações seguras, materiais estratégicos) — Missão 6 da NIB.',
       tags:['defesa','soberania','tecnologias-criticas','nib-missao-6'] },
 
     { id:'c-finep-mib-semicondutores-732', titulo:'FINEP MIB — Semicondutores (edital 732)', agencia:'finep', instrumento:'finep-mais-inovacao', categoria:'Subvenção',
       dominios:['semic','tic'], regiao:'Nacional', valor:'até R$ 30 mi/projeto', valorTotal:600, moeda:'R$ mi',
-      publico:'Empresas com cadeia de semicondutores', abertura:addDays(today,-15), encerramento:addDays(today,75), status:'aberta', urgente:false, destaque:true,
+      publico:'Empresas com cadeia de semicondutores', abertura:'2026-05-08', encerramento:'2026-08-06', status:'aberta', urgente:false, destaque:true,
       resumo:'Subvenção para design, encapsulamento, teste e P&D em semicondutores — alinhada à Missão 6 da NIB e ao programa Brasil Semicondutores.',
       tags:['semicondutores','padis-complementar','nib-missao-6'] },
 
     { id:'c-bndes-mais-inovacao-difusao', titulo:'BNDES Mais Inovação — Difusão Tecnológica (linha contínua)', agencia:'bndes', instrumento:'bndes-mais-inovacao-direto', categoria:'Crédito',
       dominios:['manufatura','tic','agro','energia'], regiao:'Nacional', valor:'a partir de R$ 10 mi', valorTotal:4000, moeda:'R$ mi',
-      publico:'Empresas industriais com aquisição de máquinas/equipamentos no CFI', abertura:addDays(today,-180), encerramento:addDays(today,365), status:'aberta', urgente:false,
+      publico:'Empresas industriais com aquisição de máquinas/equipamentos no CFI', abertura:'2025-11-24', encerramento:'2027-05-23', status:'aberta', urgente:false,
       resumo:'Linha permanente para difusão tecnológica via aquisição de bens cadastrados no CFI/BNDES. Aderente à Missão 4 (Transformação Digital) da NIB.',
       tags:['difusao','industria-4-0','linha-continua','nib-missao-4'] },
 
     { id:'c-embrapii-alto-impacto-saude-2025', titulo:'EMBRAPII — Projetos de Alto Impacto em Saúde 2025', agencia:'embrapii', instrumento:'embrapii', categoria:'Cofinanciamento',
       dominios:['saude'], regiao:'Nacional', valor:'aporte EMBRAPII ≥ R$ 5 mi/projeto', valorTotal:60, moeda:'R$ mi',
-      publico:'Consórcios UE Diamante/Ouro + empresas (1-2) + ICTs', abertura:addDays(today,-25), encerramento:addDays(today,180), status:'aberta', urgente:false, destaque:true,
+      publico:'Consórcios UE Diamante/Ouro + empresas (1-2) + ICTs', abertura:'2026-04-28', encerramento:'2026-11-19', status:'aberta', urgente:false, destaque:true,
       resumo:'Chamada para projetos em rede de alto impacto em Saúde (dispositivos médicos, fármacos/farmoquímicos) com recursos do Ministério da Saúde. TRL 3-7. Fluxo contínuo até esgotar R$ 60 mi.',
       tags:['saude','ceis','alto-impacto','ms','nib-missao-2'] },
 
     { id:'c-aneel-h2-verde-2025', titulo:'ANEEL — Chamada Estratégica nº 029/2025: Hidrogênio de Baixo Carbono', agencia:'aneel', instrumento:'aneel-pd', categoria:'PD&I Setorial',
       dominios:['energia','ambiental','materiais'], regiao:'Nacional', valor:'cota das concessionárias convocadas', valorTotal:500, moeda:'R$ mi',
-      publico:'Concessionárias D+G+T + ICTs', abertura:addDays(today,-90), encerramento:addDays(today,120), status:'aberta', urgente:false, destaque:true,
+      publico:'Concessionárias D+G+T + ICTs', abertura:'2026-02-22', encerramento:'2026-09-20', status:'aberta', urgente:false, destaque:true,
       resumo:'Chamada estratégica para H2 verde acoplado à matriz elétrica (produção, armazenamento, integração rede, eletrólise). TRL alvo 4-7.',
       tags:['h2-verde','transicao-energetica','aneel'] },
 
     { id:'c-aneel-bess-2025', titulo:'ANEEL — Chamada nº 030/2025: BESS (Armazenamento)', agencia:'aneel', instrumento:'aneel-pd', categoria:'PD&I Setorial',
       dominios:['energia','materiais'], regiao:'Nacional', valor:'cota das concessionárias convocadas', valorTotal:350, moeda:'R$ mi',
-      publico:'Concessionárias D+G+T + ICTs', abertura:addDays(today,30), encerramento:addDays(today,180), status:'em-breve',
+      publico:'Concessionárias D+G+T + ICTs', abertura:'2026-06-22', encerramento:'2026-11-19', status:'em-breve',
       resumo:'Sistemas BESS (Battery Energy Storage Systems) em larga escala — integração à rede, modelos de remuneração, baterias estacionárias.',
       tags:['bess','baterias','armazenamento','aneel'] },
 
     { id:'c-mover-estruturante-2025', titulo:'Projeto Estruturante MOVER (EMBRAPII + SENAI)', agencia:'mover', instrumento:'mover', categoria:'Cofinanciamento estruturante',
       dominios:['mobilidade','manufatura','energia','materiais'], regiao:'Nacional', valor:'R$ 10 mi a R$ 60 mi', valorTotal:600, moeda:'R$ mi',
-      publico:'Consórcio UE Diamante/Ouro + ISI SENAI + ≥5 grandes empresas cadeia automotiva', abertura:addDays(today,-60), encerramento:addDays(today,90), status:'aberta', urgente:false, destaque:true,
+      publico:'Consórcio UE Diamante/Ouro + ISI SENAI + ≥5 grandes empresas cadeia automotiva', abertura:'2026-03-24', encerramento:'2026-08-21', status:'aberta', urgente:false, destaque:true,
       resumo:'Modalidade especial co-coordenada EMBRAPII+SENAI para grandes projetos na cadeia automotiva — descarbonização, eletrificação, segurança veicular, biocombustíveis.',
       tags:['mover','automotivo','estruturante','consorcio'] },
 
     { id:'c-bndes-fundo-clima-florestas-2025', titulo:'BNDES Fundo Clima — Florestas Nativas (custo 1% a.a.)', agencia:'bndes', instrumento:'bndes-fundo-clima', categoria:'Crédito subsidiado',
       dominios:['ambiental','agro'], regiao:'Nacional', valor:'R$ 20 mi (mín) a R$ 500 mi/grupo/12m', valorTotal:1200, moeda:'R$ mi',
-      publico:'PJ Direito Público/Privado, empresários individuais e PF rural', abertura:addDays(today,-200), encerramento:addDays(today,360), status:'aberta', urgente:false, destaque:true,
+      publico:'PJ Direito Público/Privado, empresários individuais e PF rural', abertura:'2025-11-04', encerramento:'2027-05-18', status:'aberta', urgente:false, destaque:true,
       resumo:'Linha mais subsidiada do BNDES (1% a.a.). Manejo florestal, recomposição vegetal, SAF/ILPF com nativas, corredores ecológicos, cadeia produtiva da biodiversidade.',
       tags:['florestas-nativas','bioeconomia','clima','subsidio'] }
   ];
@@ -25173,6 +25176,25 @@ window.ANTT_PROJETOS_STATS = [{"tema": "Soluções Tecnológicas aplicadas à In
 
 /* ATLAS-NOVOS-DATASETS-END */
   </script>
+  <script>
+/* RADAR-STATUS-AUTO: status/urgente calculados das datas salvas ao abrir o Atlas */
+(function(){
+  try{
+    var A = window.ATLAS_DATA; if(!A || !A.CHAMADAS) return;
+    var now = new Date(); now.setHours(0,0,0,0);
+    var DAY = 864e5;
+    function parse(d){ if(!d) return null; var p=String(d).slice(0,10).split('-'); if(p.length!==3) return null; var dt=new Date(+p[0], (+p[1])-1, +p[2]); dt.setHours(0,0,0,0); return isNaN(dt)?null:dt; }
+    A.CHAMADAS.forEach(function(c){
+      var ab=parse(c.abertura), en=parse(c.encerramento), status;
+      if(ab && ab>now) status='em-breve';
+      else if(en && en<now) status='encerrada';
+      else status='aberta';
+      c.status = status;
+      c.urgente = (status==='aberta' && en) ? (((en-now)/DAY) <= 15) : false;
+    });
+  }catch(e){ console.error('RADAR-STATUS-AUTO falhou:', e); }
+})();
+  </script>
 <script type="text/babel" data-presets="react">
 // tweaks-panel.jsx
 // Reusable Tweaks shell + form-control helpers.
@@ -25896,7 +25918,7 @@ const NAV = [
 ];
 
 function Topbar({ segment }) {
-  const now = new Date('2026-05-23');
+  const now = new Date();
   return (
     <header className="topbar">
       <div className="topbar-inner">
@@ -25991,7 +26013,7 @@ Object.assign(window, {
 
 function Hub() {
   const { INSTRUMENTOS, CHAMADAS, ICTS, DOMINIOS, AGENCIAS, GLOSSARIO, GUIA } = window.ATLAS_DATA;
-  const today = new Date('2026-05-23');
+  const today = new Date();
 
   const abertas = CHAMADAS.filter(c => c.status === 'aberta');
   const urgentes = abertas.filter(c => daysBetween(today, c.encerramento) <= 15).sort((a,b)=>daysBetween(today,a.encerramento)-daysBetween(today,b.encerramento));
@@ -26146,7 +26168,7 @@ function ModuleCard({ num, href, icon, title, body, accent, badge, live }) {
 }
 
 function FeaturedCall({ c }) {
-  const today = new Date('2026-05-23');
+  const today = new Date();
   const dias = daysBetween(today, c.encerramento);
   return (
     <a href={`#/radar`} onClick={()=>{ setTimeout(()=>{ window.dispatchEvent(new CustomEvent('focus-call', { detail: c.id })); }, 60); }}
@@ -26713,7 +26735,7 @@ Object.assign(window, { Catalogo, InstrumentoDetalhe });
 
 function Radar() {
   const { CHAMADAS, DOMINIOS, AGENCIAS } = window.ATLAS_DATA;
-  const today = new Date('2026-05-23');
+  const today = new Date();
 
   const [q, setQ] = React.useState('');
   const [dominio, setDominio] = React.useState([]);
