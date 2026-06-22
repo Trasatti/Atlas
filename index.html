@@ -393,6 +393,7 @@ window.ATLAS_DATA = (() => {
     { id: 'aneel',   nome: 'ANEEL',          tipo: 'Agência Reguladora', vinculo: 'MME' },
     { id: 'anp',     nome: 'ANP',            tipo: 'Agência Reguladora', vinculo: 'MME' },
     { id: 'antt',    nome: 'ANTT',           tipo: 'Agência Reguladora', vinculo: 'Min. Transportes' },
+    { id: 'saneamento', nome: 'Reguladoras de Saneamento', tipo: 'Reguladoras Estaduais', vinculo: 'Estados / ANA' },
     { id: 'mcti',    nome: 'MCTI',           tipo: 'Ministério',       vinculo: 'Governo Federal' },
     { id: 'mdic',    nome: 'MDIC',           tipo: 'Ministério',       vinculo: 'Governo Federal' },
     { id: 'mover',   nome: 'Programa Mover', tipo: 'Programa Federal', vinculo: 'MDIC' },
@@ -728,6 +729,85 @@ window.ATLAS_DATA = (() => {
       tags: ['setorial','transporte','rodovias','compulsório','P&D']
     },
     {
+      id: 'pdi-saneamento',
+      sigla: 'PD&I Saneamento',
+      nome: 'PD&I no Saneamento (reguladoras estaduais)',
+      categoria: 'Obrigação Regulatória Setorial',
+      agencia: 'saneamento',
+      dominios: ['ambiental','tic','energia','materiais','saude'],
+      publicos: ['Prestadoras/concessionárias de saneamento','ICTs e universidades executoras'],
+      modalidade: 'Percentual da receita aplicado em PD&I, reconhecido na tarifa — regra definida por cada agência estadual',
+      ticket: 'Varia por estado — ex.: 0,2% da receita (ADASA/DF), 0,1→0,3% (ARSAE-MG), 0,05% (ARSESP/SP)',
+      prazo: 'Ciclos anuais (ADASA) ou quadrienais (ARSESP); projetos de até 4–5 anos',
+      resumo: 'Obrigação regulatória análoga à de ANP/ANEEL, porém descentralizada: cada agência estadual de saneamento (ADASA-DF, ARSAE-MG, ARSESP-SP, ARSP-ES…) exige que as prestadoras invistam um percentual da receita em pesquisa, desenvolvimento e inovação nos serviços de água e esgoto, com reconhecimento tarifário dos gastos após homologação. Tem como base a Lei 11.445/2007 e o Novo Marco do Saneamento (Lei 14.026/2020).',
+      beneficios: [
+        'Recursos reconhecidos na tarifa (remuneração garantida após homologação)',
+        'ICTs e universidades podem ser Entidade Executora dos projetos',
+        'Demanda recorrente e setorial por pesquisa aplicada em água e esgoto',
+        'Propriedade intelectual compartilhada entre prestadora e executora'
+      ],
+      quemPode: 'A obrigação recai sobre as prestadoras/concessionárias reguladas pela agência estadual; ICTs, universidades e centros de pesquisa atuam como executoras (contratadas pela prestadora ou via chamada pública, como a da ADASA/Caesb).',
+      naoSeAplica: 'Atividades de rotina operacional, capacitação e estudos sem componente de P&D; na ARSESP, prestadoras com receita requerida direta abaixo de R$ 250 mi/ano ficam desobrigadas.',
+      comoAcessar: [
+        'Identificar a agência reguladora do estado e o seu Manual de PD&I',
+        'Posicionar a ICT como executora — responder à chamada pública (ADASA/Caesb) ou ser contratada pela prestadora',
+        'Construir o projeto dentro dos temas e do percentual autorizado',
+        'Executar e prestar contas para homologação e reconhecimento tarifário'
+      ],
+      pegadinhas: [
+        'O recurso é da prestadora, não da agência — não há balcão direto para ICTs',
+        'Reconhecimento tarifário é ex-post: projetos reprovados ou com metas não atingidas podem ser glosados',
+        'Cada estado tem regra, percentual e calendário próprios — ler o manual da reguladora específica'
+      ],
+      base: 'Lei 11.445/2007; Lei 14.026/2020 (Novo Marco); Res. ADASA 13/2021; Res. ARSAE-MG 154/2021 e 166/2022; Manual ARSESP S-0001/2019; Res. ARSP-ES 096/2026',
+      links: [
+        { label: 'ADASA (DF)', url: 'https://www.adasa.df.gov.br' },
+        { label: 'ARSAE-MG', url: 'https://www.arsae.mg.gov.br' },
+        { label: 'ARSESP (SP)', url: 'https://www.arsesp.sp.gov.br' },
+        { label: 'ANA — Saneamento', url: 'https://www.gov.br/ana/' }
+      ],
+      tags: ['saneamento','setorial','tarifa','estadual','água e esgoto']
+    },
+    {
+      id: 'compras-publicas',
+      sigla: 'Compras Públicas',
+      nome: 'Compras Públicas para Inovação (CPSI & Encomenda Tecnológica)',
+      categoria: 'Poder de Compra do Estado',
+      agencia: 'mcti',
+      dominios: DOMINIOS.map(d=>d.id),
+      publicos: ['Empresas inovadoras','Startups','ICTs','Órgãos públicos compradores'],
+      modalidade: 'Licitação orientada ao problema (CPSI) e Encomenda Tecnológica (ETEC) para risco tecnológico',
+      ticket: 'CPSI: até R$ 1,6 mi/contrato na experimentação + fornecimento até ~R$ 8 mi; ETEC: sem teto fixo',
+      prazo: 'Conforme edital de cada órgão; CPSI: experimentação até 12+12 meses e fornecimento até 24+24 meses',
+      resumo: 'O Estado usa seu poder de compra para induzir inovação. O CPSI (Contrato Público para Solução Inovadora, do Marco Legal das Startups — LC 182/2021) permite contratar a experimentação de soluções inovadoras descrevendo o problema (não a solução), com tolerância ao risco tecnológico e fornecimento direto em escala se a prova for bem-sucedida. Para desenvolver sob encomenda algo inexistente no mercado, usa-se a Encomenda Tecnológica (art. 20 da Lei 10.973/2004).',
+      beneficios: [
+        'Edital orientado ao problema — abre espaço para soluções novas',
+        'Tolerância ao risco tecnológico (pagamento mesmo sem atingir o resultado, se decorrer do risco assumido)',
+        'Barreiras reduzidas para startups (dispensa de documentos/garantias; pagamento antecipado da 1ª etapa)',
+        'Sucesso na experimentação → contrato de fornecimento sem nova licitação'
+      ],
+      quemPode: 'Empresas inovadoras e startups (LC 182/2021: receita até R$ 16 mi e CNPJ até 10 anos) com solução aderente ao desafio publicado; órgãos e estatais de qualquer esfera podem publicar CPSIs.',
+      naoSeAplica: 'Aquisição de produtos/serviços já consolidados, com especificação fechada e sem risco tecnológico (usa-se licitação comum da Lei 14.133/2021).',
+      comoAcessar: [
+        'Monitorar editais no PNCP (pncp.gov.br) e plataformas de CPSI',
+        'Verificar elegibilidade ao desafio e ao enquadramento (startup, se exigido)',
+        'Apresentar proposta orientada ao problema (plano de testes, metas, indicadores)',
+        'Executar a experimentação (PoC → piloto → rollout) e, se aprovado, contrato de fornecimento'
+      ],
+      pegadinhas: [
+        'Teto de R$ 1,6 mi por contrato CPSI é fixo — projetos maiores exigem ETEC ou divisão',
+        'Processo é longo (média ~245 dias do edital à assinatura) — não serve para urgência',
+        'Maior gargalo é a maturidade institucional do órgão comprador, não a lei',
+        'CPSI valida soluções; ETEC desenvolve do zero com risco — não confundir os instrumentos'
+      ],
+      base: 'LC 182/2021 (Marco Legal das Startups, arts. 13–15); Lei 14.133/2021; Lei 10.973/2004 (art. 20 e 20-B); Decreto 9.283/2018',
+      links: [
+        { label: 'PNCP — Contratações Públicas', url: 'https://pncp.gov.br' },
+        { label: 'InovaCPIN (CPSI)', url: 'https://inovacpin.org' }
+      ],
+      tags: ['CPSI','compras públicas','startups','encomenda tecnológica','poder de compra']
+    },
+    {
       id: 'anp-pdi',
       sigla: 'P,D&I ANP',
       nome: 'Cláusula de P,D&I — Setor de Petróleo e Gás',
@@ -872,32 +952,39 @@ window.ATLAS_DATA = (() => {
       categoria: 'Recursos Orçamentários',
       agencia: 'mcti',
       dominios: DOMINIOS.map(d=>d.id),
-      publicos: ['ICTs','Municípios','Fundações de apoio'],
-      modalidade: 'Transferência orçamentária via emenda',
-      ticket: 'Variável — de R$ 200 mil a dezenas de milhões',
-      prazo: 'Ciclo anual orçamentário (LOA)',
-      resumo: 'Recursos orçamentários direcionados por parlamentares para projetos de inovação, infraestrutura laboratorial, formação e parcerias em ICTs.',
+      publicos: ['ICTs e universidades','Estados e municípios','OSCs sem fins lucrativos','Fundações de apoio','OS vinculadas ao MCTI'],
+      modalidade: 'Transferência especial (repasse direto ao ente, "tipo PIX") ou transferência com finalidade definida (convênio/TED/termo via Transferegov)',
+      ticket: 'Variável — individuais até 2% da RCL (~R$ 38 mi/deputado, ~R$ 70 mi/senador); bancada 1% da RCL. No MCTI, projetos de R$ 200 mil a R$ 10 mi',
+      prazo: 'Ciclo orçamentário anual (PLOA até 31/ago → LOA até 22/dez → execução no exercício seguinte)',
+      resumo: 'Instrumento pelo qual deputados e senadores destinam recursos do Orçamento da União a entes públicos, ICTs e OSCs. No MCTI, financiam PD&I, infraestrutura laboratorial, ambientes inovadores e popularização da ciência. Emendas individuais (RP6) e de bancada (RP7) são impositivas — execução obrigatória, salvo impedimento de ordem técnica (CF art. 166 e 166-A; LC 210/2024).',
       beneficios: [
-        'Flexibilidade de aplicação dentro da finalidade',
-        'Pode complementar contrapartida em outros instrumentos'
+        'Caráter impositivo das emendas individuais e de bancada (execução obrigatória pelo Executivo)',
+        'Dispensa de chamamento público para OSCs (art. 29 da Lei 13.019/2014)',
+        'Transferência especial: repasse direto ao ente, sem convênio',
+        'Cobrem toda a cadeia de CT&I — de popularização da ciência a laboratórios e Unidades EMBRAPII'
       ],
-      quemPode: 'ICTs públicas, fundações de apoio, entes federativos.',
-      naoSeAplica: 'Empresas privadas como beneficiárias diretas (em geral).',
+      quemPode: 'ICTs e entidades federais (aplicação direta/TED), estados e municípios (convênio ou transferência especial) e OSCs com 3+ anos e regularidade (termo de colaboração/fomento). A emenda é sempre indicada por um parlamentar.',
+      naoSeAplica: 'Pessoa física; despesas com pessoal e serviço da dívida; objeto incompatível com a ação orçamentária. A transferência especial exige ≥70% em despesas de capital.',
       comoAcessar: [
-        'Articulação política e técnica com mandatos parlamentares',
-        'Cadastro do projeto no SICONV/Transferegov',
-        'Convênio ou termo de execução descentralizada'
+        'Mapear ações elegíveis do MCTI e definir o projeto (escopo, valor, funcional programática)',
+        'Articular com o(s) parlamentar(es) e formalizar a indicação na LOA (via SIOP/CMO)',
+        'Cadastrar a proposta/plano de trabalho no Transferegov dentro do cronograma anual',
+        'Celebrar o instrumento (convênio/TED/termo), executar e prestar contas (até 60 dias após a vigência)'
       ],
       pegadinhas: [
-        'Sujeito a contingenciamento e prazos da execução orçamentária',
+        'Impositividade não é absoluta: cede a impedimento de ordem técnica (lista de 27 hipóteses na LC 210/2024)',
+        'Emendas impositivas também podem ser contingenciadas proporcionalmente',
+        'O código RP define obrigatoriedade e regras de corte (RP6 individual, RP7 bancada, RP8 demais)',
+        'Prazos do cronograma são fatais — atraso no plano de trabalho inviabiliza o empenho no exercício',
         'Prestação de contas rígida'
       ],
-      base: 'LOA anual; LC 101/2000',
+      base: 'CF art. 166 e 166-A; EC 86/2015, 100/2019, 105/2019 e 126/2022; LC 210/2024; Lei 13.019/2014; Decretos 11.531/2023 e 10.426/2020; LDO/LOA',
       links: [
-        { label: 'Transferegov (convênios)', url: 'https://www.gov.br/transferegov/pt-br' },
-        { label: 'Câmara — Emendas Parlamentares', url: 'https://www.camara.leg.br/orcamento-da-uniao/emendas' }
+        { label: 'Transferegov', url: 'https://www.gov.br/transferegov/pt-br' },
+        { label: 'Câmara — Emendas / Orçamento', url: 'https://www.camara.leg.br/orcamento-da-uniao/emendas' },
+        { label: 'MCTI', url: 'https://www.gov.br/mcti/' }
       ],
-      tags: ['orçamentário','ICT','convênio']
+      tags: ['orçamentário','impositiva','Transferegov','transferência especial','ICT']
     },
     {
       id: 'senai-isi',
@@ -1085,6 +1172,25 @@ window.ATLAS_DATA = (() => {
     // CONVENCAO: datas em ISO fixo 'YYYY-MM-DD' (salvas no cadastro da chamada).
     // NAO definir 'status'/'urgente' manualmente — sao calculados automaticamente
     // a partir das datas vs. a data real de hoje (ver script RADAR-STATUS-AUTO).
+    {
+      id: 'c-finep-defesa-2026',
+      titulo: 'FINEP — Autonomia Tecnológica na Área da Defesa',
+      agencia: 'finep',
+      instrumento: 'finep-subvencao',
+      categoria: 'Não-reembolsável',
+      dominios: ['aero','tic','materiais','manufatura','energia'],
+      regiao: 'Nacional',
+      valor: 'mín. R$ 25 mi/projeto',
+      valorTotal: 500,
+      moeda: 'R$ mi',
+      publico: 'ICTs do Ministério da Defesa (Marinha/Exército/FAB) + Fundação de Apoio',
+      abertura: '2026-05-29',
+      encerramento: '2026-09-18',
+      status: 'aberta',
+      resumo: 'Apoio não-reembolsável (convênio FNDCT) a ICTs do Ministério da Defesa para tecnologias críticas: guiamento e navegação de mísseis/foguetes/VANTs, sensoriamento e consciência situacional, IA, defesa cibernética, quântica e robótica, nuclear e energia, lançadores de satélites e materiais compostos.',
+      destaque: true,
+      tags: ['defesa','autonomia tecnológica','FNDCT']
+    },
     {
       id: 'c-finep-clima-2026',
       titulo: 'FINEP Mais Inovação — Transição Climática 2026',
@@ -28651,6 +28757,14 @@ const AGENTE_PERFIS = {
     cobertura: 'RDT instituído pela Resolução 483/2004 · 8+ temas de pesquisa · Carteira monitorada de projetos executados com universidades e ICTs',
     hero: 'P&D rodoviário via RDT — concessionárias + universidades'
   },
+  saneamento: {
+    sobre: 'As agências reguladoras estaduais de saneamento (ADASA-DF, ARSAE-MG, ARSESP-SP, ARSP-ES, entre outras) regulam e fiscalizam os serviços de água e esgoto e, com base na Lei 11.445/2007 e no Novo Marco (Lei 14.026/2020), exigem que as prestadoras invistam um percentual da receita em PD&I. A ANA edita normas de referência nacionais que as reguladoras estaduais observam. Não há regra única — cada estado define o seu modelo, percentual e calendário.',
+    site: 'https://www.gov.br/ana/',
+    criada: 'Variável por estado',
+    natureza: 'Agências reguladoras estaduais (+ ANA federal)',
+    cobertura: 'Programas de PD&I ativos/em estruturação em ADASA (DF/Caesb), ARSAE-MG (Copasa), ARSESP (SP/Sabesp) e ARSP (ES/Cesan)',
+    hero: 'PD&I obrigatório do saneamento — regra estadual, reconhecimento na tarifa'
+  },
   mcti: {
     sobre: 'O MCTI (Ministério da Ciência, Tecnologia e Inovação) coordena a política federal de CT&I. Opera a Lei do Bem (FORMP&D), PADIS (semicondutores), Programas Prioritários da Lei de TICs, FNDCT e supervisiona FINEP/CNPq/CAPES.',
     site: 'https://www.gov.br/mcti/',
@@ -28740,6 +28854,12 @@ function modalidadesPorAgente(id) {
     { nome:'Infraestrutura Laboratorial', desc:'Implantação/modernização de laboratórios e plantas-piloto em ICTs credenciadas.', ticket:'Até ~30% anual' },
     { nome:'Formação e Capacitação', desc:'Bolsas, mestrados profissionais, cátedras em ICTs credenciadas.', ticket:'Até ~20% anual' },
     { nome:'Produção Científica e PI', desc:'Publicações, patentes, software, eventos técnicos.', ticket:'Limite por PT' }
+  ];
+  if (id === 'saneamento') return [
+    { nome:'PD&I ADASA / Caesb (DF)', desc:'Programa anual de PD&I da Caesb regulado pela ADASA, com recursos de até 0,2% da Receita Operacional Direta reconhecidos na tarifa. A Caesb lança chamada pública competitiva (ex.: ChP1807024) para selecionar ICTs/universidades como Entidade Executora. Temas 2025: gestão corporativa; sustentabilidade e recursos hídricos; gestão operacional, perdas e eficiência energética. Base: Res. ADASA 13/2021.', ticket:'até 0,2% da Receita Operacional Direta' },
+    { nome:'PRPDI ARSAE-MG / Copasa (MG)', desc:'Programa Regulatório de PD&I da Copasa com recursos tarifários escalonados (0,1% em 2022 → 0,2% em 2023 → 0,3% em 2024 da ROL), depositados em conta exclusiva. Plano plurianual ratificado pela ARSAE-MG; projetos de até 60 meses; royalties de PI divididos 50% modicidade tarifária / 50% Copasa. Base: Res. ARSAE-MG 154/2021 e 166/2022.', ticket:'0,1% → 0,3% da ROL (escalonado)' },
+    { nome:'Programa Quadrienal ARSESP (SP)', desc:'Programa quadrienal de PD&I das prestadoras paulistas (principal: Sabesp): 0,05% da Receita Requerida Direta por ano do ciclo tarifário. Prestadoras com receita requerida direta abaixo de R$ 250 mi/ano ficam desobrigadas. Executoras: universidades, fundações, centros de pesquisa e fabricantes. Base: Manual Técnico ARSESP S-0001/2019.', ticket:'0,05% da Receita Requerida Direta' },
+    { nome:'PD&I ARSP / Cesan (ES) — em definição', desc:'A ARSP prevê o PD&I como componente da equação tarifária da Cesan; o percentual ainda não foi fixado e depende do resultado da 2ª Revisão Tarifária (2º ciclo com início previsto para set/2026). Base: Res. ARSP 096/2026.', ticket:'a definir na 2ª RTO (2026)' }
   ];
   if (id === 'senai') return [
     { nome:'Smart Factory — BNDES/2026', desc:'ESCOPO: soluções de Indústria 4.0 para micro, pequenas e médias empresas (MPMEs) industriais. ARRANJO: Empresa Parceira (provedora de tecnologia, qualquer porte ou startup) + Instituto SENAI coordenador (ISI/IST) + mín. 12 empresas validadoras MPME (cada validadora em até 5 projetos). TRL: inicial 6–9, final 8–9 (eliminatório). CONTRAPARTIDA: MPME ≥30% (sendo ≥10% financeira); grande empresa ≥30% financeira. Duração 12 meses (+6).', ticket:'Até R$ 800 mil/projeto · Plataforma cobre até 70% · até R$ 22 mil/validadora' },
