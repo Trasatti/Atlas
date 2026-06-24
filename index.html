@@ -396,6 +396,7 @@ window.ATLAS_DATA = (() => {
     { id: 'saneamento', nome: 'Reguladoras de Saneamento', tipo: 'Reguladoras Estaduais', vinculo: 'Estados / ANA' },
     { id: 'mcti',    nome: 'MCTI',           tipo: 'Ministério',       vinculo: 'Governo Federal' },
     { id: 'mdic',    nome: 'MDIC',           tipo: 'Ministério',       vinculo: 'Governo Federal' },
+    { id: 'mma',     nome: 'MMA',            tipo: 'Ministério',       vinculo: 'Governo Federal' },
     { id: 'mover',   nome: 'Programa Mover', tipo: 'Programa Federal', vinculo: 'MDIC' },
     { id: 'senai',   nome: 'SENAI ISI',      tipo: 'Sistema Indústria', vinculo: 'CNI' },
     { id: 'faps',    nome: 'FAPs Estaduais', tipo: 'Fundações Estaduais', vinculo: 'Governos Estaduais' },
@@ -806,6 +807,47 @@ window.ATLAS_DATA = (() => {
         { label: 'InovaCPIN (CPSI)', url: 'https://inovacpin.org' }
       ],
       tags: ['CPSI','compras públicas','startups','encomenda tecnológica','poder de compra']
+    },
+    {
+      id: 'lei-reciclagem',
+      sigla: 'Lei da Reciclagem',
+      nome: 'Lei de Incentivo à Reciclagem (LIR — Lei 14.260/2021)',
+      categoria: 'Incentivo Fiscal',
+      agencia: 'mma',
+      dominios: ['ambiental','materiais','manufatura','tic'],
+      publicos: ['Empresas em Lucro Real (incentivadoras)','Pessoas físicas (doadoras)','Proponentes de projetos (empresas, cooperativas de catadores, OSCs, ICTs)'],
+      modalidade: 'Dedução do Imposto de Renda de doações/patrocínios a projetos aprovados (renúncia fiscal)',
+      ticket: 'Projetos de R$ 50 mil a R$ 8 mi por proponente; dedução de até 6% do IR (PF) e até ~1% (PJ Lucro Real, compartilhado com a Lei do Esporte)',
+      prazo: 'Janela anual de submissão (em 2026, até 30/07) — efeitos garantidos por 5 anos (art. 3º)',
+      resumo: 'A Lei de Incentivo à Reciclagem (LIR) permite que pessoas físicas e jurídicas deduzam do Imposto de Renda devido valores doados ou patrocinados a projetos aprovados da indústria e da cadeia produtiva da reciclagem. Cria ainda o Favorecicle (fundo de apoio) e o ProRecicle (fundos de investimento). É operada pelo MMA, com propostas submetidas via Transferegov.',
+      beneficios: [
+        'Renúncia fiscal: doações/patrocínios deduzidos do IR devido',
+        'Financia projetos de reciclagem, economia circular e inclusão de catadores',
+        'Pessoa física pode destinar até 6% do IR; PJ em Lucro Real até ~1%',
+        'Cria o Favorecicle (fundo de apoio) e o ProRecicle (fundos de investimento)'
+      ],
+      quemPode: 'Incentivadores: PF e PJ em Lucro Real com IR devido. Proponentes de projetos: empresas, cooperativas/empreendimentos de catadores, OSCs e ICTs com CNPJ regular, capacidade técnica e tempo mínimo de existência.',
+      naoSeAplica: 'Empresas no Simples ou Lucro Presumido como incentivadoras; projetos fora dos objetivos da Lei 14.260/2021 ou sem inclusão de catadores (salvo justificativa formal).',
+      comoAcessar: [
+        'Estudar a Portaria GM/MMA 1.250/2024 (regras, elegibilidade e metas-padrão)',
+        'Cadastrar-se e submeter a proposta no Transferegov, no programa da LIR do ano',
+        'Captar o mínimo exigido (20% do valor aprovado; 50% se houver obras) para avançar à análise técnica',
+        'Executar o projeto e prestar contas conforme o plano de trabalho'
+      ],
+      pegadinhas: [
+        'É preciso captar um mínimo (20%, ou 50% com obras) para o projeto avançar',
+        'Piso de R$ 50 mil e teto de R$ 8 mi por proponente',
+        'Concorre com a Lei de Incentivo ao Esporte pelo mesmo limite de dedução da PJ',
+        'Inclusão de empreendimentos de catadores é avaliada (ou exige justificativa formal)',
+        'Prazo de 5 anos (art. 3º) — vigência do incentivo ainda em consolidação'
+      ],
+      base: 'Lei 14.260/2021; Decreto 12.106/2024; Portaria GM/MMA 1.250/2024',
+      links: [
+        { label: 'MMA — Lei de Incentivo à Reciclagem', url: 'https://www.gov.br/mma/' },
+        { label: 'SINIR', url: 'https://sinir.gov.br/' },
+        { label: 'Transferegov', url: 'https://www.gov.br/transferegov/pt-br' }
+      ],
+      tags: ['incentivo fiscal','reciclagem','economia circular','catadores','MMA']
     },
     {
       id: 'anp-pdi',
@@ -25299,6 +25341,11 @@ window.ANTT_PROJETOS = [["Redução de acidentes rodoviários por intervenções
 window.ANTT_PROJETOS_COLS = ["pesquisa", "concessionaria", "tema", "situacao", "inicio", "fim", "valor", "duracao", "processo"];
 window.ANTT_PROJETOS_STATS = [{"tema": "Soluções Tecnológicas aplicadas à Infraestrutura", "total": 56223905.66, "n": 34}, {"tema": "Pavimentação", "total": 52644019.78, "n": 55}, {"tema": "Segurança Viária", "total": 24703881.17, "n": 17}, {"tema": "Geotecnia", "total": 14201763.15, "n": 13}, {"tema": "Operação Rodoviária", "total": 14118430.05, "n": 9}, {"tema": "Gestão da Rodovia", "total": 10586603.4, "n": 20}, {"tema": "Receitas da concessão", "total": 9678427.56, "n": 6}, {"tema": "Meio Ambiente", "total": 3937838.64, "n": 6}, {"tema": "Capacitação", "total": 3864489.89, "n": 3}, {"tema": "Obras de Arte (Especial e Corrente)", "total": 79175.0, "n": 1}];
 
+/* ---- leireciclagem.js ---- */
+window.LEIRECICLAGEM_PROJETOS = [["GAIA PROJETOS E CONSULTORIA SOCIOAMBIENTAIS LTDA", "RS", "S?O LEOPOLDO", "Em Captação", 5312100.0, "0 %", "Produzir casas modulares utilizando materiais sustent?veis, com baixo custo e r?pida instala??o para atender as fam?lias de catadoras e catadores de res?duos, com foco, mas n?o se limitando a fam?lias chefiadas por mulheres. O projeto visa captar recursos para a produ??o de 30 casas modulares sustent?veis mobiliadas de 40 m?. Essas unidades habitacionais ser?o constru?das a partir do reaproveitamento de res?duos de containers mar?timos e contar?o com um sistema de capta??o de ?gua da chuva para reaproveitamento domiciliar e pain?is solares para gera??o de energia el?trica. Este modelo de casas apresenta um custo de fabrica??o menor em compara??o ?s casas convencionais de alvenaria, gera res?duos m?nimos durante o processo de constru??o e montagem e pode ser instalado em at? 3 dias. Al?m de serem resistentes ?s intemp?ries, essas unidades habitacionais modulares requerem um baixo n?vel de prepara??o do solo para a instala??o e podem ser integralmente realocadas para outros locais sem preju?zo ? sua estrutura. Al?m das casas citadas acima, o projeto prev? a constru??o de um espa?o compartilhado de trabalho para as catadoras e catadores aut?nomos. Este espa?o objetiva garantir condi??es dignas para o trabalho para estes, al?m de visar desestimular que os res?duos coletados sejam alocados em suas resid?ncias e arredores. O espa?o, um Centro de Triagem Compartilhado, dotado de 30 boxes (um para cada fam?lia beneficiada) no qual poder?o ser realizados a triagem e o armazenamento dos res?duos. Ainda, uma ?rea reservada para trabalhos coletivos, dotado de uma esteira de triagem de 10m, duas prensas hidr?ulicas de 32ton, balan?a digital de at? 500kg e uma paleteira hidr?ulica. Contemplar? ainda o local uma ?rea reservada para banheiros/vesti?rios, refeit?rio e um escrit?rio. O pavilh?o tamb?m contar? com estrutura de capta??o e aproveitamento de ?gua da chuva, bem como pain?is solares para gera??o de energia el?trica. O projeto prev? que as fam?lias sejam acompanhadas por profissionais especializados (servi?o social, sa?de e psicologia). N?o ? premissa que as catadoras e catadores aut?nomos formem uma cooperativa no espa?o disponibilizado. Esta poder? ser uma op??o, desde que esta seja uma vontade do coletivo de fam?lias beneficiadas. A ?nica premissa do projeto ? que catadoras e catadores, em sua autonomia, tenham a op??o de trabalhar em um ambiente com condi??es adequadas e salubres. Se for o desejo do coletivo constituir-se em uma cooperativa, o projeto ofertar? acompanhamento t?cnico especializado para tal. Olhando pela perspectiva de fortalecimento visando inclus?o de catadoras e catadores nos diversos eixos de trabalho e de tomada de decis?es do setor da reciclagem, o projeto prover? forma??o t?cnico-administrativa dos catadores, orientando-os em temas chave para seu desenvolvimento profissional (Cooperativismo; Justi?a de G?nero; Administra??o, Marketing e Comunica??o; Empreendedorismo e Educa??o Financeira; Produ??o e Qualidade)."], ["INCENTIVE PROJETOS E CAPACITACOES LTDA", "SC", "FLORIAN?POLIS", "Em Execução", 1415280.0, "0 %", "Este projeto tem por finalidade difundir o conhecimento sobre o uso de incentivo fiscal para o fomento da reciclagem, que se dar? atrav?s da produ??o e distribui??o de cartilhas da Lei de Incentivo ? Reciclagem ? LIR, e da ministra??o de cursos. O projeto serve para trazer conhecimento a quem precisa, e fomentar a cadeira produtiva da reciclagem atrav?s de projetos. Objetivos Espec?ficos:- produzir, imprimir e distribuir uma Cartilha sobre a Lei de Incentivo ? Reciclagem (2.000 exemplares)- ministrar at? 5 cursos sobre o tema em diversas regi?es do pa?s"], ["PRESERVA - RECICLAGEM DE OLEOS VEGETAIS LTDA", "SP", "COTIA", "Em Captação", 1592071.87, "0 %", "O projeto \"Preserva Recicla ? Reestrutura??o\" tem como objetivo modernizar as opera??es da empresa, focando na efici?ncia da coleta seletiva de ?leos e gorduras residuais (OGR). Para isso, ser?o adquiridos uma prensa hidr?ulica enfardadeira para garrafas PET e seis novos ve?culos, sendo 1 el?trico. Essa iniciativa n?o apenas aumentar? a efici?ncia na coleta seletiva, mas tamb?m reduzir? custos operacionais e emiss?es de poluentes. Outro objetivo ? a instala??o de kits de adapta??o para os ve?culos para adequa??o de seguran?a, bem como a instala??o adequada da prensa hidr?ulica.A renova??o da frota incluir? a adapta??o dos ve?culos para a coleta de materiais, visando otimizar o atendimento aos pontos de entrega volunt?ria (PEVs) e ?s cooperativas de reciclagem parceiras. Os ve?culos atender?o ? crescente demanda por reciclagem de ?leos vegetais, refor?ando o compromisso da Preserva Recicla com pr?ticas sustent?veis e responsabilidade ambiental visto que os ve?culos s?o substancialmente mais econ?micos e seguros que os atuais. A prensa hidr?ulica permitir? o enfardamento interno das garrafas PET, agregando valor ao material que ser? destinado ?s cooperativas, garantindo uma opera??o mais eficiente e colaborativa.Complementarmente, o projeto contemplar? a adesiva??o dos ve?culos com a identidade visual da Preserva Recicla e o desenvolvimento de uma estrat?gia de divulga??o do projeto, comunicando as a??es para o grande p?blico e parceiros envolvidos como: empresas, cooperativas etc. A comunica??o ser? desenvolvida atrav?s de redes sociais, v?deos, meios de comunica??o, entre outros materiais produzidos. Importante ressaltar que a campanha estar? de acordo com o termo de responsabilidade, presente na portaria PORTARIA GM/MMA N? 1.250, DE 13 DE DEZEMBRO DE 2024.Com essa reestrutura??o, a Preserva Recicla busca otimizar suas opera??es de coleta seletiva, promover o uso de outras matrizes energ?ticas e principalmente fortalecer o setor da reciclagem no Brasil."], ["REDERESIDUOS INOVACOES PARA ECONOMIA CIRCULAR LTDA", "SP", "COTIA", "Em Captação", 928600.0, "0 %", "O projeto XRRCoopV3 visa otimizar a gest?o de res?duos s?lidos atrav?s da plataforma digital REDERES?DUOS, que foi expandida para atender n?o apenas a cooperativas, mas a todos os entes eleg?veis para submeter projetos ? Lei de Incentivo ? Reciclagem (LIR). A iniciativa conecta os diversos atores da cadeia produtiva, como geradores, cooperativas e ind?stria2.Para isso, o projeto incorpora um m?dulo especializado de Gest?o e Reporte para a LIR, desenhado para suprir as exig?ncias de monitoramento, transpar?ncia e presta??o de contas do programa. Esta funcionalidade permitir? aos proponentes:Monitoramento Centralizado: Realizar o acompanhamento cont?nuo da execu??o f?sica e financeira de seus projetos, alinhando despesas e atividades ?s metas e cronogramas aprovados3.Registro de Evid?ncias Verific?veis: Criar um reposit?rio digital para anexar e organizar todas as evid?ncias exigidas, como relat?rios fotogr?ficos, notas fiscais e recibos.Gera??o de Relat?rios para a LIR: Gerar relat?rios automatizados e padronizados para a presta??o de contas.Alinhamento com Sistemas Nacionais: Assegurar a conformidade e a rastreabilidade por meio de ferramentas alinhadas a sistemas como o Manifesto de Transporte de Res?duos (MTR) e o Sistema Nacional de Informa??es sobre a Gest?o dos Res?duos S?lidos (SINIR).Dessa forma, a plataforma se posiciona como uma ferramenta de suporte para todos os projetos aprovados no ?mbito da LIR, facilitando a gest?o e garantindo a conformidade."], ["SOCIEDADE HOSPITALAR ANGELINA CARON", "PR", "CAMPINA GRANDE DO SUL", "Em Captação", 4893808.55, "0 %", "Implementar um sistema avan?ado e sustent?vel de gest?o de res?duos recicl?veis no Hospital Angelina Caron, visando a amplia??o da efici?ncia na triagem, separa??o, tratamento e destina??o de res?duos s?lidos gerados na institui??o. A proposta contempla a aquisi??o de equipamentos modernos, qualifica??o t?cnica da equipe e ado??o de solu??es sustent?veis, como sistemas de biodigest?o, energia solar e reutiliza??o de ?gua.O projeto tem como objetivos espec?ficos: Agregar valor aos materiais recicl?veisReduzir o volume de res?duos enviados para aterros sanit?riosPromover a autossustentabilidade energ?tica e h?drica da Central de Triagem de Res?duos (CTR)Minimizar a emiss?o de gases de efeito estufa por meio da utiliza??o de ve?culos el?tricos no transporte internoFomentar a conscientiza??o ambiental entre colaboradores e pacientes, fortalecendo a cadeia produtiva da reciclagem e contribuindo para o desenvolvimento sustent?vel da regi?o.T?tulo do Projeto: Sa?de Circular: Triagem e Gest?o Sustent?vel de Res?duos"], ["USINA INDUSTRIAL LTDA", "RS", "PORT?O", "Em Captação", 2999940.0, "0 %", "O projeto tem como objetivo desenvolver um m?todo inovador de coleta de res?duos em condom?nios residenciais, gerando valor para todos os envolvidos: consumidores (geradores), condom?nios, cooperativas e ind?strias. No contexto do projeto, forneceremos coletores identificados por tipo de res?duo para moradores e condom?nios e faremos capacita??o sobre educa??o ambiental e reciclagem, visando melhorar a qualidade de separa??o, aumentar a receita das cooperativas e catadores aut?nomos, bem como otimizar volume e qualidade de res?duos p?s-consumo que servir?o de mat?ria-prima para as ind?strias. O projeto prev? o atendimento a moradores do Vale do Rio dos Sinos, no RS."], ["VIRANDO A TERRA LTDA", "RS", "S?O LEOPOLDO", "Em Captação", 1983975.0, "0 %", "Esse projeto pretende ampliar a capacidade de compostagem da Virando a Terra e intensificar as a??es de educa??o ambiental, abordando desde a coleta seletiva na fonte at? a conscientiza??o de diferentes p?blicos, em conson?ncia com os resultados e recomenda??es do Diagn?stico Tem?tico ? Vis?o Geral dos Res?duos S?lidos (SNIS, 2023) e em alinhamento com a Portaria GM/MMA n? 1.250/2024. Trata-se de uma a??o conjunta, que promove benef?cios ambientais, sociais e econ?micos, refor?ando a relev?ncia dos incentivos fiscais como ferramenta para impulsionar a economia circular no pa?s."]];
+window.LEIRECICLAGEM_PROJETOS_COLS = ["proponente", "uf", "municipio", "situacao", "valor", "captacao", "objeto"];
+window.LEIRECICLAGEM_STATS = [{"situacao": "Em Captação", "n": 6}, {"situacao": "Em Execução", "n": 1}];
+
 /* ATLAS-NOVOS-DATASETS-END */
   </script>
   <script>
@@ -26820,6 +26867,17 @@ function InstrumentoDetalhe({ id }) {
               Empresas habilitadas aos benefícios da Lei de Informática mediante cumprimento do Processo Produtivo Básico (PPB). <span className="mono" style={{ color:'var(--text-4)' }}>Fonte: MCTI — Lista de Empresas Habilitadas.</span>
             </p>
             <ProjetosTabela kind="leiinfo"/>
+          </SubSection>
+        </>
+      )}
+      {id === 'lei-reciclagem' && (window.LEIRECICLAGEM_PROJETOS || []).length > 0 && (
+        <>
+          <div className="divider"/>
+          <SubSection num="05" title="Projetos aprovados na Lei de Incentivo à Reciclagem">
+            <p style={{ color:'var(--text-2)', fontSize:13.5, lineHeight:1.6, margin:'0 0 16px', maxWidth:'80ch' }}>
+              Projetos aprovados no mecanismo da LIR (em captação ou execução), com proponente, situação, valor solicitado e percentual já captado. <span className="mono" style={{ color:'var(--text-4)' }}>Fonte: MMA — Lei de Incentivo à Reciclagem (Transferegov/SINIR).</span>
+            </p>
+            <ProjetosTabela kind="leireciclagem"/>
           </SubSection>
         </>
       )}
@@ -28800,6 +28858,14 @@ const AGENTE_PERFIS = {
     cobertura: 'NIB 2024-2033 · 6 missões estratégicas · R$ 300 bi+ em instrumentos coordenados',
     hero: 'Política industrial e Nova Indústria Brasil (NIB)'
   },
+  mma: {
+    sobre: 'O MMA (Ministério do Meio Ambiente e Mudança do Clima) coordena a política ambiental federal. No fomento à inovação, opera a Lei de Incentivo à Reciclagem (LIR, Lei 14.260/2021): incentivo fiscal que permite a pessoas físicas e jurídicas deduzir do Imposto de Renda doações e patrocínios a projetos aprovados da indústria e da cadeia produtiva da reciclagem, com submissão via Transferegov.',
+    site: 'https://www.gov.br/mma/',
+    criada: '1992',
+    natureza: 'Ministério',
+    cobertura: 'Lei de Incentivo à Reciclagem (LIR) · Favorecicle e ProRecicle · Portaria GM/MMA 1.250/2024',
+    hero: 'Incentivo fiscal à reciclagem (LIR) e política ambiental'
+  },
   mover: {
     sobre: 'O Programa Mover (Mobilidade Verde e Inovação) é a política federal para o setor automotivo (Lei 14.902/2024, sucessor do Rota 2030). Concede crédito financeiro proporcional a investimentos em PD&I, descarbonização, eletrificação e segurança veicular.',
     site: 'https://www.gov.br/mdic/pt-br/assuntos/competitividade-industrial/mover',
@@ -28981,6 +29047,7 @@ function AgenteDetalhe({ id }) {
   const nEmpEletrico = (window.ANEEL_EMPRESAS || []).length;
   const nFndct       = (window.FNDCT_PROJETOS || []).length;
   const nPatentes    = (window.INPI_PATENTES || []).length;
+  const nLir         = (window.LEIRECICLAGEM_PROJETOS || []).length;
   const isMcti = id === 'mcti';
 
   const secoes = [
@@ -28997,7 +29064,8 @@ function AgenteDetalhe({ id }) {
         { id:'leidobem', label:'Lei do Bem',         icon: I.money },
         { id:'leiinfo',  label:'Lei de Informática', icon: I.book }
       ] : []),
-    ...(id === 'inpi' && nPatentes > 0 ? [{ id:'patentes', label:`Pedidos no INPI (${nPatentes.toLocaleString('pt-BR')})`, icon: I.spark }] : [])
+    ...(id === 'inpi' && nPatentes > 0 ? [{ id:'patentes', label:`Pedidos no INPI (${nPatentes.toLocaleString('pt-BR')})`, icon: I.spark }] : []),
+    ...(id === 'mma' && nLir > 0 ? [{ id:'lir', label:`Lei da Reciclagem (${nLir.toLocaleString('pt-BR')})`, icon: I.spark }] : [])
   ];
 
   return (
@@ -29240,6 +29308,14 @@ function AgenteDetalhe({ id }) {
           <ProjetosTabela kind="inpi_patentes"/>
         </div>
       )}
+      {secao === 'lir'      && id === 'mma'      && (
+        <div>
+          <p style={{ color:'var(--text-2)', fontSize:13.5, lineHeight:1.6, margin:'0 0 16px', maxWidth:'80ch' }}>
+            Projetos aprovados na <strong>Lei de Incentivo à Reciclagem</strong> (LIR — Lei 14.260/2021), em captação ou execução, com proponente, situação, valor solicitado e percentual captado. <span className="mono" style={{ color:'var(--text-4)' }}>Fonte: MMA — LIR (Transferegov/SINIR).</span>
+          </p>
+          <ProjetosTabela kind="leireciclagem"/>
+        </div>
+      )}
     </div>
   );
 }
@@ -29415,6 +29491,24 @@ function ProjetosTabela({ kind }) {
       searchIdx: [0, 1, 2, 8],
       searchPlaceholder: 'Buscar por pesquisa, concessionária ou nº do processo…',
       itemNoun: 'projetos'
+    },
+    leireciclagem: {
+      rows: window.LEIRECICLAGEM_PROJETOS || [],
+      cols: window.LEIRECICLAGEM_PROJETOS_COLS || [],
+      stats: window.LEIRECICLAGEM_STATS || [],
+      statsLabel: 'Projetos aprovados por situação',
+      statsKey: 'situacao',
+      statKind: 'count',
+      filterDefs: [
+        { key:'situacao', label:'Situação', idx:3 },
+        { key:'uf', label:'UF', idx:1 }
+      ],
+      valueIdx: 4,
+      titleCols: [{idx:0, label:'Proponente', width:'minmax(300px,3fr)'}, {idx:1, label:'UF', width:'60px'}, {idx:3, label:'Situação', width:'130px'}, {idx:4, label:'Valor solicitado', width:'140px', isMoney:true}, {idx:5, label:'Captação', width:'100px'}],
+      searchIdx: [0, 2, 6],
+      searchPlaceholder: 'Buscar projeto por proponente ou objeto…',
+      itemNoun: 'projetos',
+      defaultSortIdx: 0, defaultSortDesc: false
     }
   };
   const cfg = CFGS[kind] || CFGS.finep;
