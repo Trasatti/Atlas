@@ -996,9 +996,9 @@ window.ATLAS_DATA = (() => {
       dominios: DOMINIOS.map(d=>d.id),
       publicos: ['ICTs e universidades','Estados e municípios','OSCs sem fins lucrativos','Fundações de apoio','OS vinculadas ao MCTI'],
       modalidade: 'Transferência especial (repasse direto ao ente, "tipo PIX") ou transferência com finalidade definida (convênio/TED/termo via Transferegov)',
-      ticket: 'Variável — individuais até 2% da RCL (~R$ 38 mi/deputado, ~R$ 70 mi/senador); bancada 1% da RCL. No MCTI, projetos de R$ 200 mil a R$ 10 mi',
-      prazo: 'Ciclo orçamentário anual (PLOA até 31/ago → LOA até 22/dez → execução no exercício seguinte)',
-      resumo: 'Instrumento pelo qual deputados e senadores destinam recursos do Orçamento da União a entes públicos, ICTs e OSCs. No MCTI, financiam PD&I, infraestrutura laboratorial, ambientes inovadores e popularização da ciência. Emendas individuais (RP6) e de bancada (RP7) são impositivas — execução obrigatória, salvo impedimento de ordem técnica (CF art. 166 e 166-A; LC 210/2024).',
+      ticket: 'Variável — individuais até 2% da RCL (ordem de ~R$ 40 mi/deputado e ~R$ 70 mi/senador); bancada 1% da RCL (limites por parlamentar atualizados a cada LOA). No MCTI, projetos de R$ 200 mil a R$ 10 mi',
+      prazo: 'Ciclo orçamentário anual — vigente: PLOA 2026 (enviado em ago/2025) → LOA 2026 → execução em 2026. Cada ministério publica anualmente sua Cartilha de Emendas do ano',
+      resumo: 'Instrumento pelo qual deputados e senadores destinam recursos do Orçamento da União a entes públicos, ICTs e OSCs. No MCTI, financiam PD&I, infraestrutura laboratorial, ambientes inovadores e popularização da ciência. Emendas individuais (RP6) e de bancada (RP7) são impositivas — execução obrigatória, salvo impedimento de ordem técnica (CF art. 166 e 166-A; LC 210/2024). No ciclo PLOA 2026, cada ministério (MCTI, Saúde/FNS, MDS, Justiça, Cultura…) publica sua Cartilha de Emendas com as ações elegíveis e os valores de referência do ano.',
       beneficios: [
         'Caráter impositivo das emendas individuais e de bancada (execução obrigatória pelo Executivo)',
         'Dispensa de chamamento público para OSCs (art. 29 da Lei 13.019/2014)',
@@ -1008,7 +1008,7 @@ window.ATLAS_DATA = (() => {
       quemPode: 'ICTs e entidades federais (aplicação direta/TED), estados e municípios (convênio ou transferência especial) e OSCs com 3+ anos e regularidade (termo de colaboração/fomento). A emenda é sempre indicada por um parlamentar.',
       naoSeAplica: 'Pessoa física; despesas com pessoal e serviço da dívida; objeto incompatível com a ação orçamentária. A transferência especial exige ≥70% em despesas de capital.',
       comoAcessar: [
-        'Mapear ações elegíveis do MCTI e definir o projeto (escopo, valor, funcional programática)',
+        'Consultar a Cartilha de Emendas do ano (PLOA 2026) do ministério da área — MCTI para CT&I — com ações elegíveis, funcionais programáticas e valores de referência',
         'Articular com o(s) parlamentar(es) e formalizar a indicação na LOA (via SIOP/CMO)',
         'Cadastrar a proposta/plano de trabalho no Transferegov dentro do cronograma anual',
         'Celebrar o instrumento (convênio/TED/termo), executar e prestar contas (até 60 dias após a vigência)'
@@ -1026,7 +1026,7 @@ window.ATLAS_DATA = (() => {
         { label: 'Câmara — Emendas / Orçamento', url: 'https://www.camara.leg.br/orcamento-da-uniao/emendas' },
         { label: 'MCTI', url: 'https://www.gov.br/mcti/' }
       ],
-      tags: ['orçamentário','impositiva','Transferegov','transferência especial','ICT']
+      tags: ['orçamentário','impositiva','Transferegov','transferência especial','ICT','PLOA 2026']
     },
     {
       id: 'senai-isi',
