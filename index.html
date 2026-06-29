@@ -28131,184 +28131,420 @@ function Glossario() {
 /* ════════════════════════════════════════════════════════════
    SIMULADOR — recomenda instrumentos a partir de 4 perguntas
    ════════════════════════════════════════════════════════════ */
+/* ===== Simulador de Fomentos — catálogo de instrumentos + motor de pontuação ===== */
+// Cada entrada referencia (quando existe) o instrumento (instrId) e/ou agente (agenteId) do Atlas
+// para cross-link. Metadados dirigem a pontuação genérica; elimIf aplica filtros eliminatórios.
+const SIM_CATALOGO = [
+  { id:'embrapii', nome:'EMBRAPII', tipo:'Não-reembolsável · cofinanciamento com Unidade EMBRAPII', instrId:'embrapii', agenteId:'embrapii',
+    trl:[3,7], portes:['micro','pequena','media','grande','startup'], setores:'all', apoio:['nao-reemb','lab'],
+    risco:['alto','medio'], parceiro:['embrapii','senai','ict','universidade'],
+    objetivos:['novo-produto','novo-processo','melhorar','prototipo','prova-conceito'], resultados:['prototipo','mvp','produto','processo','patente'],
+    orcamentos:['300ka1mi','1a5mi','5a30mi'], contrapartidas:['ate10','10a30','30a50','acima50'],
+    elimIf:a=>a.contrapartida==='nao', elimMsg:'EMBRAPII exige contrapartida financeira da empresa.',
+    msg:'Forte aderência se houver desenvolvimento tecnológico (TRL 3–7) em parceria com uma Unidade EMBRAPII e contrapartida financeira.' },
+
+  { id:'embrapii-sebrae', nome:'EMBRAPII + Sebrae', tipo:'Não-reembolsável · contrapartida subsidiada (ME/EPP/startup)', instrId:'embrapii', agenteId:'sebrae',
+    trl:[3,7], portes:['mei','micro','pequena','startup'], setores:'all', apoio:['nao-reemb','lab'],
+    risco:['alto','medio'], parceiro:['embrapii','senai','ict'], objetivos:['novo-produto','novo-processo','prototipo','melhorar'],
+    resultados:['prototipo','mvp','produto'], orcamentos:['80a300k','300ka1mi','1a5mi'], contrapartidas:['ate10','10a30','30a50'],
+    elimIf:a=>['media','grande','ict'].includes(a.porte)||a.contrapartida==='nao',
+    elimMsg:'Modelo EMBRAPII+Sebrae é para ME/EPP/startups COM contrapartida financeira (o Sebrae subsidia parte dela, mas não a substitui).',
+    bonus:(a,add)=>{ if(['startup','micro'].includes(a.porte)) add(8,'Porte ideal para EMBRAPII+Sebrae'); },
+    msg:'Excelente para pequenas empresas e startups: reduz risco e custo do desenvolvimento com Unidade EMBRAPII, sem esperar edital. A empresa sempre aporta contrapartida financeira.' },
+
+  { id:'finep-subvencao', nome:'Finep Subvenção Econômica', tipo:'Não-reembolsável', instrId:'finep-subvencao', agenteId:'finep',
+    trl:[3,7], portes:['micro','pequena','media','grande','startup'], setores:'all', apoio:['nao-reemb'],
+    risco:['alto','medio'], objetivos:['novo-produto','novo-processo','prototipo','prova-conceito'], resultados:['prototipo','mvp','produto'],
+    orcamentos:['300ka1mi','1a5mi','5a30mi'], contrapartidas:['ate10','10a30','30a50','acima50'],
+    elimIf:a=>a.risco==='baixo', elimMsg:'A subvenção econômica exige risco tecnológico (seu projeto foi marcado como baixo risco).',
+    bonus:(a,add)=>{ if(['agro','saude','energia','tic','hardware','defesa','circular','mineracao','construcao','industria40','biotec'].includes(a.setor)) add(12,'Setor prioritário da Nova Indústria Brasil'); },
+    msg:'Indicada para projetos com risco tecnológico em setores prioritários da NIB, com capacidade de execução e contrapartida.' },
+
+  { id:'finep-credito', nome:'Finep Crédito / Mais Inovação', tipo:'Financiamento reembolsável (juros reduzidos)', instrId:'finep-mais-inovacao', agenteId:'finep',
+    trl:[5,9], portes:['pequena','media','grande'], setores:'all', apoio:['financiamento'],
+    risco:['medio','baixo'], objetivos:['escalar','novo-processo','equipamento','digitalizar'], resultados:['produto','escala','processo'],
+    orcamentos:['1a5mi','5a30mi','acima30mi'],
+    msg:'Para projetos maiores e implantação produtiva, com plano robusto de inovação aderente à NIB e capacidade de pagamento.' },
+
+  { id:'finep-inovacred', nome:'Finep Inovacred', tipo:'Financiamento descentralizado (MPME)', instrId:'finep-inovacred', agenteId:'finep',
+    trl:[5,9], portes:['micro','pequena','media'], setores:'all', apoio:['financiamento'],
+    objetivos:['equipamento','escalar','digitalizar','novo-processo','melhorar'], orcamentos:['300ka1mi','1a5mi','5a30mi'],
+    msg:'Crédito de inovação para MPME via agentes financeiros regionais — equipamentos, software, serviços, equipe e infraestrutura.' },
+
+  { id:'finep-tecnova', nome:'Tecnova (FINEP + FAPs)', tipo:'Subvenção descentralizada (micro/pequena)', instrId:'finep-tecnova', agenteId:'finep',
+    trl:[3,6], portes:['micro','pequena'], setores:'all', apoio:['nao-reemb'], risco:['alto','medio'],
+    objetivos:['novo-produto','novo-processo','prototipo'], orcamentos:['80a300k','300ka1mi'],
+    elimIf:a=>!['mei','micro','pequena','startup'].includes(a.porte), elimMsg:'Tecnova é restrita a micro e pequenas empresas (dentro do teto de faturamento do edital).',
+    msg:'Subvenção para micro/pequenas com risco tecnológico e potencial de mercado, operada via FAP estadual.' },
+
+  { id:'finep-centelha', nome:'Centelha', tipo:'Subvenção + bolsas + capacitação (ideação)', instrId:'finep-centelha', agenteId:'finep',
+    trl:[1,3], portes:['pf','mei','micro','startup'], setores:'all', apoio:['nao-reemb','bolsa','capacitacao'],
+    risco:['alto','medio'], objetivos:['prova-conceito','prototipo'], resultados:['prova-conceito','prototipo'], orcamentos:['ate80k','80a300k'],
+    elimIf:a=>['media','grande','ict'].includes(a.porte)||a.trl>5, elimMsg:'Centelha é para ideias/empresas nascentes em estágio inicial — não para empresas maduras ou em escala comercial.',
+    msg:'Primeiro impulso para ideias inovadoras e empresas nascentes (TRL 1–3): subvenção, bolsa e capacitação.' },
+
+  { id:'finep-startup', nome:'Finep Startup', tipo:'Investimento / aceleração', instrId:'finep-startup', agenteId:'finep',
+    trl:[4,8], portes:['startup','micro','pequena'], setores:'all', apoio:['investimento','nao-reemb'],
+    objetivos:['escalar','novo-produto'], parceiro:['ancora'], resultados:['mvp','produto','contrato'],
+    msg:'Aporte conversível/investimento para startups com produto desenvolvido, quando houver chamada aberta.' },
+
+  { id:'lei-do-bem', nome:'Lei do Bem', tipo:'Incentivo fiscal (Lucro Real)', instrId:'lei-do-bem', agenteId:'mcti',
+    trl:[4,9], portes:['pequena','media','grande'], setores:'all', apoio:['fiscal'], risco:['alto','medio'],
+    objetivos:['novo-produto','novo-processo','melhorar','pesquisadores','pi'], resultados:['produto','patente','processo'],
+    elimIf:a=>a.regime!=='real', elimMsg:'A Lei do Bem exige regime de Lucro Real (seu regime é outro).',
+    msg:'Não é edital, é incentivo fiscal: empresa em Lucro Real com P&D contínuo recupera parte relevante dos dispêndios no IRPJ/CSLL.' },
+
+  { id:'lei-informatica', nome:'Lei de Informática (Lei de TICs)', tipo:'Crédito financeiro setorial', instrId:'lei-informatica', agenteId:'mdic',
+    trl:[5,9], portes:['pequena','media','grande'], setores:['hardware','tic'], apoio:['fiscal','financiamento'],
+    objetivos:['novo-produto','novo-processo','escalar'], orcamentos:['1a5mi','5a30mi','acima30mi'],
+    elimIf:a=>!['hardware','tic'].includes(a.setor), elimMsg:'A Lei de TICs é para bens de TIC, hardware, automação e telecomunicações.',
+    bonus:(a,add)=>{ if(a.setor==='hardware') add(10,'Hardware/eletrônica com produção nacional'); },
+    msg:'Para empresas que produzem bens de TIC/hardware com PPB e investimento estruturado em PD&I.' },
+
+  { id:'padis', nome:'PADIS / Brasil Semicon', tipo:'Incentivo fiscal setorial (semicondutores)', instrId:'padis', agenteId:'mdic',
+    trl:[4,9], portes:['media','grande'], setores:['hardware'], apoio:['fiscal'],
+    elimIf:a=>a.setor!=='hardware', elimMsg:'PADIS/Brasil Semicon é específico para semicondutores, displays e componentes estratégicos.',
+    msg:'Política setorial para semicondutores, displays e componentes — design, fabricação, encapsulamento, teste ou insumos.' },
+
+  { id:'mover', nome:'MOVER — Mobilidade Verde', tipo:'Incentivo fiscal + crédito (automotivo)', instrId:'mover', agenteId:'mover',
+    trl:[5,9], portes:['media','grande','pequena'], setores:['automotivo'], apoio:['fiscal','financiamento'],
+    objetivos:['novo-produto','novo-processo','emissoes'], resultados:['produto','emissoes','escala'],
+    elimIf:a=>a.setor!=='automotivo', elimMsg:'MOVER é restrito ao setor automotivo/mobilidade.',
+    bonus:(a,add)=>{ if(a.regime==='real') add(12,'Lucro Real ativa o crédito fiscal do MOVER'); if(a.objetivo==='emissoes') add(8,'Descarbonização/eficiência'); },
+    msg:'Crédito para PD&I, eletrificação, descarbonização e segurança veicular no setor automotivo (preferencialmente Lucro Real).' },
+
+  { id:'bndes-mais-inovacao', nome:'BNDES Mais Inovação', tipo:'Financiamento', instrId:'bndes-mais-inovacao-direto', agenteId:'bndes',
+    trl:[5,9], portes:['pequena','media','grande'], setores:'all', apoio:['financiamento'],
+    risco:['medio','baixo'], objetivos:['digitalizar','equipamento','escalar','produtividade','novo-processo'], resultados:['produto','escala','processo'],
+    orcamentos:['1a5mi','5a30mi','acima30mi'],
+    msg:'Crédito para inovação empresarial, indústria 4.0, digitalização, aquisição de máquinas/equipamentos inovadores e centros de P&D.' },
+
+  { id:'bndes-fundo-clima', nome:'BNDES Fundo Clima', tipo:'Financiamento climático', instrId:'bndes-fundo-clima', agenteId:'bndes',
+    trl:[5,9], portes:['pequena','media','grande'], setores:['energia','circular','saneamento','agro','mineracao','construcao'], apoio:['financiamento'],
+    objetivos:['emissoes','escalar','equipamento'], resultados:['emissoes','escala'], orcamentos:['1a5mi','5a30mi','acima30mi'],
+    bonus:(a,add)=>{ if(a.objetivo==='emissoes') add(14,'Redução de emissões / transição energética'); if(a.resultado==='emissoes') add(6,null); },
+    msg:'Financiamento climático: redução de emissões, transição/eficiência energética, bioeconomia, indústria verde e economia circular.' },
+
+  { id:'bndes-funtec', nome:'BNDES Funtec', tipo:'Não-reembolsável a ICTs (empresa âncora)', instrId:'bndes-funtec', agenteId:'bndes',
+    trl:[3,7], portes:['ict'], setores:'all', apoio:['nao-reemb'], parceiro:['ict','universidade','ancora','empresa'],
+    objetivos:['novo-produto','novo-processo','prova-conceito'],
+    msg:'Recurso não-reembolsável para ICTs em parceria com empresa âncora; PI compartilhada.' },
+
+  { id:'bndes-finame', nome:'BNDES Finame Baixo Carbono', tipo:'Crédito p/ máquinas e equipamentos', instrId:'bndes-finame-baixo-carbono', agenteId:'bndes',
+    trl:[7,9], portes:['micro','pequena','media','grande'], setores:'all', apoio:['financiamento'],
+    objetivos:['equipamento'], orcamentos:['300ka1mi','1a5mi','5a30mi'],
+    msg:'Financia a aquisição de máquinas/equipamentos credenciados (CFI) com etiqueta de inovação ou baixo carbono.' },
+
+  { id:'lei-reciclagem', nome:'Lei de Incentivo à Reciclagem (LIR)', tipo:'Incentivo fiscal via captação', instrId:'lei-reciclagem', agenteId:'mma',
+    trl:[3,9], portes:['micro','pequena','media','grande','coop','startup'], setores:['circular','saneamento'], apoio:['fiscal','nao-reemb'],
+    objetivos:['novo-processo','emissoes','novo-produto'], resultados:['emissoes','processo','produto'],
+    bonus:(a,add)=>{ if(a.setor==='circular') add(12,'Reciclagem / economia circular'); },
+    msg:'Projetos de reciclagem/economia circular captam recursos de patrocinadores (PF/PJ Lucro Real) que deduzem do IR; submissão ao MMA.' },
+
+  { id:'rhae', nome:'RHAE — Pesquisador na Empresa', tipo:'Bolsas para pesquisadores', instrId:'pse-rhae', agenteId:'cnpq',
+    trl:[2,7], portes:['micro','pequena','media','startup'], setores:'all', apoio:['bolsa'],
+    objetivos:['pesquisadores','novo-produto','novo-processo'],
+    bonus:(a,add)=>{ if(a.objetivo==='pesquisadores') add(18,'Contratação de mestres/doutores'); },
+    msg:'Bolsas para alocar mestres e doutores em empresas inovadoras com PD&I estruturado.' },
+
+  { id:'cnpq-bolsas', nome:'CNPq — Bolsas e Auxílios', tipo:'Bolsas / fomento à pesquisa', instrId:'cnpq-bolsas', agenteId:'cnpq',
+    trl:[1,4], portes:['ict','startup','micro'], setores:'all', apoio:['bolsa'],
+    objetivos:['pesquisadores','pi'], resultados:['artigo','prova-conceito'],
+    msg:'Bolsas e auxílios para pesquisa (Universal, temáticas, formação) — base científica e talento qualificado.' },
+
+  { id:'pipe-fapesp', nome:'PIPE / FAPs (pesquisa na pequena empresa)', tipo:'Subvenção estadual à pesquisa', instrId:'pipe-fapesp', agenteId:'faps',
+    trl:[2,6], portes:['micro','pequena','startup'], setores:'all', apoio:['nao-reemb','bolsa'], regioes:['sudeste'],
+    objetivos:['prova-conceito','prototipo'], resultados:['prova-conceito','prototipo'],
+    bonus:(a,add)=>{ if(a.regiao==='sudeste') add(8,'PIPE/FAPESP disponível em SP'); },
+    msg:'Pesquisa inovativa em pequenas empresas com base científica (PIPE/FAPESP e equivalentes), conforme a FAP do estado.' },
+
+  { id:'faps', nome:'FAPs Estaduais', tipo:'Fomento descentralizado (varia por UF)', instrId:'faps', agenteId:'faps',
+    trl:[1,6], portes:['pf','mei','micro','pequena','startup','ict'], setores:'all', apoio:['nao-reemb','bolsa'],
+    regioes:['norte','nordeste','centro-oeste','sudeste','sul'], objetivos:['prova-conceito','prototipo','pesquisadores'],
+    msg:'Programas da Fundação de Amparo à Pesquisa do seu estado (Tecnova, Centelha, PIPE/Pappe). Verifique edital ativo na UF.' },
+
+  { id:'sebrae-bmp', nome:'Sebrae / Brasil Mais Produtivo / ALI', tipo:'Capacitação e produtividade', instrId:'sebrae-aliancas', agenteId:'sebrae',
+    trl:[5,9], portes:['mei','micro','pequena'], setores:'all', apoio:['capacitacao'], risco:['baixo','medio'],
+    objetivos:['digitalizar','produtividade','melhorar'], resultados:['processo'],
+    msg:'Consultoria, mentoria e produtividade para MPE (Brasil Mais Produtivo, ALI) — foco em processos e digitalização, não em P&D profundo.' },
+
+  { id:'sebrae-catalisa', nome:'Sebrae Catalisa ICT / Startups', tipo:'Aceleração de base tecnológica', instrId:'sebrae-catalisa-ict', agenteId:'sebrae',
+    trl:[2,5], portes:['pf','micro','startup'], setores:'all', apoio:['capacitacao','investimento'],
+    parceiro:['ict','universidade'], objetivos:['prova-conceito','prototipo'],
+    msg:'Aceleração de tecnologias de ICTs e startups nascentes rumo ao mercado.' },
+
+  { id:'compras-publicas', nome:'CPSI / Marco Legal das Startups', tipo:'Compra pública para inovação', instrId:'compras-publicas', agenteId:'mcti',
+    trl:[5,9], portes:['startup','micro','pequena','media'], setores:'all', apoio:['investimento'],
+    parceiro:['publico','ancora'], objetivos:['novo-produto','digitalizar','novo-processo'], resultados:['mvp','produto','contrato'],
+    bonus:(a,add)=>{ if(a.parceiro==='publico') add(22,'Cliente é órgão público (desafio público)'); if(a.resultado==='contrato') add(8,null); },
+    msg:'Para GovTechs e soluções ao setor público: o órgão contrata a experimentação de uma solução inovadora (CPSI) ou usa encomenda tecnológica.' },
+
+  { id:'lei-inovacao', nome:'Lei de Inovação (encomenda / parceria ICT)', tipo:'Arcabouço de parceria empresa–ICT', instrId:'lei-inovacao', agenteId:'mcti',
+    trl:[3,8], portes:['micro','pequena','media','grande','ict','startup'], setores:'all', apoio:['nao-reemb'],
+    parceiro:['ict','universidade','embrapii','publico'], objetivos:['novo-produto','novo-processo','pi'],
+    msg:'Habilita encomenda tecnológica, subvenção a empresas, bônus tecnológico e parcerias formais com ICTs (cotitularidade, licenciamento).' },
+
+  { id:'aneel-pd', nome:'P&D ANEEL', tipo:'PD&I regulado do setor elétrico', instrId:'aneel-pd', agenteId:'aneel',
+    trl:[4,8], portes:['media','grande','ict'], setores:['energia'], apoio:['nao-reemb'], parceiro:['ict','universidade'],
+    elimIf:a=>a.setor!=='energia', elimMsg:'P&D ANEEL atende projetos do setor elétrico (energia).',
+    msg:'Recurso regulado das concessionárias do setor elétrico, frequentemente executado por ICTs (geração, transmissão, distribuição, armazenamento).' },
+
+  { id:'anp-pdi', nome:'P,D&I ANP', tipo:'PD&I regulado de óleo, gás e biocombustíveis', instrId:'anp-pdi', agenteId:'anp',
+    trl:[3,8], portes:['media','grande','ict'], setores:['energia','quimica','mineracao'], apoio:['nao-reemb'], parceiro:['ict','universidade'],
+    msg:'Cláusula de PD&I de petróleo, gás e biocombustíveis; ICTs credenciadas executam parte relevante dos recursos.' },
+
+  { id:'rdt-antt', nome:'RDT — ANTT', tipo:'PD&I regulado de rodovias', instrId:'rdt-antt', agenteId:'antt',
+    trl:[3,8], portes:['media','grande','ict'], setores:['construcao','automotivo'], apoio:['nao-reemb'], parceiro:['ict','universidade'],
+    msg:'Recurso para Desenvolvimento Tecnológico das concessionárias de rodovias federais, executado com universidades/ICTs.' },
+
+  { id:'pdi-saneamento', nome:'PD&I no Saneamento (reguladoras estaduais)', tipo:'PD&I regulado de água e esgoto', instrId:'pdi-saneamento', agenteId:'saneamento',
+    trl:[3,8], portes:['media','grande','ict'], setores:['saneamento','circular'], apoio:['nao-reemb'], parceiro:['ict','universidade'],
+    msg:'Obrigação de PD&I das prestadoras de saneamento (ADASA, ARSAE-MG, ARSESP, ARSP), com ICTs como executoras.' },
+
+  { id:'emendas', nome:'Emendas Parlamentares (CT&I)', tipo:'Recursos orçamentários', instrId:'emendas-parlamentares', agenteId:'mcti',
+    trl:[1,9], portes:['ict','coop'], setores:'all', apoio:['nao-reemb'], parceiro:['publico','ict'],
+    objetivos:['equipamento','pesquisadores','novo-processo'],
+    msg:'Para ICTs, municípios e OSCs: recursos orçamentários direcionados por parlamentares (infraestrutura, laboratórios, projetos).' }
+];
+
+function simScore(e, ans) {
+  if (e.elimIf && e.elimIf(ans)) return { status:'elim', score:0, pct:0, reasons:[e.elimMsg || 'Não atende a um requisito obrigatório.'] };
+  let s = 0; const r = [];
+  const add = (n, why) => { s += n; if (why && n > 0) r.push(why); };
+  if (e.trl) { const [lo,hi]=e.trl; if (ans.trl>=lo && ans.trl<=hi) add(22, `Aderente ao TRL ${ans.trl}`); else if (ans.trl>=lo-1 && ans.trl<=hi+1) add(9, null); }
+  if (e.portes && e.portes.includes(ans.porte)) add(16, 'Porte elegível');
+  if (e.setores==='all') add(6, null); else if (e.setores && e.setores.includes(ans.setor)) add(24, 'Setor prioritário');
+  if (e.apoio && ans.apoio!=='ns' && e.apoio.includes(ans.apoio)) add(14, 'Tipo de apoio preferido combina');
+  if (e.risco && ans.risco!=='ns' && e.risco.includes(ans.risco)) add(12, 'Perfil de risco aderente');
+  if (e.parceiro && ans.parceiro!=='nao' && e.parceiro.includes(ans.parceiro)) add(14, 'Arranjo de parceria aderente');
+  if (e.objetivos && e.objetivos.includes(ans.objetivo)) add(10, 'Objetivo do projeto combina');
+  if (e.resultados && e.resultados.includes(ans.resultado)) add(8, null);
+  if (e.orcamentos && e.orcamentos.includes(ans.orcamento)) add(10, 'Orçamento na faixa típica');
+  if (e.contrapartidas && e.contrapartidas.includes(ans.contrapartida)) add(8, null);
+  if (e.regioes && e.regioes.includes(ans.regiao)) add(6, null);
+  if (e.bonus) e.bonus(ans, add);
+  const pct = Math.max(0, Math.min(100, Math.round(s)));
+  return { status:'ok', score:s, pct, reasons:r.slice(0,4) };
+}
+function simTier(pct) {
+  if (pct >= 85) return { label:'Altamente recomendado', cor:'var(--green-500)', bg:'var(--green-glow)' };
+  if (pct >= 65) return { label:'Recomendado', cor:'var(--blue-400)', bg:'var(--blue-glow)' };
+  if (pct >= 45) return { label:'Possível, com ajustes', cor:'var(--amber-500)', bg:'rgba(245,158,11,0.08)' };
+  return { label:'Baixa aderência', cor:'var(--text-4)', bg:'var(--bg-2)' };
+}
+
+function SimSelect({ value, on, options }) {
+  return (
+    <select value={value} onChange={e=>on(e.target.value)} style={{
+      width:'100%', padding:'10px 12px', border:'1px solid var(--border-2)', background:'var(--bg-2)',
+      color:'var(--text-1)', borderRadius:8, fontSize:13, outline:0, cursor:'pointer'
+    }}>
+      {options.map(o => <option key={o.id} value={o.id}>{o.label}</option>)}
+    </select>
+  );
+}
+
+const SIM_OPCOES = {
+  trl: [
+    {id:'1',label:'TRL 1 — princípio científico observado'},
+    {id:'2',label:'TRL 2 — conceito tecnológico formulado'},
+    {id:'3',label:'TRL 3 — prova de conceito experimental'},
+    {id:'4',label:'TRL 4 — validação em laboratório'},
+    {id:'5',label:'TRL 5 — validação em ambiente relevante'},
+    {id:'6',label:'TRL 6 — protótipo em ambiente relevante'},
+    {id:'7',label:'TRL 7 — protótipo em ambiente operacional'},
+    {id:'8',label:'TRL 8 — sistema completo e qualificado'},
+    {id:'9',label:'TRL 9 — solução em uso comercial'}
+  ],
+  porte: [
+    {id:'pf',label:'Pessoa física / sem CNPJ'},{id:'mei',label:'MEI'},{id:'micro',label:'Microempresa'},
+    {id:'pequena',label:'Empresa de pequeno porte'},{id:'media',label:'Média empresa'},{id:'grande',label:'Grande empresa'},
+    {id:'ict',label:'ICT / universidade'},{id:'coop',label:'Cooperativa / associação'},{id:'startup',label:'Startup'}
+  ],
+  regime: [
+    {id:'simples',label:'Simples Nacional'},{id:'presumido',label:'Lucro Presumido'},{id:'real',label:'Lucro Real'},
+    {id:'imune',label:'Imune / isenta'},{id:'ns',label:'Ainda não sei'}
+  ],
+  setor: [
+    {id:'agro',label:'Agro'},{id:'saude',label:'Saúde'},{id:'tic',label:'TIC / software'},{id:'hardware',label:'Hardware / eletrônica'},
+    {id:'automotivo',label:'Automotivo / mobilidade'},{id:'energia',label:'Energia'},{id:'circular',label:'Economia circular / resíduos'},
+    {id:'industria40',label:'Indústria 4.0'},{id:'defesa',label:'Defesa'},{id:'mineracao',label:'Mineração'},
+    {id:'quimica',label:'Química / materiais'},{id:'biotec',label:'Biotecnologia'},{id:'construcao',label:'Construção / cidades inteligentes'},
+    {id:'saneamento',label:'Saneamento'},{id:'alimentos',label:'Alimentos'},{id:'outro',label:'Outro'}
+  ],
+  objetivo: [
+    {id:'novo-produto',label:'Criar novo produto'},{id:'novo-processo',label:'Criar novo processo'},{id:'melhorar',label:'Melhorar produto existente'},
+    {id:'digitalizar',label:'Digitalizar operação'},{id:'produtividade',label:'Aumentar produtividade'},{id:'prova-conceito',label:'Validar prova de conceito'},
+    {id:'prototipo',label:'Construir protótipo'},{id:'escalar',label:'Escalar produção'},{id:'equipamento',label:'Comprar equipamento inovador'},
+    {id:'pesquisadores',label:'Contratar pesquisadores'},{id:'pi',label:'Proteger propriedade intelectual'},{id:'emissoes',label:'Reduzir emissões / impacto'}
+  ],
+  risco: [
+    {id:'alto',label:'Alto risco tecnológico'},{id:'medio',label:'Médio risco tecnológico'},{id:'baixo',label:'Baixo risco tecnológico'},{id:'ns',label:'Não sei'}
+  ],
+  parceiro: [
+    {id:'nao',label:'Não terá parceiro técnico'},{id:'universidade',label:'Universidade'},{id:'ict',label:'ICT'},{id:'embrapii',label:'Unidade EMBRAPII'},
+    {id:'senai',label:'Instituto SENAI'},{id:'empresa',label:'Outra empresa'},{id:'startup',label:'Startup'},{id:'ancora',label:'Cliente âncora'},{id:'publico',label:'Órgão público'}
+  ],
+  orcamento: [
+    {id:'ate80k',label:'Até R$ 80 mil'},{id:'80a300k',label:'R$ 80 mil a R$ 300 mil'},{id:'300ka1mi',label:'R$ 300 mil a R$ 1 milhão'},
+    {id:'1a5mi',label:'R$ 1 mi a R$ 5 mi'},{id:'5a30mi',label:'R$ 5 mi a R$ 30 mi'},{id:'acima30mi',label:'Acima de R$ 30 mi'}
+  ],
+  contrapartida: [
+    {id:'nao',label:'Não consegue aportar'},{id:'ate10',label:'Até 10%'},{id:'10a30',label:'10% a 30%'},{id:'30a50',label:'30% a 50%'},{id:'acima50',label:'Acima de 50%'}
+  ],
+  apoio: [
+    {id:'nao-reemb',label:'Recurso não reembolsável'},{id:'financiamento',label:'Financiamento com juros reduzidos'},{id:'fiscal',label:'Incentivo fiscal'},
+    {id:'bolsa',label:'Bolsa para equipe técnica'},{id:'capacitacao',label:'Capacitação / mentoria'},{id:'lab',label:'Acesso a laboratório / infraestrutura'},
+    {id:'investimento',label:'Investimento / aceleração'},{id:'ns',label:'Ainda não sei'}
+  ],
+  regiao: [
+    {id:'norte',label:'Norte'},{id:'nordeste',label:'Nordeste'},{id:'centro-oeste',label:'Centro-Oeste'},{id:'sudeste',label:'Sudeste'},{id:'sul',label:'Sul'}
+  ],
+  resultado: [
+    {id:'artigo',label:'Artigo / conhecimento científico'},{id:'prova-conceito',label:'Prova de conceito'},{id:'prototipo',label:'Protótipo funcional'},
+    {id:'mvp',label:'MVP / PMV'},{id:'produto',label:'Produto pronto para mercado'},{id:'processo',label:'Processo produtivo implantado'},
+    {id:'patente',label:'Patente / software registrado'},{id:'escala',label:'Escala industrial'},{id:'emissoes',label:'Redução de emissões'},{id:'contrato',label:'Contrato com cliente'}
+  ]
+};
+function simLabel(grupo, id) { const o = (SIM_OPCOES[grupo]||[]).find(x=>x.id===id); return o ? o.label : id; }
+
 function Simulador() {
-  const { INSTRUMENTOS, DOMINIOS } = window.ATLAS_DATA;
+  const PERGUNTAS = [
+    ['trl','01 · Estágio tecnológico (TRL)', 'Maturidade da tecnologia, de 1 (ideia) a 9 (uso comercial).'],
+    ['porte','02 · Porte da organização', null],
+    ['regime','03 · Regime tributário', 'Define elegibilidade a incentivos fiscais (ex.: Lei do Bem exige Lucro Real).'],
+    ['setor','04 · Setor / área principal', null],
+    ['objetivo','05 · Principal objetivo do projeto', null],
+    ['risco','06 · Risco tecnológico', null],
+    ['parceiro','07 · Parceiro técnico', null],
+    ['orcamento','08 · Orçamento estimado', null],
+    ['contrapartida','09 · Contrapartida financeira', 'Quanto a empresa consegue aportar do próprio caixa.'],
+    ['apoio','10 · Tipo de apoio preferido', null],
+    ['regiao','11 · Localização', null],
+    ['resultado','12 · Resultado esperado', null]
+  ];
+  const [a, setA] = React.useState({
+    trl:'5', porte:'pequena', regime:'real', setor:'outro', objetivo:'novo-produto', risco:'medio',
+    parceiro:'nao', orcamento:'300ka1mi', contrapartida:'10a30', apoio:'nao-reemb', regiao:'sudeste', resultado:'prototipo'
+  });
+  const set = (k,v) => setA(prev => ({ ...prev, [k]:v }));
 
-  const [tipo, setTipo] = React.useState('empresa-grande'); // empresa-mpe, empresa-grande, ict, startup
-  const [regime, setRegime] = React.useState('lucro-real'); // lucro-real, lucro-presumido, simples, na
-  const [dominios, setDominios] = React.useState([]);
-  const [setor, setSetor] = React.useState('outro'); // outro, og, energia, automotivo, tic-semic
-  const [maturidade, setMaturidade] = React.useState('trl4-6'); // trl1-3, trl4-6, trl7-9
-  const [preferencia, setPreferencia] = React.useState([]); // não-reembolsável, crédito, fiscal, cofin
+  const recs = React.useMemo(() => {
+    const ans = { ...a, trl: Number(a.trl) };
+    return SIM_CATALOGO
+      .map(e => ({ e, ...simScore(e, ans) }))
+      .sort((x,y) => (x.status===y.status) ? (y.score - x.score) : (x.status==='ok' ? -1 : 1));
+  }, [a]);
 
-  const recomendacoes = React.useMemo(() => {
-    const scores = {};
-    INSTRUMENTOS.forEach(i => scores[i.id] = 0);
+  const ok = recs.filter(r => r.status==='ok');
+  const elim = recs.filter(r => r.status==='elim');
+  const topOk = ok.slice(0, 10);
 
-    // Tipo
-    const t = tipo;
-    const score = (id, n) => { scores[id] = (scores[id]||0) + n; };
+  const explicacao = (() => {
+    const tops = ok.slice(0,3).map(r=>r.e.nome);
+    let t = `Projeto em TRL ${a.trl}, ${simLabel('porte',a.porte).toLowerCase()}, regime ${simLabel('regime',a.regime)}, setor ${simLabel('setor',a.setor)}, risco ${simLabel('risco',a.risco).toLowerCase()}`;
+    t += a.parceiro!=='nao' ? `, com parceria ${simLabel('parceiro',a.parceiro).toLowerCase()}. ` : ', sem parceiro técnico definido. ';
+    if (tops.length) t += `Instrumentos mais aderentes: ${tops.join(', ')}. `;
+    if (elim.length) t += `Eliminados (${elim.length}): ${elim.slice(0,4).map(r=>r.e.nome).join(', ')}${elim.length>4?'…':''}.`;
+    return t;
+  })();
 
-    if (t === 'empresa-grande' || t === 'empresa-mpe') {
-      score('finep-subvencao', 4); score('finep-mais-inovacao', 4);
-      score('bndes-credito-inovacao', 3); score('embrapii', 4);
-      if (regime === 'lucro-real') score('lei-do-bem', 6);
-      score('cnpq-bolsas', 2); // RHAE
-    }
-    if (t === 'empresa-mpe' || t === 'startup') {
-      score('faps', 4); score('sebrae-aliancas', 4);
-      score('finep-subvencao', 3);
-      score('embrapii', 3);
-    }
-    if (t === 'ict') {
-      score('lei-inovacao', 6); score('bndes-funtec', 5);
-      score('emendas-parlamentares', 4); score('cnpq-bolsas', 4);
-      score('senai-isi', 3); score('aneel-pd', 3); score('anp-pdi', 3);
-    }
-
-    // Setor regulado
-    if (setor === 'og') { score('anp-pdi', 8); score('embrapii', 3); }
-    if (setor === 'energia') { score('aneel-pd', 7); score('finep-subvencao', 3); }
-    if (setor === 'automotivo') { score('mover', 8); }
-    if (setor === 'tic-semic') { score('lei-informatica', 7); score('padis', 6); }
-
-    // Domínios
-    dominios.forEach(d => {
-      INSTRUMENTOS.forEach(i => { if (i.dominios.includes(d)) scores[i.id] += 1; });
-    });
-
-    // TRL
-    if (maturidade === 'trl1-3') {
-      score('cnpq-bolsas', 3); score('bndes-funtec', 2); score('faps', 2);
-    }
-    if (maturidade === 'trl4-6') {
-      score('finep-subvencao', 3); score('embrapii', 4); score('senai-isi', 2);
-    }
-    if (maturidade === 'trl7-9') {
-      score('bndes-credito-inovacao', 4); score('mover', 2); score('finep-mais-inovacao', 3);
-    }
-
-    // Preferência
-    if (preferencia.includes('nao-reembolsavel')) {
-      score('finep-subvencao', 3); score('bndes-funtec', 3); score('emendas-parlamentares', 2);
-    }
-    if (preferencia.includes('credito')) {
-      score('bndes-credito-inovacao', 4); score('finep-mais-inovacao', 2);
-    }
-    if (preferencia.includes('fiscal')) {
-      score('lei-do-bem', 5); score('lei-informatica', 3); score('padis', 3); score('mover', 3);
-    }
-    if (preferencia.includes('cofinanciamento')) {
-      score('embrapii', 5); score('senai-isi', 3);
-    }
-
-    return Object.entries(scores)
-      .filter(([_,s]) => s > 0)
-      .map(([id, s]) => ({ instrumento: INSTRUMENTOS.find(i=>i.id===id), score: s }))
-      .sort((a,b) => b.score - a.score)
-      .slice(0, 6);
-  }, [tipo, regime, dominios, setor, maturidade, preferencia]);
-
-  const maxScore = Math.max(...recomendacoes.map(r=>r.score), 1);
+  const passos = (() => {
+    const p = ['Formalize o escopo técnico (problema, solução, ineditismo) e estime o orçamento.'];
+    const ids = ok.slice(0,6).map(r=>r.e.id);
+    if (ids.some(i=>['embrapii','embrapii-sebrae','bndes-funtec','lei-inovacao'].includes(i))) p.push('Identifique uma Unidade EMBRAPII / ICT parceira com competência aderente.');
+    if (ids.some(i=>['finep-subvencao','finep-tecnova','embrapii','finep-credito'].includes(i))) p.push('Organize evidências de risco tecnológico e capacidade de execução.');
+    if (a.contrapartida==='nao') p.push('⚠️ Sem contrapartida financeira, priorize Centelha, Sebrae, bolsas e FAPs — EMBRAPII/Finep exigem aporte.');
+    else p.push('Confirme a contrapartida financeira disponível em caixa.');
+    if (ids.some(i=>['finep-tecnova','faps','pipe-fapesp','finep-centelha'].includes(i))) p.push('Mapeie o edital ativo da FAP do seu estado (Tecnova/Centelha/PIPE).');
+    if (a.regime==='real') p.push('Estruture a documentação de P&D para usar a Lei do Bem em paralelo (incentivo fiscal anual).');
+    p.push('Verifique chamadas abertas no Radar do Atlas e confirme prazos no canal oficial.');
+    return p;
+  })();
 
   return (
     <div className="page fade-in">
-      <SectionHead num="§ 07" kicker="Simulador" title="O que se aplica à minha organização?"
-        lede="Responda quatro perguntas e veja os instrumentos potencialmente aderentes. Resultado heurístico — não substitui validação técnica e jurídica."
+      <SectionHead num="§ 07" kicker="Simulador de Fomentos" title="Quais instrumentos se aplicam ao meu projeto?"
+        lede="Responda 12 perguntas e veja um ranking de instrumentos por aderência (0–100), com filtros eliminatórios, explicação e próximos passos. Resultado heurístico — não substitui validação técnica e jurídica."
       />
-
-      <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'var(--s-6)' }}>
-        {/* Form */}
-        <div className="card" style={{ padding:'24px 28px', display:'flex', flexDirection:'column', gap:'var(--s-5)' }}>
-          <SimField num="01" title="Qual o tipo da organização?">
-            <SegBig opts={[
-              { id:'empresa-grande', label:'Empresa', sub:'média/grande' },
-              { id:'empresa-mpe', label:'MPE', sub:'micro ou pequena' },
-              { id:'startup', label:'Startup', sub:'base tecnológica' },
-              { id:'ict', label:'ICT', sub:'universidade, centro' }
-            ]} val={tipo} on={setTipo}/>
-          </SimField>
-
-          <SimField num="02" title="Regime tributário (se aplicável)">
-            <SegBig opts={[
-              { id:'lucro-real', label:'Lucro Real' },
-              { id:'lucro-presumido', label:'Lucro Presumido' },
-              { id:'simples', label:'Simples Nacional' },
-              { id:'na', label:'Não se aplica' }
-            ]} val={regime} on={setRegime}/>
-          </SimField>
-
-          <SimField num="03" title="Setor regulado?">
-            <SegBig opts={[
-              { id:'outro', label:'Outro' },
-              { id:'og', label:'Petróleo & Gás' },
-              { id:'energia', label:'Setor Elétrico' },
-              { id:'automotivo', label:'Automotivo' },
-              { id:'tic-semic', label:'TIC / Semicondutores' }
-            ]} val={setor} on={setSetor}/>
-          </SimField>
-
-          <SimField num="04" title="Maturidade tecnológica (TRL)" hint="TRL 1-3 pesquisa básica · TRL 4-6 desenvolvimento · TRL 7-9 demonstração e produção">
-            <SegBig opts={[
-              { id:'trl1-3', label:'TRL 1-3' },
-              { id:'trl4-6', label:'TRL 4-6' },
-              { id:'trl7-9', label:'TRL 7-9' }
-            ]} val={maturidade} on={setMaturidade}/>
-          </SimField>
-
-          <SimField num="05" title="Domínio(s) tecnológico(s) do projeto" hint="Selecione um ou mais para refinar.">
-            <MultiToggle options={DOMINIOS} value={dominios} onChange={setDominios}/>
-          </SimField>
-
-          <SimField num="06" title="Preferências por mecanismo (opcional)">
-            <MultiToggle
-              options={[
-                {id:'nao-reembolsavel',label:'Não-reembolsável'},
-                {id:'credito',label:'Crédito'},
-                {id:'fiscal',label:'Fiscal'},
-                {id:'cofinanciamento',label:'Cofinanciamento'}
-              ]}
-              value={preferencia} onChange={setPreferencia}/>
-          </SimField>
+      <div style={{ display:'grid', gridTemplateColumns:'minmax(320px, 1fr) minmax(340px, 1.1fr)', gap:'var(--s-6)' }}>
+        {/* Formulário */}
+        <div className="card" style={{ padding:'22px 24px', display:'flex', flexDirection:'column', gap:'var(--s-4)' }}>
+          {PERGUNTAS.map(([k, titulo, hint]) => (
+            <div key={k}>
+              <div style={{ display:'flex', alignItems:'baseline', gap:8, marginBottom:6 }}>
+                <h4 className="h4" style={{ fontSize:13.5 }}>{titulo}</h4>
+              </div>
+              {hint && <div style={{ fontSize:11, color:'var(--text-4)', marginBottom:7, lineHeight:1.4 }}>{hint}</div>}
+              <SimSelect value={a[k]} on={v=>set(k,v)} options={SIM_OPCOES[k]}/>
+            </div>
+          ))}
+          <div style={{ fontSize:11, color:'var(--text-4)', borderTop:'1px solid var(--border-1)', paddingTop:12, lineHeight:1.5 }}>
+            Lógica híbrida: filtros eliminatórios → pontuação por aderência → ranking. Ex.: Lei do Bem é eliminada fora do Lucro Real; EMBRAPII exige contrapartida financeira.
+          </div>
         </div>
 
-        {/* Results */}
+        {/* Resultados */}
         <div>
-          <div style={{ position:'sticky', top:80, display:'flex', flexDirection:'column', gap:14 }}>
-            <div className="sec-num">Recomendações ordenadas</div>
-            <h2 className="serif" style={{ fontSize:32, lineHeight:1.1, margin:0 }}>Top {recomendacoes.length} instrumentos para você explorar</h2>
-            <p style={{ color:'var(--text-3)', fontSize:13, margin:0 }}>Score relativo. Quanto maior a barra, maior a aderência com as respostas.</p>
-
-            <div style={{ display:'flex', flexDirection:'column', gap:8, marginTop:14 }}>
-              {recomendacoes.map((r,k) => (
-                <a key={r.instrumento.id} href={`#/instrumento/${r.instrumento.id}`} className="card" style={{
-                  padding:'14px 16px',
-                  display:'flex', flexDirection:'column', gap:10,
-                  borderColor: k===0 ? 'var(--blue-500)' : ''
-                }}>
-                  <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start' }}>
-                    <div style={{ display:'flex', alignItems:'baseline', gap:10 }}>
-                      <span className="serif" style={{ fontSize:24, color: k===0 ? 'var(--blue-400)' : 'var(--text-2)' }}>{String(k+1).padStart(2,'0')}</span>
-                      <div>
-                        <div style={{ fontSize:14.5, fontWeight:600 }}>{r.instrumento.sigla}</div>
-                        <div style={{ fontSize:11, color:'var(--text-3)' }}>{r.instrumento.categoria}</div>
-                      </div>
-                    </div>
-                    <div className="mono" style={{ color:'var(--text-3)' }}>score {r.score}</div>
-                  </div>
-                  <div style={{ height:4, background:'var(--bg-2)', borderRadius:99, overflow:'hidden' }}>
-                    <div style={{ height:'100%', width:`${(r.score/maxScore)*100}%`, background: k===0 ? 'var(--blue-500)' : 'var(--blue-900)', borderRadius:99 }}/>
-                  </div>
-                  <p style={{ fontSize:12.5, color:'var(--text-3)', lineHeight:1.5, margin:0 }}>{r.instrumento.resumo.slice(0,140)}…</p>
-                </a>
-              ))}
-              {recomendacoes.length === 0 && (
-                <div className="card" style={{ padding:24, color:'var(--text-3)', fontSize:13 }}>
-                  Responda as perguntas ao lado para ver as recomendações.
-                </div>
-              )}
+          <div style={{ position:'sticky', top:80, display:'flex', flexDirection:'column', gap:14, maxHeight:'calc(100vh - 100px)', overflowY:'auto', paddingRight:4 }}>
+            <div>
+              <div className="sec-num">Ranking de aderência</div>
+              <h2 className="serif" style={{ fontSize:28, lineHeight:1.1, margin:'4px 0 0' }}>{ok.length} instrumentos aderentes · {elim.length} eliminados</h2>
             </div>
 
+            <div className="card" style={{ padding:'14px 16px', background:'var(--bg-2)' }}>
+              <div className="sec-num" style={{ color:'var(--blue-400)', marginBottom:6 }}>Leitura do seu caso</div>
+              <p style={{ fontSize:12.5, color:'var(--text-2)', lineHeight:1.55, margin:0 }}>{explicacao}</p>
+            </div>
+
+            <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
+              {topOk.map((r,k) => {
+                const tier = simTier(r.pct);
+                const href = r.e.instrId ? `#/instrumento/${r.e.instrId}` : (r.e.agenteId ? `#/agentes/${r.e.agenteId}` : '#/instrumentos');
+                return (
+                  <a key={r.e.id} href={href} className="card" style={{ padding:'13px 15px', display:'flex', flexDirection:'column', gap:9, borderColor: k===0 ? 'var(--blue-500)' : '' }}>
+                    <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', gap:8 }}>
+                      <div style={{ display:'flex', alignItems:'baseline', gap:9 }}>
+                        <span className="serif" style={{ fontSize:20, color: k===0 ? 'var(--blue-400)' : 'var(--text-3)' }}>{String(k+1).padStart(2,'0')}</span>
+                        <div>
+                          <div style={{ fontSize:14, fontWeight:600, lineHeight:1.2 }}>{r.e.nome}</div>
+                          <div style={{ fontSize:10.5, color:'var(--text-4)', marginTop:1 }}>{r.e.tipo}</div>
+                        </div>
+                      </div>
+                      <div style={{ textAlign:'right', flexShrink:0 }}>
+                        <div style={{ fontFamily:'var(--f-display)', fontSize:20, color:tier.cor, lineHeight:1 }}>{r.pct}<span style={{ fontSize:11 }}>%</span></div>
+                        <div className="mono" style={{ fontSize:8.5, color:tier.cor, marginTop:2, textTransform:'uppercase', letterSpacing:'0.04em' }}>{tier.label}</div>
+                      </div>
+                    </div>
+                    <div style={{ height:4, background:'var(--bg-2)', borderRadius:99, overflow:'hidden' }}>
+                      <div style={{ height:'100%', width:`${r.pct}%`, background:tier.cor, borderRadius:99 }}/>
+                    </div>
+                    {r.reasons.length > 0 && <div style={{ display:'flex', flexWrap:'wrap', gap:4 }}>{r.reasons.map((why,i)=><span key={i} className="mono" style={{ fontSize:9, color:'var(--text-4)', background:'var(--bg-2)', borderRadius:4, padding:'2px 6px' }}>{why}</span>)}</div>}
+                    <p style={{ fontSize:11.5, color:'var(--text-3)', lineHeight:1.45, margin:0 }}>{r.e.msg}</p>
+                  </a>
+                );
+              })}
+            </div>
+
+            {elim.length > 0 && (
+              <details className="card" style={{ padding:'12px 15px' }}>
+                <summary style={{ cursor:'pointer', fontSize:12.5, color:'var(--text-2)', fontWeight:600 }}>Eliminados ({elim.length}) — por que não se aplicam</summary>
+                <div style={{ display:'flex', flexDirection:'column', gap:8, marginTop:10 }}>
+                  {elim.map(r => (
+                    <div key={r.e.id} style={{ fontSize:11.5, color:'var(--text-3)', lineHeight:1.45 }}>
+                      <span style={{ color:'var(--rose-500)', fontWeight:600 }}>{r.e.nome}</span> — {r.reasons[0]}
+                    </div>
+                  ))}
+                </div>
+              </details>
+            )}
+
+            <div className="card" style={{ padding:'14px 16px' }}>
+              <div className="sec-num" style={{ color:'var(--blue-400)', marginBottom:8 }}>Próximos passos</div>
+              <ol style={{ margin:0, paddingLeft:18, display:'flex', flexDirection:'column', gap:6 }}>
+                {passos.map((p,i)=><li key={i} style={{ fontSize:12, color:'var(--text-2)', lineHeight:1.5 }}>{p}</li>)}
+              </ol>
+            </div>
           </div>
         </div>
       </div>
