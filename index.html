@@ -1500,11 +1500,13 @@ window.ATLAS_DATA = (() => {
     { id:'ufpa', nome:'UFPA', longo:'Universidade Federal do Pará', cidade:'Belém', uf:'PA', regiao:'Norte', tipo:'Universidade Federal', dominios:['ambiental','agro','og','energia'], credenciamentos:['ANP'], lat:-1.46, lng:-48.45 },
     { id:'uea', nome:'UEA', longo:'Universidade do Estado do Amazonas', cidade:'Manaus', uf:'AM', regiao:'Norte', tipo:'Universidade Estadual', dominios:['tic','ambiental'], credenciamentos:[], lat:-3.07, lng:-60.01 },
     { id:'sidia', nome:'SIDIA', longo:'Instituto de Ciência e Tecnologia (Manaus)', cidade:'Manaus', uf:'AM', regiao:'Norte', tipo:'ICT Privada', dominios:['tic','semic'], credenciamentos:['Lei de Informática'], lat:-3.09, lng:-60.03 },
+    { id:'irede-am', nome:'iRede Amazônia', longo:'Instituto de Gestão, Redes Tecnológicas e Energias da Amazônia', cidade:'Manaus', uf:'AM', regiao:'Norte', tipo:'ICT Privada', dominios:['tic'], credenciamentos:['Lei de Informática'], lat:-3.11, lng:-60.01 },
 
     // Nordeste
     { id:'ufpe', nome:'UFPE / Cesar', longo:'Universidade Federal de Pernambuco + CESAR', cidade:'Recife', uf:'PE', regiao:'Nordeste', tipo:'Universidade + ICT Privada', dominios:['tic','semic','saude'], credenciamentos:['Embrapii','Lei de Informática'], destaque:true, lat:-8.05, lng:-34.95 },
     { id:'ufrn', nome:'UFRN', longo:'Universidade Federal do Rio Grande do Norte', cidade:'Natal', uf:'RN', regiao:'Nordeste', tipo:'Universidade Federal', dominios:['og','energia','ambiental','saude'], credenciamentos:['ANP','Embrapii'], destaque:true, lat:-5.84, lng:-35.20 },
     { id:'ufc', nome:'UFC', longo:'Universidade Federal do Ceará', cidade:'Fortaleza', uf:'CE', regiao:'Nordeste', tipo:'Universidade Federal', dominios:['energia','og','tic','materiais'], credenciamentos:['ANP','Embrapii'], lat:-3.74, lng:-38.57 },
+    { id:'irede-ce', nome:'iRede', longo:'Instituto de Gestão, Redes Tecnológicas e Energias (sede)', cidade:'Fortaleza', uf:'CE', regiao:'Nordeste', tipo:'ICT Privada', dominios:['tic'], credenciamentos:['Lei de Informática','Softex'], lat:-3.73, lng:-38.53 },
     { id:'ufba', nome:'UFBA / SENAI CIMATEC', longo:'UFBA + SENAI CIMATEC', cidade:'Salvador', uf:'BA', regiao:'Nordeste', tipo:'Universidade + ISI', dominios:['og','manufatura','materiais','aero'], credenciamentos:['ANP','Embrapii','ISI'], destaque:true, lat:-12.97, lng:-38.51 },
     { id:'fiocruz-ne', nome:'Fiocruz-PE', longo:'Fiocruz Pernambuco (IAM)', cidade:'Recife', uf:'PE', regiao:'Nordeste', tipo:'Pesquisa Federal', dominios:['saude'], credenciamentos:[], lat:-8.04, lng:-34.95 },
 
@@ -2374,6 +2376,31 @@ const GLOSSARIO_EXTRA = [
     // ICT enrichment — site, contato, áreas, linhas de pesquisa e projetos exemplo
     // curados para as ICTs com massa crítica em fomento.
     var ICTS_DETALHES = {
+      'irede-ce': {
+        site: 'https://irede.org.br/',
+        contato: 'Fortaleza/CE — sede do iRede',
+        areas: ['TIC & Software','Microeletrônica','Inteligência Artificial','Formação em TIC'],
+        linhasPesquisa: [
+          'Execução e gestão de projetos de PD&I da Lei de Informática (credenciada no CATI/MCTI — Resolução 823/2024)',
+          'Agente Regional Softex no Ceará (desde jan/2023): capacitação e acesso a recursos para o ecossistema de TIC',
+          'Desenvolvimento em software, microeletrônica e tecnologia da informação',
+          'Rede nacional de laboratórios parceiros; mais de 250 profissionais. Fundada em 2005 no LDS do IFCE'
+        ],
+        projetos: [
+          { nome:'Residência em TIC — formação profissional em TIC', empresa:'Softex / MCTI', ano:'2022–presente' },
+          { nome:'EaD com uso de inteligência artificial', empresa:'UECE / Softex', ano:'2022' }
+        ]
+      },
+      'irede-am': {
+        site: 'https://irede.org.br/irede-amazonia/',
+        contato: 'Rua Guglielmo Marconi, 14 — Adrianópolis, Manaus/AM',
+        areas: ['TIC & Software','PD&I da Lei de Informática (ZFM)'],
+        linhasPesquisa: [
+          'Execução de projetos de PD&I para empresas beneficiárias da Lei de Informática no Polo Industrial de Manaus',
+          'ICT credenciada pelo CAPDA/Suframa (Resolução 57/2024/CAPDA)',
+          'Projetos externos com universidades e institutos de pesquisa, e projetos internos de P&D'
+        ]
+      },
       'usp': {
         site: 'https://www.usp.br/',
         contato: 'aucani@usp.br · (11) 3091-3500',
@@ -27377,7 +27404,7 @@ function Mapa() {
   const [modalUF, setModalUF] = React.useState(null);
   const [matrixCell, setMatrixCell] = React.useState(null); // { domain: domObj, region: 'Sul' } or null
 
-  const credenciamentos = ['ANP','Embrapii','Lei de Informática','ANEEL','ISI'];
+  const credenciamentos = ['ANP','Embrapii','Lei de Informática','ANEEL','ISI','Softex'];
   const regioes = [
     { id:'Norte', label:'Norte' },
     { id:'Nordeste', label:'Nordeste' },
