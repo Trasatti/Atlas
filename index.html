@@ -28994,15 +28994,24 @@ function ad2RiskLabel(cls){ return cls==='high' ? 'Alto' : (cls==='medium' ? 'Mo
 function ad2InitAnswers(){ const a={}; Object.values(AD2_PERFIS).forEach(p=>p.domains.forEach(d=>d.questions.forEach(([q])=>{ a[q]=1; }))); return a; }
 function ad2InitWeights(){ const w={}; Object.values(AD2_PERFIS).forEach(p=>p.domains.forEach(d=>{ w[d.id]=20; })); return w; }
 
+const AD2_STORE = 'atlas_ad2_v1';
 function Ad2Calculadora() {
-  const [form, setForm] = React.useState({ projeto:'', tecnologia:'', escopo:'Componente', trlAtual:'3', trlAlvo:'6', contexto:'' });
-  const [profileId, setProfileId] = React.useState('bilbro');
-  const [rounding, setRounding] = React.useState('ceil');
-  const [answers, setAnswers] = React.useState(ad2InitAnswers);
-  const [touched, setTouched] = React.useState({});
-  const [weights, setWeights] = React.useState(ad2InitWeights);
-  const [cons, setCons] = React.useState({ technical:1, schedule:1, cost:1 });
+  const saved = React.useMemo(() => { try { return JSON.parse(localStorage.getItem(AD2_STORE) || 'null'); } catch(e){ return null; } }, []);
+  const hoje = new Date().toISOString().slice(0,10);
+  const [form, setForm] = React.useState(() => ({ projeto:'', tecnologia:'', escopo:'Componente', avaliador:'', trlAtual:'3', trlAlvo:'6', data:hoje, moeda:'BRL', contexto:'', ...(saved && saved.form) }));
+  const [profileId, setProfileId] = React.useState(() => (saved && saved.profileId) || 'bilbro');
+  const [rounding, setRounding] = React.useState(() => (saved && saved.rounding) || 'ceil');
+  const [answers, setAnswers] = React.useState(() => ({ ...ad2InitAnswers(), ...(saved && saved.answers) }));
+  const [touched, setTouched] = React.useState(() => (saved && saved.touched) || {});
+  const [evidence, setEvidence] = React.useState(() => (saved && saved.evidence) || {});
+  const [weights, setWeights] = React.useState(() => ({ ...ad2InitWeights(), ...(saved && saved.weights) }));
+  const [cons, setCons] = React.useState(() => (saved && saved.cons) || { technical:1, schedule:1, cost:1 });
+  const [consNotes, setConsNotes] = React.useState(() => (saved && saved.consNotes) || '');
+  const [actions, setActions] = React.useState(() => (saved && Array.isArray(saved.actions) ? saved.actions : []));
+  const [toast, setToast] = React.useState('');
+  const fileRef = React.useRef(null);
   const setF = (k,v) => setForm(p=>({ ...p, [k]:v }));
+  const flash = m => { setToast(m); setTimeout(()=>setToast(''), 2200); };
 
   const profile = AD2_PERFIS[profileId];
   const brl = n => Number(n||0).toLocaleString('pt-BR', { minimumFractionDigits:2, maximumFractionDigits:2 });
@@ -29038,6 +29047,9 @@ function Ad2Calculadora() {
 
   const sintese = React.useMemo(() => {
     const c = calc;
+    const va = actions.filter(a => (a.profile||profileId) === profileId);
+    const vc = va.reduce((s,a)=>s+Number(a.cost||0),0);
+    const vm = va.reduce((m,a)=>Math.max(m,Number(a.weeks||0)),0);
     const critText = c.critical.length ? c.critical.slice(0,5).map((x,i)=>`${i+1}. ${x.domainName}: ${x.question} [AD² ${x.sc}]`).join('\n') : 'Nenhum indicador nos níveis 7 a 9.';
     const domText = c.domainScores.map(d=>`${d.name}: ${d.score.toFixed(2)}`).join('; ');
     const mat = c.trlValido ? `TRL ${c.cur} → TRL ${c.alvo} (${c.trlGap} ${c.trlGap===1?'nível':'níveis'})` : `configuração inválida: TRL alvo deve ser maior que o atual`;
@@ -29066,12 +29078,16 @@ function Ad2Calculadora() {
       '',
       'INDICADORES CRÍTICOS',
       critText,
+      '',
+      'PLANO DE MATURAÇÃO',
+      `${va.length} ação(ões); custo total ${Number(vc).toLocaleString('pt-BR',{style:'currency',currency:form.moeda})}; maior duração ${vm} semana(s).`,
       form.contexto ? `\nPREMISSAS E LIMITES\n${form.contexto}` : '',
+      consNotes ? `\nJUSTIFICATIVA DAS CONSEQUÊNCIAS\n${consNotes}` : '',
       '',
       c.completeness<100 ? 'Alerta: resultado preliminar — nem todos os indicadores foram avaliados.' : '',
       'Observação: o AD² complementa o TRL. Mede a dificuldade de avançar, não a maturidade já demonstrada.'
     ].filter(Boolean).join('\n');
-  }, [calc, form, profile]);
+  }, [calc, form, profile, actions, profileId, consNotes]);
 
   const inputSt = { width:'100%', padding:'9px 11px', border:'1px solid var(--border-2)', background:'var(--bg-2)', color:'var(--text-1)', borderRadius:8, fontSize:13, outline:0 };
   const labelSt = { display:'block', marginBottom:5, color:'var(--text-3)', fontSize:11.5, fontWeight:600 };
@@ -29080,10 +29096,35 @@ function Ad2Calculadora() {
   const setAns = (q,v) => { setAnswers(p=>({ ...p, [q]:v })); setTouched(p=>({ ...p, [q]:true })); };
   const pesosIguais = () => { const ds=profile.domains; const base=Math.floor(100/ds.length); const rem=100-base*ds.length; setWeights(p=>{ const w={ ...p }; ds.forEach((d,i)=>w[d.id]=base+(i<rem?1:0)); return w; }); };
 
+  const money = n => Number(n||0).toLocaleString('pt-BR', { style:'currency', currency: form.moeda });
+  const uid = () => (window.crypto && crypto.randomUUID ? crypto.randomUUID() : 'a'+Date.now().toString(36)+Math.random().toString(36).slice(2,8));
+  const visibleActions = actions.filter(a => (a.profile||profileId) === profileId);
+  const totCusto = visibleActions.reduce((s,a)=>s+Number(a.cost||0),0);
+  const maxSem = visibleActions.reduce((m,a)=>Math.max(m,Number(a.weeks||0)),0);
+  const addAction = (d={}) => setActions(p => [...p, { id:uid(), profile:profileId, domain:d.domain||profile.domains[0].id, description:d.description||'', owner:'', cost:0, weeks:0, status:'Planejada', sourceQid:d.sourceQid||'' }]);
+  const updateAction = (id,k,v) => setActions(p => p.map(a => a.id===id ? { ...a, [k]: (k==='cost'||k==='weeks') ? Number(v||0) : v } : a));
+  const delAction = id => setActions(p => p.filter(a => a.id!==id));
+  const sugerirAcoes = () => { const ja=new Set(visibleActions.map(a=>a.sourceQid)); const novas = calc.critical.filter(x=>!ja.has(x.q)).map(x=>({ id:uid(), profile:profileId, domain:(profile.domains.find(d=>d.questions.some(qq=>qq[0]===x.q))||profile.domains[0]).id, description:'Reduzir a dificuldade: '+x.question, owner:'', cost:0, weeks:0, status:'Planejada', sourceQid:x.q })); if(!novas.length){ flash('Nenhum indicador em nível 7, 8 ou 9.'); return; } setActions(p=>[...p, ...novas]); flash(novas.length+' ação(ões) sugerida(s).'); };
+  const snapshot = () => ({ app:'Calculadora AD2', version:'atlas-1', form, profileId, rounding, answers, touched, evidence, weights, cons, consNotes, actions });
+  React.useEffect(() => { try { localStorage.setItem(AD2_STORE, JSON.stringify(snapshot())); } catch(e){} }, [form, profileId, rounding, answers, touched, evidence, weights, cons, consNotes, actions]);
+  const salvar = () => { try { localStorage.setItem(AD2_STORE, JSON.stringify(snapshot())); flash('Avaliação salva no navegador.'); } catch(e){ flash('O navegador bloqueou o armazenamento.'); } };
+  const exportar = () => { const blob=new Blob([JSON.stringify(snapshot(),null,2)],{type:'application/json'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download=(form.tecnologia||'avaliacao_ad2').replace(/[^a-zA-Z0-9_-]+/g,'_')+'_AD2.json'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url); flash('JSON exportado.'); };
+  const importar = e => { const f=e.target.files[0]; if(!f){ return; } const r=new FileReader(); r.onload=()=>{ try{ const d=JSON.parse(r.result); if(d.form) setForm(x=>({ ...x, ...d.form })); if(d.profileId) setProfileId(d.profileId); if(d.rounding) setRounding(d.rounding); if(d.answers) setAnswers(x=>({ ...x, ...d.answers })); if(d.touched) setTouched(d.touched); if(d.evidence) setEvidence(d.evidence); if(d.weights) setWeights(x=>({ ...x, ...d.weights })); if(d.cons) setCons(d.cons); if(typeof d.consNotes==='string') setConsNotes(d.consNotes); if(Array.isArray(d.actions)) setActions(d.actions); flash('Avaliação importada.'); }catch(err){ flash('Arquivo inválido.'); } }; r.readAsText(f,'UTF-8'); e.target.value=''; };
+  const limpar = () => { if(!window.confirm('Limpar todos os dados desta avaliação?')){ return; } try{ localStorage.removeItem(AD2_STORE); }catch(e){} setForm({ projeto:'', tecnologia:'', escopo:'Componente', avaliador:'', trlAtual:'3', trlAlvo:'6', data:hoje, moeda:'BRL', contexto:'' }); setProfileId('bilbro'); setRounding('ceil'); setAnswers(ad2InitAnswers()); setTouched({}); setEvidence({}); setWeights(ad2InitWeights()); setCons({ technical:1, schedule:1, cost:1 }); setConsNotes(''); setActions([]); flash('Avaliação limpa.'); };
+
   return (
     <div style={{ display:'grid', gridTemplateColumns:'minmax(0,1fr) 360px', gap:'var(--s-6)', alignItems:'start' }}>
       {/* Coluna principal */}
       <div style={{ display:'flex', flexDirection:'column', gap:'var(--s-5)', minWidth:0 }}>
+        <div style={{ display:'flex', flexWrap:'wrap', gap:8, alignItems:'center' }}>
+          <button onClick={salvar} className="btn sm">Salvar no navegador</button>
+          <button onClick={exportar} className="btn sm">Exportar JSON</button>
+          <button onClick={()=>fileRef.current && fileRef.current.click()} className="btn sm">Importar JSON</button>
+          <input ref={fileRef} type="file" accept="application/json,.json" onChange={importar} style={{ display:'none' }}/>
+          <button onClick={()=>window.print()} className="btn sm">Imprimir</button>
+          <span style={{ flex:1 }}/>
+          <button onClick={limpar} className="btn sm" style={{ color:'var(--rose-500)', borderColor:'var(--rose-500)' }}>Limpar avaliação</button>
+        </div>
         <div style={{ padding:'11px 14px', border:'1px solid var(--border-2)', borderLeft:'3px solid var(--amber-500)', borderRadius:8, background:'rgba(245,158,11,0.06)', color:'var(--text-3)', fontSize:12, lineHeight:1.5 }}>
           O AD² não tem um questionário único e universal. Esta calculadora operacionaliza as referências (Bilbro; Zhao & Wei; GAO). O resultado apoia decisão e planejamento — não substitui evidência técnica nem avaliação formal de maturidade.
         </div>
@@ -29101,6 +29142,11 @@ function Ad2Calculadora() {
               <div><label style={labelSt}>TRL atual</label><select style={inputSt} value={form.trlAtual} onChange={e=>setF('trlAtual',e.target.value)}>{Object.keys(TRL_LABELS).map(k=><option key={k} value={k}>TRL {k}</option>)}</select></div>
               <div><label style={labelSt}>TRL alvo</label><select style={inputSt} value={form.trlAlvo} onChange={e=>setF('trlAlvo',e.target.value)}>{Object.keys(TRL_LABELS).map(k=><option key={k} value={k}>TRL {k}</option>)}</select></div>
             </div>
+          </div>
+          <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr 1fr', gap:12, marginTop:12 }}>
+            <div><label style={labelSt}>Responsável pela avaliação</label><input style={inputSt} value={form.avaliador} onChange={e=>setF('avaliador',e.target.value)} placeholder="Nome ou equipe"/></div>
+            <div><label style={labelSt}>Data da avaliação</label><input type="date" style={inputSt} value={form.data} onChange={e=>setF('data',e.target.value)}/></div>
+            <div><label style={labelSt}>Moeda do plano</label><select style={inputSt} value={form.moeda} onChange={e=>setF('moeda',e.target.value)}>{['BRL','USD','EUR'].map(o=><option key={o} value={o}>{o}</option>)}</select></div>
           </div>
           {!calc.trlValido && <div style={{ marginTop:12, padding:'9px 12px', borderRadius:8, background:'rgba(245,158,11,0.1)', color:'var(--amber-500)', fontSize:12 }}>Configuração inválida: o TRL alvo deve ser superior ao TRL atual para avaliar um avanço AD².</div>}
           <div style={{ marginTop:12 }}><label style={labelSt}>Contexto, premissas e limites</label><textarea style={{ ...inputSt, minHeight:70, resize:'vertical' }} value={form.contexto} onChange={e=>setF('contexto',e.target.value)} placeholder="Ambiente alvo, restrições, dependências, fontes de evidência e premissas."/></div>
@@ -29147,7 +29193,12 @@ function Ad2Calculadora() {
                     const v = Number(answers[q]||1);
                     return (
                       <div key={q} style={{ display:'grid', gridTemplateColumns:'minmax(0,1fr) minmax(220px,0.8fr)', gap:16, padding:'13px 0', borderBottom: qi<d.questions.length-1?'1px solid var(--border-1)':'none' }}>
-                        <div><div style={{ fontSize:13, fontWeight:500, lineHeight:1.35 }}>{di+1}.{qi+1} {question}</div><div style={{ fontSize:11, color:'var(--text-4)', marginTop:4 }}>{help}</div></div>
+                        <div><div style={{ fontSize:13, fontWeight:500, lineHeight:1.35 }}>{di+1}.{qi+1} {question}</div><div style={{ fontSize:11, color:'var(--text-4)', marginTop:4 }}>{help}</div>
+                          <details style={{ marginTop:7 }}>
+                            <summary style={{ fontSize:11, color:'var(--blue-400)', cursor:'pointer', fontWeight:600 }}>Evidência ou justificativa</summary>
+                            <textarea value={evidence[q]||''} onChange={e=>setEvidence(p=>({ ...p, [q]:e.target.value }))} placeholder="Fonte, ensaio, documento, premissa ou lacuna observada." style={{ width:'100%', marginTop:6, minHeight:54, resize:'vertical', padding:'8px', border:'1px solid var(--border-2)', background:'var(--bg-2)', color:'var(--text-1)', borderRadius:8, fontSize:12, outline:0 }}/>
+                          </details>
+                        </div>
                         <div>
                           <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:6 }}>
                             <span style={{ display:'inline-flex', gap:7, alignItems:'center', fontWeight:800, fontSize:12 }}><span style={{ display:'grid', placeItems:'center', width:30, height:24, borderRadius:7, background:'var(--blue-500)', color:'#fff' }}>{v}</span>Dificuldade</span>
@@ -29177,11 +29228,47 @@ function Ad2Calculadora() {
               </div>
             ))}
           </div>
+          <div style={{ marginTop:12 }}><label style={labelSt}>Justificativa das consequências</label><textarea style={{ ...inputSt, minHeight:62, resize:'vertical' }} value={consNotes} onChange={e=>setConsNotes(e.target.value)} placeholder="Efeito esperado nos requisitos, nos marcos do projeto e no orçamento."/></div>
+        </section>
+
+        <section className="card" style={{ padding:'18px 20px' }}>
+          <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', gap:10, marginBottom:12, flexWrap:'wrap' }}>
+            <div><h3 className="h4">5 · Plano de maturação tecnológica</h3><p style={{ fontSize:12, color:'var(--text-4)', margin:'4px 0 0' }}>Atividades, custos, prazos e responsáveis para reduzir a dificuldade dos indicadores.</p></div>
+            <div style={{ display:'flex', gap:8, flexShrink:0 }}>
+              <button onClick={sugerirAcoes} className="btn sm">Sugerir ações críticas</button>
+              <button onClick={()=>addAction()} className="btn sm primary">Adicionar ação</button>
+            </div>
+          </div>
+          <div style={{ overflowX:'auto' }}>
+            <table style={{ width:'100%', borderCollapse:'collapse', fontSize:12 }}>
+              <thead><tr>{['Dimensão','Ação','Responsável','Custo','Semanas','Status',''].map((h,i)=><th key={i} style={{ textAlign:'left', padding:'8px 6px', borderBottom:'1px solid var(--border-2)', color:'var(--text-4)', fontSize:10, textTransform:'uppercase', letterSpacing:'0.04em', fontWeight:700 }}>{h}</th>)}</tr></thead>
+              <tbody>
+                {visibleActions.length===0 && <tr><td colSpan={7} style={{ padding:'14px 6px', color:'var(--text-4)', fontSize:12 }}>Nenhuma ação. Use “Sugerir ações críticas” (a partir dos indicadores AD² ≥ 7) ou “Adicionar ação”.</td></tr>}
+                {visibleActions.map(a=>(
+                  <tr key={a.id} style={{ borderBottom:'1px solid var(--border-1)' }}>
+                    <td style={{ padding:'6px 6px' }}><select value={a.domain} onChange={e=>updateAction(a.id,'domain',e.target.value)} style={{ ...inputSt, padding:'6px 8px', minWidth:130 }}>{profile.domains.map(d=><option key={d.id} value={d.id}>{d.name}</option>)}</select></td>
+                    <td style={{ padding:'6px 6px' }}><input value={a.description} onChange={e=>updateAction(a.id,'description',e.target.value)} placeholder="Atividade necessária" style={{ ...inputSt, padding:'6px 8px', minWidth:210 }}/></td>
+                    <td style={{ padding:'6px 6px' }}><input value={a.owner} onChange={e=>updateAction(a.id,'owner',e.target.value)} placeholder="Responsável" style={{ ...inputSt, padding:'6px 8px', minWidth:110 }}/></td>
+                    <td style={{ padding:'6px 6px' }}><input type="number" min="0" step="0.01" value={a.cost} onChange={e=>updateAction(a.id,'cost',e.target.value)} style={{ ...inputSt, padding:'6px 8px', width:100 }}/></td>
+                    <td style={{ padding:'6px 6px' }}><input type="number" min="0" step="1" value={a.weeks} onChange={e=>updateAction(a.id,'weeks',e.target.value)} style={{ ...inputSt, padding:'6px 8px', width:72 }}/></td>
+                    <td style={{ padding:'6px 6px' }}><select value={a.status} onChange={e=>updateAction(a.id,'status',e.target.value)} style={{ ...inputSt, padding:'6px 8px', minWidth:120 }}>{['Planejada','Em execução','Bloqueada','Concluída'].map(s=><option key={s} value={s}>{s}</option>)}</select></td>
+                    <td style={{ padding:'6px 6px', textAlign:'center' }}><button onClick={()=>delAction(a.id)} className="btn sm" style={{ color:'var(--rose-500)', padding:'6px 9px' }} aria-label="Excluir ação">×</button></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <div style={{ display:'flex', flexWrap:'wrap', gap:14, justifyContent:'flex-end', marginTop:10, fontSize:12.5, color:'var(--text-4)' }}>
+            <span>Ações: <strong style={{ color:'var(--text-1)' }}>{visibleActions.length}</strong></span>
+            <span>Custo total informado: <strong style={{ color:'var(--text-1)' }}>{money(totCusto)}</strong></span>
+            <span>Maior duração individual: <strong style={{ color:'var(--text-1)' }}>{maxSem} semana{maxSem===1?'':'s'}</strong></span>
+          </div>
+          <p style={{ fontSize:10.5, color:'var(--text-4)', textAlign:'right', marginTop:6, marginBottom:0 }}>A maior duração individual não representa o caminho crítico do cronograma.</p>
         </section>
 
         <section className="card" style={{ padding:'18px 20px' }}>
           <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', gap:10, marginBottom:12, flexWrap:'wrap' }}>
-            <h3 className="h4">5 · Síntese executiva</h3>
+            <h3 className="h4">6 · Síntese executiva</h3>
             <button onClick={copiar} className="btn sm">Copiar síntese</button>
           </div>
           <pre style={{ whiteSpace:'pre-wrap', margin:0, padding:14, border:'1px solid var(--border-1)', borderRadius:10, background:'var(--bg-2)', color:'var(--text-2)', fontFamily:'var(--f-mono)', fontSize:11.5, lineHeight:1.55 }}>{sintese}</pre>
@@ -29254,6 +29341,8 @@ function Ad2Calculadora() {
           </ol>
         </div>
       </aside>
+
+      {toast && <div style={{ position:'fixed', right:22, bottom:22, zIndex:100, padding:'11px 15px', borderRadius:10, background:'var(--bg-3)', border:'1px solid var(--border-3)', color:'var(--text-1)', fontSize:13, boxShadow:'0 8px 24px rgba(0,0,0,0.35)' }}>{toast}</div>}
     </div>
   );
 }
