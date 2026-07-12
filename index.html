@@ -26343,6 +26343,8 @@ const I = {
   money: (p={}) => <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" strokeLinecap="round" {...p}><path d="M11 4.5C10.2 3.6 9 3 8 3c-1.7 0-3 1-3 2.2C5 7.5 11 6.5 11 9c0 1.4-1.4 2.3-3 2.3-1.3 0-2.5-.6-3.3-1.6"/><path d="M8 1.5v1.6M8 11.4V13"/></svg>,
   group: (p={}) => <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" {...p}><circle cx="6" cy="6" r="2.2"/><path d="M2 13c.6-2 2-3.2 4-3.2s3.4 1.2 4 3.2"/><circle cx="11" cy="5" r="1.6"/><path d="M14 11c-.4-1.5-1.4-2.4-3-2.5"/></svg>,
   flag: (p={}) => <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" {...p}><path d="M3 14V2"/><path d="M3 3h9l-2 3 2 3H3"/></svg>,
+  levels: (p={}) => <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" {...p}><path d="M2 14h12"/><rect x="2.5" y="9" width="3" height="4.5" rx="0.5"/><rect x="6.5" y="6" width="3" height="7.5" rx="0.5"/><rect x="10.5" y="2.5" width="3" height="11" rx="0.5"/></svg>,
+  gauge: (p={}) => <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" {...p}><path d="M2.5 12a6 6 0 1111 0"/><path d="M8 12l3-3.5"/></svg>,
 };
 
 /* ────────────────────────────────────────────────────────────────────
@@ -26484,6 +26486,7 @@ const NAV = [
   { id:'pi',          label:'PI',           icon: I.flag },
   { id:'guia',        label:'Guia',         icon: I.book },
   { id:'simulador',   label:'Simulador',    icon: I.spark },
+  { id:'trl',         label:'TRL & AD²',    icon: I.levels },
   { id:'glossario',   label:'Dicionário',   icon: I.abc }
 ];
 
@@ -26640,7 +26643,7 @@ function Hub() {
       </section>
 
       {/* Hub modules */}
-      <SectionHead num="§ 01" title="Módulos" lede="Seis portas para o atlas. Cada uma é um corte distinto sobre o ecossistema." />
+      <SectionHead num="§ 01" title="Módulos" lede="Sete portas para o atlas. Cada uma é um corte distinto sobre o ecossistema." />
 
       <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(280px, 1fr))', gap:14, marginBottom:'var(--s-8)' }}>
         <ModuleCard num="01" href="#/instrumentos" icon={<I.grid/>} title="Catálogo de Instrumentos" body="Todas as leis, programas e incentivos com ficha completa, filtros por domínio, público, agência e modalidade." accent="var(--blue-400)" badge={`${INSTRUMENTOS.length} fichas`} />
@@ -26649,6 +26652,7 @@ function Hub() {
         <ModuleCard num="04" href="#/guia" icon={<I.book/>} title="Guia do Bom Projeto" body="Oito capítulos curados com pontos críticos e checklists — do enquadramento à prestação de contas." accent="var(--rose-500)" badge={`${GUIA.length} capítulos`} />
         <ModuleCard num="05" href="#/simulador" icon={<I.spark/>} title="Simulador de Fomentos" body="Simule o seu projeto e use IA para o seu projeto: responda 12 perguntas, veja o ranking de instrumentos por aderência e fale com o Agente de IA Sapiens." accent="var(--blue-400)" badge="12 perguntas + IA" />
         <ModuleCard num="06" href="#/glossario" icon={<I.abc/>} title="Dicionário da Inovação" body={`${(window.DICIONARIO||GLOSSARIO).length} verbetes do ecossistema — termo, significado e onde se usa. De TRL e subvenção a patente, glosa, PPB e encomenda tecnológica.`} accent="var(--text-2)" badge="verbetes A–Z" />
+        <ModuleCard num="07" href="#/trl" icon={<I.levels/>} title="TRL & método AD²" body="Entenda o TRL (maturidade da tecnologia) e o AD² (dificuldade de avançar) e avalie o seu projeto na calculadora AD² — nível, matriz de risco e plano de maturação." accent="var(--amber-500)" badge="calculadora" />
       </div>
 
       {/* Featured calls + urgent */}
@@ -28866,6 +28870,589 @@ function SapiensBrain({ size=30 }) {
   );
 }
 
+/* ══════════════════════════════════════════════════════════════════
+   TRL & AD² — dados e calculadora (porte fiel do protótipo validado)
+   Fontes: Bilbro (2008); Zhao & Wei (2015); GAO-20-48G.
+   ══════════════════════════════════════════════════════════════════ */
+const TRL_LABELS = {
+  1:'TRL 1 — Princípios básicos observados',
+  2:'TRL 2 — Conceito tecnológico formulado',
+  3:'TRL 3 — Prova de conceito analítica/experimental',
+  4:'TRL 4 — Validação em laboratório',
+  5:'TRL 5 — Validação em ambiente relevante',
+  6:'TRL 6 — Protótipo demonstrado em ambiente relevante',
+  7:'TRL 7 — Demonstração em ambiente operacional',
+  8:'TRL 8 — Sistema completo e qualificado',
+  9:'TRL 9 — Sistema comprovado em operação'
+};
+const TRL_CURTO = { 1:'Princípios básicos', 2:'Conceito formulado', 3:'Prova de conceito', 4:'Validação em laboratório', 5:'Validação em ambiente relevante', 6:'Protótipo em ambiente relevante', 7:'Demonstração operacional', 8:'Sistema qualificado', 9:'Comprovado em operação' };
+
+const AD2_NIVEIS = {
+  1:{ prob:0,  band:'Baixa dificuldade',   desc:'A solução existe e exige apenas ajustes pequenos. Uma abordagem de desenvolvimento é suficiente.' },
+  2:{ prob:10, band:'Baixa dificuldade',   desc:'A solução existe, mas requer modificações relevantes. Uma abordagem de desenvolvimento tende a ser suficiente.' },
+  3:{ prob:20, band:'Baixa a moderada',    desc:'Há desenvolvimento novo, porém dentro da base de experiência disponível. Uma abordagem é considerada adequada.' },
+  4:{ prob:30, band:'Moderada',            desc:'Há desenvolvimento novo com boa similaridade em todas as áreas críticas. Uma abordagem pode ser conduzida com alta confiança.' },
+  5:{ prob:40, band:'Moderada',            desc:'Há desenvolvimento novo e comparação possível nas áreas críticas. Recomenda-se avaliar duas abordagens.' },
+  6:{ prob:50, band:'Moderada a alta',     desc:'Há similaridade apenas parcial com a experiência existente. Duas abordagens devem ser consideradas.' },
+  7:{ prob:70, band:'Alta dificuldade',    desc:'A comparação com experiências anteriores cobre só parte das áreas críticas. Necessárias rotas alternativas.' },
+  8:{ prob:80, band:'Alta dificuldade',    desc:'A similaridade com a base de experiência é ampla e pouco específica. Múltiplas rotas de desenvolvimento.' },
+  9:{ prob:90, band:'Dificuldade crítica', desc:'O desenvolvimento está fora da base de experiência. Pode ser necessária pesquisa básica.' }
+};
+const AD2_RATING = { 1:'Ajuste mínimo', 2:'Modificação maior', 3:'Dentro da experiência', 4:'Nova solução, alta confiança', 5:'Duas abordagens', 6:'Similaridade parcial', 7:'Múltiplas rotas', 8:'Experiência só ampla', 9:'Fora da experiência' };
+
+const AD2_PERFIS = {
+  bilbro: {
+    name:'Bilbro e GAO: cinco áreas funcionais',
+    description:'Estrutura das cinco áreas citadas para o AD²: projeto e análise, manufatura, software, testes e operações. As perguntas verificam se há pessoas, competências, ferramentas, instalações e evidências para avançar ao TRL alvo.',
+    domains:[
+      { id:'design', name:'Projeto e análise', short:'Projeto', description:'Métodos, modelos, ferramentas, dados e capacidade de projeto.', questions:[
+        ['design_req','Requisitos, interfaces e critérios de desempenho estão definidos para o TRL alvo?','Estabilidade dos requisitos, rastreabilidade e critérios de aceitação.'],
+        ['design_models','Os modelos e métodos de análise representam o ambiente alvo?','Calibração, validação e incertezas dos modelos.'],
+        ['design_tools','Ferramentas, bases de dados e infraestrutura de engenharia estão disponíveis e qualificadas?','Licenças, capacidade computacional, dados e configuração.'],
+        ['design_uncertainty','Hipóteses críticas, margens e incertezas de desempenho estão caracterizadas?','Sensibilidade, tolerâncias e modos de falha.'],
+        ['design_team','A equipe tem experiência demonstrada em projetos comparáveis?','Pessoas, competências raras, liderança técnica e disponibilidade.'] ] },
+      { id:'manufacturing', name:'Manufatura', short:'Manufatura', description:'Processos, materiais, escala, qualidade, fornecedores e instalações.', questions:[
+        ['mfg_process','Os processos, materiais e equipamentos já existem ou são acessíveis?','Processos especiais, ferramental e capacidade instalada.'],
+        ['mfg_scale','A fabricação na escala, repetibilidade e tolerâncias exigidas foi demonstrada?','Transição de protótipo para lote piloto ou produção.'],
+        ['mfg_supply','Fornecedores e insumos críticos estão qualificados e com continuidade?','Lead time, obsolescência e dependência de fonte única.'],
+        ['mfg_quality','Metrologia, controle de processo e qualidade atendem ao nível requerido?','Inspeção, rastreabilidade, rendimento e capacidade do processo.'],
+        ['mfg_people','Instalações e força de trabalho estão disponíveis para fabricar e sustentar?','Treinamento, segurança, manutenção e curva de aprendizagem.'] ] },
+      { id:'software', name:'Desenvolvimento de software', short:'Software', description:'Arquitetura, algoritmos, dados, ferramentas, segurança e equipe.', questions:[
+        ['sw_arch','A arquitetura de software e suas interfaces estão definidas para o sistema alvo?','Modularidade, interoperabilidade e dependências externas.'],
+        ['sw_algorithms','Algoritmos, dados e modelos foram demonstrados em condição representativa?','Desempenho, generalização, latência e qualidade dos dados.'],
+        ['sw_toolchain','A cadeia de desenvolvimento, testes e gestão de configuração é adequada?','Integração contínua, versionamento, ambientes e rastreabilidade.'],
+        ['sw_quality','Segurança, confiabilidade, proteção cibernética e qualidade estão tratadas?','Falhas seguras, vulnerabilidades, dívida técnica e conformidade.'],
+        ['sw_team','A equipe tem experiência e disponibilidade para desenvolver e manter o software?','Competências, suporte, documentação e transferência de conhecimento.'] ] },
+      { id:'test', name:'Teste e avaliação', short:'Testes', description:'Critérios, instalações, ambientes, cobertura e tratamento de anomalias.', questions:[
+        ['test_criteria','Requisitos de teste, critérios de sucesso e evidências necessárias estão definidos?','Relação com requisitos e decisão de passagem de fase.'],
+        ['test_facilities','Instalações, instrumentação e pessoal de teste estão disponíveis no prazo?','Capacidade, calibração, segurança e acesso.'],
+        ['test_environment','Ambientes representativos e artigos de teste podem ser produzidos ou acessados?','Fidelidade ambiental, interfaces e escala.'],
+        ['test_coverage','A estratégia de V&V cobre os modos de operação e falha relevantes?','Cobertura, condições extremas e critérios estatísticos.'],
+        ['test_anomalies','Há capacidade de investigar anomalias, corrigir causas e repetir ensaios?','Tempo de ciclo, peças de reposição e margem de cronograma.'] ] },
+      { id:'operations', name:'Operações', short:'Operações', description:'Conceito de operação, integração, suporte, treinamento e ambiente de uso.', questions:[
+        ['ops_concept','O conceito de operação e os procedimentos para o uso alvo estão definidos?','Atores, decisões, cenários e limites operacionais.'],
+        ['ops_integration','A integração com pessoas, processos, infraestrutura e sistemas é viável?','Interoperabilidade, mudanças organizacionais e interfaces.'],
+        ['ops_support','Confiabilidade, manutenibilidade, suporte e disponibilidade foram tratados?','Manutenção, peças, diagnóstico e metas de serviço.'],
+        ['ops_training','Treinamento, logística, documentação e suporte estão disponíveis?','Prontidão dos usuários e capacidade de sustentação.'],
+        ['ops_environment','Restrições do ambiente real e do ciclo de vida são conhecidas e controláveis?','Clima, segurança, regulação, descarte e custo total.'] ] }
+    ]
+  },
+  zhao: {
+    name:'Zhao e Wei: cinco dimensões de engenharia',
+    description:'Estrutura das cinco dimensões: projeto e análise, desenvolvimento e manufatura, operações e integração, teste e avaliação e validação. O artigo original usa ponderação hierárquica (AHP) e avaliação fuzzy por especialistas.',
+    domains:[
+      { id:'z_design', name:'Projeto e análise', short:'Projeto', description:'Métodos, modelos, ferramentas, dados e previsibilidade.', questions:[
+        ['z_design_req','Requisitos, interfaces e critérios de desempenho estão definidos para o TRL alvo?','Estabilidade, rastreabilidade e critérios de aceitação.'],
+        ['z_design_models','Métodos, modelos e ferramentas de projeto foram validados para a aplicação?','Fidelidade, calibração e validade dos dados.'],
+        ['z_design_analysis','As análises demonstram viabilidade com margens técnicas suficientes?','Sensibilidade, tolerâncias e condições extremas.'],
+        ['z_design_uncertainty','As principais incertezas e hipóteses críticas estão identificadas e quantificadas?','Fontes de erro, variabilidade e limites de confiança.'],
+        ['z_design_repro','Há capacidade de reproduzir os resultados experimentais que sustentam o projeto?','Repetibilidade, documentação e independência da evidência.'] ] },
+      { id:'z_manufacturing', name:'Desenvolvimento e manufatura', short:'Desenv./manuf.', description:'Fabricação do elemento e manufaturabilidade do produto final.', questions:[
+        ['z_mfg_need','A necessidade de novos processos de fabricação está delimitada?','Materiais, processos especiais e equipamentos.'],
+        ['z_mfg_process','Os processos podem atingir as tolerâncias e propriedades requeridas?','Capacidade, rendimento e controle de processo.'],
+        ['z_mfg_scale','A solução pode ser fabricada na escala necessária ao TRL alvo?','Lote piloto, repetibilidade e industrialização.'],
+        ['z_mfg_supply','Insumos, fornecedores, ferramental e instalações estão disponíveis?','Dependências críticas, lead time e obsolescência.'],
+        ['z_mfg_quality','Qualidade, metrologia e rastreabilidade sustentam a maturação?','Inspeção, dados de processo e critérios de liberação.'] ] },
+      { id:'z_operations', name:'Operações e integração', short:'Oper./integr.', description:'Integração ao sistema, confiabilidade, suporte, testabilidade e custo de ciclo de vida.', questions:[
+        ['z_ops_integration','As interfaces e dependências de integração ao sistema estão definidas?','Hardware, software, pessoas e processos.'],
+        ['z_ops_reliability','Confiabilidade, disponibilidade e segurança operacional são demonstráveis?','Modos de falha e tolerância a degradação.'],
+        ['z_ops_maintain','Manutenibilidade, suporte e logística foram incorporados ao desenvolvimento?','Diagnóstico, reposição, documentação e treinamento.'],
+        ['z_ops_testability','A solução foi projetada para ser testável e monitorável no ciclo de vida?','Sensores, registros, inspeções e manutenção por condição.'],
+        ['z_ops_lcc','Custos e restrições do ciclo de vida são conhecidos e aceitáveis?','Operação, manutenção, atualização e desativação.'] ] },
+      { id:'z_test', name:'Teste e avaliação', short:'Testes', description:'Testes de desenvolvimento e operacionais em condições representativas.', questions:[
+        ['z_test_dev','Os testes de desenvolvimento demonstram os requisitos técnicos previstos?','Desempenho, interfaces e margens.'],
+        ['z_test_oper','Os testes operacionais representam missões, usuários e condições reais?','Cenários normais, extremos e degradados.'],
+        ['z_test_facilities','Instalações, infraestrutura, instrumentação e pessoal estão disponíveis?','Acesso, calibração, segurança e capacidade.'],
+        ['z_test_coverage','A cobertura de testes e os critérios estatísticos são suficientes para a decisão?','Repetição, amostragem e confiabilidade da evidência.'],
+        ['z_test_recovery','Há capacidade de tratar anomalias, corrigir causas e repetir ensaios?','Peças, prazo, dados e especialistas.'] ] },
+      { id:'z_validation', name:'Validação', short:'Validação', description:'Evidência progressiva em laboratório, ambiente relevante e ambiente real.', questions:[
+        ['z_val_lab','A solução foi validada em laboratório com critérios e resultados rastreáveis?','Repetibilidade e aderência ao plano de desenvolvimento.'],
+        ['z_val_relevant','A solução foi validada em ambiente relevante com fidelidade suficiente?','Escala, interfaces e condições representativas.'],
+        ['z_val_operational','A validação em ambiente operacional ou real está planejada e é viável?','Acesso, segurança, usuários e autorização.'],
+        ['z_val_independent','A evidência pode ser revisada ou reproduzida por equipe independente?','Dados brutos, método, documentação e critérios.'],
+        ['z_val_trace','Há rastreabilidade entre plano, testes, evidências e o TRL alvo?','Lacunas, critérios de passagem e aceitação formal.'] ] }
+    ]
+  }
+};
+
+const AD2_CONSEQ = {
+  technical:{ 1:'Impacto mínimo ou inexistente no desempenho técnico.', 2:'Redução pequena de desempenho, tolerável.', 3:'Redução moderada, com impacto limitado nos objetivos.', 4:'Degradação significativa, com risco ao sucesso do programa.', 5:'Degradação severa ou incapacidade de atender requisito crítico.' },
+  schedule:{ 1:'Impacto mínimo ou inexistente no cronograma.', 2:'Datas principais ainda podem ser atendidas.', 3:'Atraso limitado; consome folga sem perder marco principal.', 4:'Caminho crítico afetado; risco de deslocar marco principal.', 5:'Marcos principais não podem ser atendidos.' },
+  cost:{ 1:'Impacto mínimo ou inexistente no orçamento.', 2:'Aumento inferior a ~1% do orçamento.', 3:'Aumento inferior a ~5% do orçamento.', 4:'Aumento inferior a ~10% do orçamento.', 5:'Aumento superior a ~10% do orçamento.' }
+};
+const AD2_RISK = [
+  ['low','medium','high','high','high'],
+  ['low','medium','medium','high','high'],
+  ['low','low','medium','medium','high'],
+  ['low','low','low','medium','medium'],
+  ['low','low','low','low-strong','medium']
+];
+const AD2_RISK_COR = { 'low':'#22c55e', 'low-strong':'#16a34a', 'medium':'#facc15', 'high':'#ef4444' };
+function ad2Likelihood(level){ if(level<=3) return 1; if(level<=5) return 2; if(level===6) return 3; if(level<=8) return 4; return 5; }
+function ad2RiskClass(cons, like){ return AD2_RISK[5-cons][like-1]; }
+function ad2RiskLabel(cls){ return cls==='high' ? 'Alto' : (cls==='medium' ? 'Moderado' : 'Baixo'); }
+function ad2InitAnswers(){ const a={}; Object.values(AD2_PERFIS).forEach(p=>p.domains.forEach(d=>d.questions.forEach(([q])=>{ a[q]=1; }))); return a; }
+function ad2InitWeights(){ const w={}; Object.values(AD2_PERFIS).forEach(p=>p.domains.forEach(d=>{ w[d.id]=20; })); return w; }
+
+function Ad2Calculadora() {
+  const [form, setForm] = React.useState({ projeto:'', tecnologia:'', escopo:'Componente', trlAtual:'3', trlAlvo:'6', contexto:'' });
+  const [profileId, setProfileId] = React.useState('bilbro');
+  const [rounding, setRounding] = React.useState('ceil');
+  const [answers, setAnswers] = React.useState(ad2InitAnswers);
+  const [touched, setTouched] = React.useState({});
+  const [weights, setWeights] = React.useState(ad2InitWeights);
+  const [cons, setCons] = React.useState({ technical:1, schedule:1, cost:1 });
+  const setF = (k,v) => setForm(p=>({ ...p, [k]:v }));
+
+  const profile = AD2_PERFIS[profileId];
+  const brl = n => Number(n||0).toLocaleString('pt-BR', { minimumFractionDigits:2, maximumFractionDigits:2 });
+
+  const calc = React.useMemo(() => {
+    const domainScores = profile.domains.map(d => {
+      const vals = d.questions.map(([q]) => Number(answers[q]||1));
+      return { ...d, score: vals.reduce((a,b)=>a+b,0)/vals.length };
+    });
+    const raw = domainScores.map(d => Math.max(0, Number(weights[d.id]||0)));
+    const tot = raw.reduce((a,b)=>a+b,0);
+    const nw = tot<=0 ? raw.map(()=>1/raw.length) : raw.map(v=>v/tot);
+    const continuous = domainScores.reduce((s,d,i)=>s + d.score*nw[i], 0);
+    const safe = Math.round(continuous*1e10)/1e10;
+    let lvl = rounding==='floor' ? Math.floor(safe) : (rounding==='nearest' ? Math.round(safe) : Math.ceil(safe));
+    const level = Math.min(9, Math.max(1, lvl));
+    const likelihood = ad2Likelihood(level);
+    const consequence = Math.max(cons.technical, cons.schedule, cons.cost);
+    const riskClass = ad2RiskClass(consequence, likelihood);
+    const totalQ = profile.domains.reduce((s,d)=>s+d.questions.length,0);
+    const answered = profile.domains.reduce((s,d)=>s + d.questions.filter(([q])=>touched[q]).length, 0);
+    const completeness = totalQ ? Math.round(answered/totalQ*100) : 0;
+    const critical = [];
+    profile.domains.forEach(d=>d.questions.forEach(([q,question])=>{ const sc=Number(answers[q]||1); if(sc>=7) critical.push({ q, question, sc, domainName:d.name }); }));
+    critical.sort((a,b)=>b.sc-a.sc);
+    const cur = Number(form.trlAtual), alvo = Number(form.trlAlvo);
+    const trlValido = alvo>cur;
+    return { domainScores, nw, continuous, level, likelihood, consequence, riskClass, completeness, critical, trlGap: alvo-cur, trlValido, cur, alvo };
+  }, [profile, answers, weights, rounding, cons, touched, form.trlAtual, form.trlAlvo]);
+
+  const pesoTotal = profile.domains.reduce((s,d)=>s+Number(weights[d.id]||0),0);
+  const pesoOk = Math.abs(pesoTotal-100) < 0.01;
+
+  const sintese = React.useMemo(() => {
+    const c = calc;
+    const critText = c.critical.length ? c.critical.slice(0,5).map((x,i)=>`${i+1}. ${x.domainName}: ${x.question} [AD² ${x.sc}]`).join('\n') : 'Nenhum indicador nos níveis 7 a 9.';
+    const domText = c.domainScores.map(d=>`${d.name}: ${d.score.toFixed(2)}`).join('; ');
+    const mat = c.trlValido ? `TRL ${c.cur} → TRL ${c.alvo} (${c.trlGap} ${c.trlGap===1?'nível':'níveis'})` : `configuração inválida: TRL alvo deve ser maior que o atual`;
+    return [
+      'AVALIAÇÃO AD²',
+      `Projeto: ${form.projeto||'não informado'}`,
+      `Tecnologia: ${form.tecnologia||'não informada'}`,
+      `Escopo: ${form.escopo}`,
+      `Maturação pretendida: ${mat}`,
+      `Perfil: ${profile.name}`,
+      `Completude do preenchimento: ${c.completeness}%`,
+      '',
+      'RESULTADO',
+      `Índice contínuo: ${c.continuous.toFixed(2)}`,
+      `Nível AD²: ${c.level} — ${AD2_NIVEIS[c.level].band}`,
+      `Probabilidade indicativa: ${AD2_NIVEIS[c.level].prob}%`,
+      `Probabilidade (matriz): nível ${c.likelihood}`,
+      `Consequência consolidada: nível ${c.consequence}`,
+      `Risco combinado: ${ad2RiskLabel(c.riskClass)}`,
+      '',
+      'INTERPRETAÇÃO',
+      AD2_NIVEIS[c.level].desc,
+      '',
+      'RESULTADOS POR DIMENSÃO',
+      domText,
+      '',
+      'INDICADORES CRÍTICOS',
+      critText,
+      form.contexto ? `\nPREMISSAS E LIMITES\n${form.contexto}` : '',
+      '',
+      c.completeness<100 ? 'Alerta: resultado preliminar — nem todos os indicadores foram avaliados.' : '',
+      'Observação: o AD² complementa o TRL. Mede a dificuldade de avançar, não a maturidade já demonstrada.'
+    ].filter(Boolean).join('\n');
+  }, [calc, form, profile]);
+
+  const inputSt = { width:'100%', padding:'9px 11px', border:'1px solid var(--border-2)', background:'var(--bg-2)', color:'var(--text-1)', borderRadius:8, fontSize:13, outline:0 };
+  const labelSt = { display:'block', marginBottom:5, color:'var(--text-3)', fontSize:11.5, fontWeight:600 };
+
+  const copiar = () => { navigator.clipboard && navigator.clipboard.writeText(sintese); };
+  const setAns = (q,v) => { setAnswers(p=>({ ...p, [q]:v })); setTouched(p=>({ ...p, [q]:true })); };
+  const pesosIguais = () => { const ds=profile.domains; const base=Math.floor(100/ds.length); const rem=100-base*ds.length; setWeights(p=>{ const w={ ...p }; ds.forEach((d,i)=>w[d.id]=base+(i<rem?1:0)); return w; }); };
+
+  return (
+    <div style={{ display:'grid', gridTemplateColumns:'minmax(0,1fr) 360px', gap:'var(--s-6)', alignItems:'start' }}>
+      {/* Coluna principal */}
+      <div style={{ display:'flex', flexDirection:'column', gap:'var(--s-5)', minWidth:0 }}>
+        <div style={{ padding:'11px 14px', border:'1px solid var(--border-2)', borderLeft:'3px solid var(--amber-500)', borderRadius:8, background:'rgba(245,158,11,0.06)', color:'var(--text-3)', fontSize:12, lineHeight:1.5 }}>
+          O AD² não tem um questionário único e universal. Esta calculadora operacionaliza as referências (Bilbro; Zhao & Wei; GAO). O resultado apoia decisão e planejamento — não substitui evidência técnica nem avaliação formal de maturidade.
+        </div>
+
+        <section className="card" style={{ padding:'18px 20px' }}>
+          <h3 className="h4" style={{ marginBottom:14 }}>1 · Identificação e escopo</h3>
+          <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:12 }}>
+            <div><label style={labelSt}>Projeto ou programa</label><input style={inputSt} value={form.projeto} onChange={e=>setF('projeto',e.target.value)} placeholder="Ex.: Plataforma de detecção autônoma"/></div>
+            <div><label style={labelSt}>Tecnologia ou elemento crítico</label><input style={inputSt} value={form.tecnologia} onChange={e=>setF('tecnologia',e.target.value)} placeholder="Ex.: Sensor óptico embarcado"/></div>
+            <div><label style={labelSt}>Unidade de análise</label>
+              <select style={inputSt} value={form.escopo} onChange={e=>setF('escopo',e.target.value)}>
+                {['Componente','Subsistema','Sistema','Processo','Software'].map(o=><option key={o} value={o}>{o}</option>)}
+              </select></div>
+            <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:12 }}>
+              <div><label style={labelSt}>TRL atual</label><select style={inputSt} value={form.trlAtual} onChange={e=>setF('trlAtual',e.target.value)}>{Object.keys(TRL_LABELS).map(k=><option key={k} value={k}>TRL {k}</option>)}</select></div>
+              <div><label style={labelSt}>TRL alvo</label><select style={inputSt} value={form.trlAlvo} onChange={e=>setF('trlAlvo',e.target.value)}>{Object.keys(TRL_LABELS).map(k=><option key={k} value={k}>TRL {k}</option>)}</select></div>
+            </div>
+          </div>
+          {!calc.trlValido && <div style={{ marginTop:12, padding:'9px 12px', borderRadius:8, background:'rgba(245,158,11,0.1)', color:'var(--amber-500)', fontSize:12 }}>Configuração inválida: o TRL alvo deve ser superior ao TRL atual para avaliar um avanço AD².</div>}
+          <div style={{ marginTop:12 }}><label style={labelSt}>Contexto, premissas e limites</label><textarea style={{ ...inputSt, minHeight:70, resize:'vertical' }} value={form.contexto} onChange={e=>setF('contexto',e.target.value)} placeholder="Ambiente alvo, restrições, dependências, fontes de evidência e premissas."/></div>
+        </section>
+
+        <section className="card" style={{ padding:'18px 20px' }}>
+          <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', gap:12, flexWrap:'wrap' }}>
+            <h3 className="h4">2 · Perfil metodológico</h3>
+            <span className="mono" style={{ fontSize:11, color: pesoOk?'var(--green-400)':'var(--amber-500)', border:'1px solid', borderColor: pesoOk?'var(--green-400)':'var(--amber-500)', borderRadius:99, padding:'3px 10px' }}>Pesos: {pesoTotal.toFixed(0)}%</span>
+          </div>
+          <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:12, marginTop:12 }}>
+            <div><label style={labelSt}>Estrutura de avaliação</label>
+              <select style={inputSt} value={profileId} onChange={e=>setProfileId(e.target.value)}>
+                <option value="bilbro">Bilbro e GAO: cinco áreas funcionais</option>
+                <option value="zhao">Zhao e Wei: cinco dimensões</option>
+              </select></div>
+            <div><label style={labelSt}>Regra para o nível final</label>
+              <select style={inputSt} value={rounding} onChange={e=>setRounding(e.target.value)}>
+                <option value="ceil">Conservadora: arredondar p/ cima</option>
+                <option value="nearest">Convencional: inteiro mais próximo</option>
+                <option value="floor">Otimista: arredondar p/ baixo</option>
+              </select></div>
+          </div>
+          <p style={{ fontSize:12, color:'var(--text-4)', lineHeight:1.5, marginTop:10, marginBottom:0 }}>{profile.description} <strong style={{ color:'var(--text-3)' }}>Cálculo:</strong> média simples dos 5 indicadores por dimensão → média ponderada entre dimensões → nível inteiro pela regra escolhida. Simplificação operacional (não reproduz AHP + fuzzy de Zhao & Wei).</p>
+          <button onClick={pesosIguais} className="btn sm" style={{ marginTop:12 }}>Distribuir pesos igualmente</button>
+        </section>
+
+        <section className="card" style={{ padding:'18px 20px' }}>
+          <h3 className="h4" style={{ marginBottom:4 }}>3 · Avaliação das dimensões</h3>
+          <p style={{ fontSize:12, color:'var(--text-4)', margin:'0 0 14px' }}>Dificuldade de 1 a 9 por indicador. Maior = mais incerteza, menos base de experiência, mais esforço de maturação.</p>
+          <div style={{ display:'flex', flexDirection:'column', gap:14 }}>
+            {calc.domainScores.map((d, di) => (
+              <div key={d.id} style={{ border:'1px solid var(--border-1)', borderRadius:12, overflow:'hidden' }}>
+                <div style={{ display:'grid', gridTemplateColumns:'1fr 90px 74px', gap:10, alignItems:'center', padding:'12px 14px', background:'var(--bg-2)', borderBottom:'1px solid var(--border-1)' }}>
+                  <div style={{ display:'flex', gap:10, alignItems:'center' }}>
+                    <span style={{ display:'grid', placeItems:'center', width:28, height:28, borderRadius:8, background:'var(--blue-500)', color:'#fff', fontWeight:800, fontSize:13, flexShrink:0 }}>{di+1}</span>
+                    <div><div style={{ fontSize:13.5, fontWeight:600 }}>{d.name}</div><div style={{ fontSize:11, color:'var(--text-4)' }}>{d.description}</div></div>
+                  </div>
+                  <div><label style={{ ...labelSt, fontSize:9.5, textTransform:'uppercase', letterSpacing:'0.04em' }}>Peso %</label><input type="number" min="0" max="100" style={{ ...inputSt, padding:'7px 8px' }} value={weights[d.id]} onChange={e=>setWeights(p=>({ ...p, [d.id]:Math.max(0,Number(e.target.value||0)) }))}/></div>
+                  <div style={{ textAlign:'right' }}><label style={{ ...labelSt, fontSize:9.5, textTransform:'uppercase', letterSpacing:'0.04em' }}>Resultado</label><strong style={{ fontSize:18, color:'var(--blue-400)' }}>{d.score.toFixed(2)}</strong></div>
+                </div>
+                <div style={{ padding:'4px 14px 12px' }}>
+                  {d.questions.map(([q, question, help], qi) => {
+                    const v = Number(answers[q]||1);
+                    return (
+                      <div key={q} style={{ display:'grid', gridTemplateColumns:'minmax(0,1fr) minmax(220px,0.8fr)', gap:16, padding:'13px 0', borderBottom: qi<d.questions.length-1?'1px solid var(--border-1)':'none' }}>
+                        <div><div style={{ fontSize:13, fontWeight:500, lineHeight:1.35 }}>{di+1}.{qi+1} {question}</div><div style={{ fontSize:11, color:'var(--text-4)', marginTop:4 }}>{help}</div></div>
+                        <div>
+                          <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:6 }}>
+                            <span style={{ display:'inline-flex', gap:7, alignItems:'center', fontWeight:800, fontSize:12 }}><span style={{ display:'grid', placeItems:'center', width:30, height:24, borderRadius:7, background:'var(--blue-500)', color:'#fff' }}>{v}</span>Dificuldade</span>
+                            <span style={{ color:'var(--text-4)', fontSize:11 }}>{AD2_RATING[v]}</span>
+                          </div>
+                          <input type="range" min="1" max="9" step="1" value={v} onChange={e=>setAns(q, Number(e.target.value))} style={{ width:'100%', accentColor:'var(--blue-400)' }}/>
+                          <div style={{ display:'flex', justifyContent:'space-between', color:'var(--text-5)', fontSize:9.5 }}><span>1 · mínima</span><span>5 · média</span><span>9 · crítica</span></div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section className="card" style={{ padding:'18px 20px' }}>
+          <h3 className="h4" style={{ marginBottom:4 }}>4 · Consequências para o programa</h3>
+          <p style={{ fontSize:12, color:'var(--text-4)', margin:'0 0 14px' }}>A consequência final usa o maior nível entre desempenho técnico, cronograma e custo.</p>
+          <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:12 }}>
+            {[['technical','Desempenho técnico'],['schedule','Cronograma'],['cost','Custo']].map(([k,rot]) => (
+              <div key={k} style={{ padding:'12px', border:'1px solid var(--border-1)', borderRadius:10, background:'var(--bg-2)' }}>
+                <label style={{ ...labelSt, color:'var(--text-2)', fontWeight:700 }}>{rot}</label>
+                <select style={inputSt} value={cons[k]} onChange={e=>setCons(p=>({ ...p, [k]:Number(e.target.value) }))}>{[1,2,3,4,5].map(n=><option key={n} value={n}>Nível {n}</option>)}</select>
+                <div style={{ fontSize:10.5, color:'var(--text-4)', marginTop:7, lineHeight:1.4 }}>{AD2_CONSEQ[k][cons[k]]}</div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section className="card" style={{ padding:'18px 20px' }}>
+          <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', gap:10, marginBottom:12, flexWrap:'wrap' }}>
+            <h3 className="h4">5 · Síntese executiva</h3>
+            <button onClick={copiar} className="btn sm">Copiar síntese</button>
+          </div>
+          <pre style={{ whiteSpace:'pre-wrap', margin:0, padding:14, border:'1px solid var(--border-1)', borderRadius:10, background:'var(--bg-2)', color:'var(--text-2)', fontFamily:'var(--f-mono)', fontSize:11.5, lineHeight:1.55 }}>{sintese}</pre>
+        </section>
+
+        <section className="card" style={{ padding:'16px 20px' }}>
+          <h3 className="h4" style={{ marginBottom:10 }}>Referências metodológicas</h3>
+          <ol style={{ margin:0, paddingLeft:18, color:'var(--text-4)', fontSize:12, lineHeight:1.5 }}>
+            <li>Bilbro, J. W. (2008). <em>Using the Advancement Degree of Difficulty (AD²) as an Input to Risk Management</em>.</li>
+            <li>Zhao, D.; Wei, F. (2015). <em>Advancement Degree of Difficulty Assessment Method for Complex Products</em>. DOI 10.2991/978-94-6239-100-0_19.</li>
+            <li>U.S. GAO (2020). <em>Technology Readiness Assessment Guide</em>. GAO-20-48G.</li>
+          </ol>
+        </section>
+      </div>
+
+      {/* Resultado (sticky) */}
+      <aside style={{ position:'sticky', top:80, display:'flex', flexDirection:'column', gap:14, maxHeight:'calc(100vh - 100px)', overflowY:'auto' }}>
+        <div className="card" style={{ padding:20, background:'linear-gradient(145deg, var(--bg-2), rgba(59,130,246,0.10))' }}>
+          <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', gap:12 }}>
+            <div>
+              <div className="sec-num" style={{ color:'var(--text-4)' }}>Nível AD²</div>
+              <div style={{ fontFamily:'var(--f-display)', fontSize:52, lineHeight:1, fontWeight:800, color:'var(--text-1)' }}>{calc.level}</div>
+              <div style={{ fontSize:11.5, color:'var(--text-4)' }}>Índice contínuo: {calc.continuous.toFixed(2)}</div>
+            </div>
+            <span style={{ padding:'6px 10px', borderRadius:99, fontSize:11, fontWeight:800, color:'var(--bg-0)', background: AD2_RISK_COR[calc.riskClass] }}>{AD2_NIVEIS[calc.level].band}</span>
+          </div>
+          <p style={{ fontSize:12, color:'var(--text-2)', lineHeight:1.5, margin:'12px 0 0' }}>{AD2_NIVEIS[calc.level].desc}</p>
+          <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:8, marginTop:14 }}>
+            {[['Probabilidade', AD2_NIVEIS[calc.level].prob+'%'],['Prob. (matriz)', 'Nível '+calc.likelihood],['Consequência', 'Nível '+calc.consequence],['Risco combinado', ad2RiskLabel(calc.riskClass)],['Salto de TRL', calc.trlValido?(calc.trlGap+(calc.trlGap===1?' nível':' níveis')):'inválido'],['Completude', calc.completeness+'%']].map(([s,val])=>(
+              <div key={s} style={{ padding:10, border:'1px solid var(--border-2)', borderRadius:9, background:'var(--bg-1)' }}><div style={{ color:'var(--text-4)', fontSize:9.5, textTransform:'uppercase', letterSpacing:'0.04em' }}>{s}</div><strong style={{ fontSize:14, color:'var(--text-1)' }}>{val}</strong></div>
+            ))}
+          </div>
+        </div>
+
+        <div className="card" style={{ padding:16 }}>
+          <h3 className="h4" style={{ fontSize:13, marginBottom:10 }}>Resultado por dimensão</h3>
+          {calc.domainScores.map(d=>(
+            <div key={d.id} style={{ display:'grid', gridTemplateColumns:'110px 1fr 34px', gap:8, alignItems:'center', margin:'8px 0', fontSize:11 }}>
+              <span title={d.name} style={{ color:'var(--text-3)', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{d.short}</span>
+              <span style={{ height:8, borderRadius:99, background:'var(--bg-3)', overflow:'hidden' }}><span style={{ display:'block', height:'100%', width:`${(d.score-1)/8*100}%`, background:'linear-gradient(90deg, var(--blue-500), var(--blue-400))' }}/></span>
+              <strong style={{ textAlign:'right' }}>{d.score.toFixed(1)}</strong>
+            </div>
+          ))}
+        </div>
+
+        <div className="card" style={{ padding:16 }}>
+          <h3 className="h4" style={{ fontSize:13, marginBottom:10 }}>Matriz de risco 5 × 5</h3>
+          <div style={{ display:'grid', gridTemplateColumns:'26px repeat(5,1fr)', gap:3 }}>
+            <span/>
+            {[1,2,3,4,5].map(l=><span key={l} style={{ display:'grid', placeItems:'center', fontSize:10, color:'var(--text-4)' }}>P{l}</span>)}
+            {[5,4,3,2,1].map(c=>(
+              <React.Fragment key={c}>
+                <span style={{ display:'grid', placeItems:'center', fontSize:10, color:'var(--text-4)' }}>C{c}</span>
+                {[1,2,3,4,5].map(l=>{ const cls=ad2RiskClass(c,l); const on=c===calc.consequence&&l===calc.likelihood; return <span key={l} title={`C${c} × P${l}`} style={{ display:'grid', placeItems:'center', minHeight:30, borderRadius:5, fontSize:10, fontWeight:800, color: cls==='medium'?'#422006':(cls==='low'||cls==='low-strong'?'#052e16':'#fff'), background: AD2_RISK_COR[cls], outline: on?'3px solid var(--text-1)':'none', outlineOffset:'-2px' }}>{c}×{l}</span>; })}
+              </React.Fragment>
+            ))}
+          </div>
+          <div style={{ display:'flex', gap:12, marginTop:10, fontSize:10.5, color:'var(--text-4)' }}>
+            <span style={{ display:'inline-flex', gap:5, alignItems:'center' }}><i style={{ width:9, height:9, borderRadius:3, background:'#22c55e' }}/>Baixo</span>
+            <span style={{ display:'inline-flex', gap:5, alignItems:'center' }}><i style={{ width:9, height:9, borderRadius:3, background:'#facc15' }}/>Moderado</span>
+            <span style={{ display:'inline-flex', gap:5, alignItems:'center' }}><i style={{ width:9, height:9, borderRadius:3, background:'#ef4444' }}/>Alto</span>
+          </div>
+          <p style={{ fontSize:10.5, color:'var(--text-4)', lineHeight:1.5, marginTop:10, marginBottom:0 }}>A probabilidade (eixo P) deriva do nível AD². A consequência (eixo C) é o maior nível entre técnico, cronograma e custo. O contorno destaca a posição atual.</p>
+        </div>
+
+        <div className="card" style={{ padding:16 }}>
+          <h3 className="h4" style={{ fontSize:13, marginBottom:10 }}>Indicadores críticos (AD² ≥ 7)</h3>
+          <ol style={{ margin:0, paddingLeft:18, fontSize:11.5, color:'var(--text-2)', lineHeight:1.45 }}>
+            {calc.critical.length ? calc.critical.slice(0,6).map(x=><li key={x.q} style={{ margin:'6px 0' }}><strong style={{ color:'var(--amber-500)' }}>{x.sc}</strong> · {x.domainName}: {x.question}</li>) : <li style={{ color:'var(--text-4)' }}>Nenhum indicador recebeu nível 7, 8 ou 9.</li>}
+          </ol>
+        </div>
+      </aside>
+    </div>
+  );
+}
+
+/* --- Sub-aba: O que é TRL --- */
+const TRL_FASES = [
+  { id:'pesquisa', nome:'Pesquisa', faixa:'TRL 1–3', cor:'var(--blue-400)', desc:'Princípios básicos, formulação do conceito e prova de conceito.' },
+  { id:'desenv', nome:'Desenvolvimento da tecnologia', faixa:'TRL 4–6', cor:'var(--amber-500)', desc:'Do demonstrador de laboratório ao protótipo validado em ambiente relevante.' },
+  { id:'operacao', nome:'Integração e operação', faixa:'TRL 7–9', cor:'var(--green-400)', desc:'Integração ao sistema, instalação/comissionamento e operação comprovada em campo.' }
+];
+const TRL_DESCR = {
+  1:'Princípios básicos observados e reportados.',
+  2:'Conceito de tecnologia e/ou aplicação formulados.',
+  3:'Prova de conceito de função crítica por via analítica e experimental.',
+  4:'Verificação funcional de componente/breadboard em ambiente de laboratório.',
+  5:'Verificação crítica em ambiente relevante; protótipo testado em função, desempenho e confiabilidade.',
+  6:'Protótipo em escala real demonstrando funções críticas em ambiente relevante.',
+  7:'Demonstração do desempenho em ambiente relevante, integrado ao sistema.',
+  8:'Sistema real concluído, instalado, comissionado e pronto para operar.',
+  9:'Sistema comprovado por missão/operação bem-sucedida (comprovado em campo).'
+};
+function faseDoTrl(n){ return n<=3 ? TRL_FASES[0] : (n<=6 ? TRL_FASES[1] : TRL_FASES[2]); }
+
+function TrlEscala() {
+  return (
+    <div style={{ display:'flex', flexDirection:'column', gap:'var(--s-5)' }}>
+      <div>
+        <div className="sec-num" style={{ color:'var(--blue-400)', marginBottom:8 }}>Maturidade tecnológica</div>
+        <h1 className="serif" style={{ fontSize:'clamp(28px,3.2vw,42px)', lineHeight:1.05, margin:0 }}>O que é TRL</h1>
+        <p style={{ color:'var(--text-2)', fontSize:14.5, lineHeight:1.6, marginTop:12, maxWidth:'70ch' }}>
+          O <strong>TRL (Technology Readiness Level</strong>, ou Nível de Maturidade Tecnológica) é uma medida do <strong>grau de maturidade atual</strong> de uma tecnologia — indica <em>onde</em> ela está no desenvolvimento, numa escala de 1 a 9. Foi criado na <strong>NASA</strong> e adotado por Defesa, energias renováveis, óleo e gás, União Europeia e pela norma <strong>ISO 16290</strong> (no Brasil, <strong>ABNT NBR ISO 16290:2015</strong>).
+        </p>
+      </div>
+
+      <div style={{ padding:'12px 15px', border:'1px solid var(--border-2)', borderLeft:'3px solid var(--blue-500)', borderRadius:8, background:'var(--blue-glow)', color:'var(--text-2)', fontSize:13, lineHeight:1.5 }}>
+        Ponto-chave: o TRL mede a maturidade <strong>atual</strong> — não a dificuldade de avançar de um nível para o próximo. Essa dificuldade é medida por outro método, o <strong>AD²</strong> (aba ao lado). O TRL também <strong>não é um processo de qualificação</strong>: quem eleva o nível e gera evidência rastreável é o desenvolvimento/qualificação da tecnologia.
+      </div>
+
+      {/* A escada dos 9 níveis, por fase */}
+      <div>
+        <h3 className="h4" style={{ marginBottom:12 }}>A escada de 9 níveis, em 3 fases</h3>
+        <div style={{ display:'flex', flexDirection:'column', gap:14 }}>
+          {TRL_FASES.map(f => (
+            <div key={f.id} className="card" style={{ padding:'14px 16px', borderLeft:`3px solid ${f.cor}` }}>
+              <div style={{ display:'flex', alignItems:'baseline', gap:10, marginBottom:10, flexWrap:'wrap' }}>
+                <span className="mono" style={{ fontSize:11, color:f.cor, fontWeight:700 }}>{f.faixa}</span>
+                <strong style={{ fontSize:14 }}>{f.nome}</strong>
+                <span style={{ fontSize:12, color:'var(--text-4)' }}>· {f.desc}</span>
+              </div>
+              <div style={{ display:'flex', flexDirection:'column', gap:6 }}>
+                {Object.keys(TRL_DESCR).map(Number).filter(n=>faseDoTrl(n).id===f.id).map(n=>(
+                  <div key={n} style={{ display:'grid', gridTemplateColumns:'54px 1fr', gap:12, alignItems:'baseline' }}>
+                    <span style={{ display:'grid', placeItems:'center', height:26, borderRadius:7, background:'var(--bg-2)', border:`1px solid ${f.cor}`, color:f.cor, fontWeight:800, fontSize:12 }}>TRL {n}</span>
+                    <span style={{ fontSize:13, color:'var(--text-2)', lineHeight:1.45 }}>{TRL_DESCR[n]}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+        <p style={{ fontSize:11.5, color:'var(--text-4)', marginTop:8 }}>Redação alinhada às fontes Astrimar / API RP 17N e à escala NASA/ISO 16290. No subsea (óleo e gás) usa-se ainda a escala API 0–7 (API TRL = TRL − 2).</p>
+      </div>
+
+      {/* Pontos práticos */}
+      <div className="card" style={{ padding:'16px 18px' }}>
+        <h3 className="h4" style={{ marginBottom:10 }}>Pontos práticos</h3>
+        <ul style={{ margin:0, paddingLeft:18, color:'var(--text-2)', fontSize:13, lineHeight:1.6 }}>
+          <li><strong>Não é linear:</strong> o esforço para subir um nível varia; pode-se, inclusive, avançar níveis em paralelo.</li>
+          <li><strong>TRL alto não garante prontidão de manufatura nem de mercado.</strong> Para isso existem escalas complementares — <strong>MRL</strong> (manufatura) e <strong>CRL</strong> (comercial), no <a href="#/glossario" style={{ color:'var(--blue-400)' }}>Dicionário</a>.</li>
+          <li><strong>Progressão do ambiente de teste:</strong> laboratório (TRL 4) → ambiente relevante/simulado (TRL 5–6) → ambiente operacional/real (TRL 8–9).</li>
+          <li>Descritores genéricos <strong>exigem interpretação e adaptação</strong> à tecnologia específica.</li>
+        </ul>
+      </div>
+
+      {/* Uso no fomento */}
+      <div className="card" style={{ padding:'16px 18px' }}>
+        <h3 className="h4" style={{ marginBottom:10 }}>Como o TRL é usado no fomento à inovação</h3>
+        <ul style={{ margin:0, paddingLeft:18, color:'var(--text-2)', fontSize:13, lineHeight:1.6 }}>
+          <li><strong>Define qual instrumento serve a cada estágio.</strong> O apoio público concentra-se nas fases iniciais (TRL baixos, alta incerteza), tipicamente via recursos não reembolsáveis; nas fases maduras entram crédito reembolsável e capital de risco. Veja o <a href="#/simulador" style={{ color:'var(--blue-400)' }}>Simulador</a>, que usa o TRL para recomendar instrumentos.</li>
+          <li><strong>Faixas por instrumento:</strong> a <strong>EMBRAPII</strong> apoia projetos entre <strong>TRL 3 e 6</strong>; a <strong>FINEP</strong> adota uma versão simplificada da NBR ISO 16290 em suas referências.</li>
+          <li><strong>Avaliadores exigem TRL declarado e rastreável</strong>, para confirmar que o ganho de maturidade corresponde ao investimento.</li>
+          <li><strong>"Vale da morte":</strong> projetos em maturidade intermediária (tipicamente TRL 4–5) correm risco de parar por falta de investimento; o TRL ajuda a identificá-los.</li>
+        </ul>
+        <p style={{ fontSize:11.5, color:'var(--text-4)', marginTop:10, marginBottom:0 }}>Marcos no Brasil: ABNT NBR ISO 16290 (2015); adoção pela Embrapa (2018); EMBRAPII e FINEP (2020); demonstrador hipersônico da FAB atingindo TRL 7 (2021); institucionalização no MCTI (2022) e a Calculadora de Maturidade Tecnológica do Invest MCTI.</p>
+      </div>
+
+      <p style={{ fontSize:11.5, color:'var(--text-4)', lineHeight:1.5 }}>Fontes: Astrimar — <em>The Qualification of New Technology</em> (Sessions 1 e 3, 2018); Thiago N. Chuba — <em>TRL e Inovação</em> (PI em Questão/INPI); NASA (Mankins, 1995); ISO 16290 / ABNT NBR ISO 16290:2015.</p>
+    </div>
+  );
+}
+
+/* --- Sub-aba: O que é o AD² --- */
+function Ad2Explicacao({ goCalc }) {
+  return (
+    <div style={{ display:'flex', flexDirection:'column', gap:'var(--s-5)' }}>
+      <div>
+        <div className="sec-num" style={{ color:'var(--amber-500)', marginBottom:8 }}>Grau de dificuldade de avanço</div>
+        <h1 className="serif" style={{ fontSize:'clamp(28px,3.2vw,42px)', lineHeight:1.05, margin:0 }}>O que é o método AD²</h1>
+        <p style={{ color:'var(--text-2)', fontSize:14.5, lineHeight:1.6, marginTop:12, maxWidth:'70ch' }}>
+          O <strong>AD² (Advancement Degree of Difficulty</strong>, Grau de Dificuldade de Avanço) mede a <strong>dificuldade</strong> — esforço, custo, tempo e risco — para <strong>avançar</strong> uma tecnologia de um <strong>TRL atual até um TRL alvo</strong>. É <strong>complementar</strong> ao TRL: enquanto o TRL diz <em>onde a tecnologia está</em>, o AD² diz <em>quão difícil será o próximo passo</em>. Foi sistematizado por <strong>James Bilbro</strong> (NASA), expandindo o antecessor <strong>R&D³</strong> de Mankins (2002).
+        </p>
+      </div>
+
+      <div style={{ padding:'12px 15px', border:'1px solid var(--border-2)', borderLeft:'3px solid var(--amber-500)', borderRadius:8, background:'rgba(245,158,11,0.06)', color:'var(--text-2)', fontSize:13, lineHeight:1.5 }}>
+        Por que importa: o salto de esforço entre TRLs <strong>não é linear</strong> — ir de TRL 3→4 pode não custar o mesmo que TRL 6→7. O TRL sozinho não informa o que falta para completar o desenvolvimento; o AD² captura essa dificuldade e a transforma em <strong>probabilidade de risco</strong>, insumo direto para a gestão do projeto.
+      </div>
+
+      {/* Escala AD2 de 9 níveis */}
+      <div>
+        <h3 className="h4" style={{ marginBottom:12 }}>A escala AD² de 9 níveis (Bilbro, 2008)</h3>
+        <div style={{ display:'flex', flexDirection:'column', gap:6 }}>
+          {[9,8,7,6,5,4,3,2,1].map(n => {
+            const lv = AD2_NIVEIS[n];
+            const cor = n>=7 ? '#ef4444' : (n>=4 ? '#facc15' : '#22c55e');
+            return (
+              <div key={n} className="card" style={{ padding:'11px 14px', display:'grid', gridTemplateColumns:'40px 1fr 64px', gap:12, alignItems:'center' }}>
+                <span style={{ display:'grid', placeItems:'center', width:34, height:34, borderRadius:9, background:cor, color:'#0b0e14', fontWeight:900, fontSize:15 }}>{n}</span>
+                <div><div style={{ fontSize:12.5, color:'var(--text-2)', lineHeight:1.45 }}>{lv.desc}</div><div style={{ fontSize:10.5, color:'var(--text-4)', marginTop:2 }}>{lv.band}</div></div>
+                <div style={{ textAlign:'right' }}><strong style={{ fontSize:16, color:cor }}>{lv.prob}%</strong><div style={{ fontSize:9, color:'var(--text-4)', textTransform:'uppercase' }}>risco</div></div>
+              </div>
+            );
+          })}
+        </div>
+        <p style={{ fontSize:11.5, color:'var(--text-4)', marginTop:8 }}>A cada nível Bilbro associa uma probabilidade de risco (nível 9 = 90%, decrescendo de 10 em 10 até 0% no nível 1). Zhao & Wei (2015) reproduzem a mesma escala.</p>
+      </div>
+
+      {/* As dimensões avaliadas */}
+      <div className="card" style={{ padding:'16px 18px' }}>
+        <h3 className="h4" style={{ marginBottom:10 }}>O que o AD² avalia</h3>
+        <p style={{ fontSize:13, color:'var(--text-2)', lineHeight:1.55, margin:'0 0 12px' }}>
+          O AD² é um conjunto de perguntas aplicadas a <strong>cada elemento</strong> do produto (do sistema ao componente). A pergunta não é sobre o elemento em si, mas: <em>"você tem os recursos — pessoas, competências, ferramentas, instalações — para projetar, fabricar, testar e operar este elemento?"</em>. Bilbro/GAO organizam em <strong>5 áreas funcionais</strong>:
+        </p>
+        <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(150px,1fr))', gap:8 }}>
+          {['Projeto e análise','Manufatura','Desenvolvimento de software','Teste (DT&E e OT&E)','Operações'].map((a,i)=>(
+            <div key={a} style={{ padding:'10px 12px', border:'1px solid var(--border-2)', borderRadius:9, background:'var(--bg-2)', fontSize:12.5 }}><span className="mono" style={{ color:'var(--amber-500)', fontSize:11 }}>{i+1}</span> · {a}</div>
+          ))}
+        </div>
+        <p style={{ fontSize:11.5, color:'var(--text-4)', marginTop:10, marginBottom:0 }}>Confirmado no GAO-20-48G (nota 25). A variante de <strong>Zhao & Wei</strong> para produtos complexos usa 5 dimensões equivalentes e calcula o AD² por <strong>avaliação fuzzy + AHP</strong> (pesos por especialistas). A calculadora ao lado operacionaliza essas estruturas de forma simplificada.</p>
+      </div>
+
+      {/* Ligação com risco */}
+      <div className="card" style={{ padding:'16px 18px' }}>
+        <h3 className="h4" style={{ marginBottom:10 }}>Do AD² ao risco do programa</h3>
+        <p style={{ fontSize:13, color:'var(--text-2)', lineHeight:1.6, margin:0 }}>
+          O AD² foi concebido como <strong>entrada para a gestão de risco</strong>. O nível AD² define a <strong>probabilidade</strong> de um evento adverso (eixo P da matriz), que é cruzada com a <strong>consequência</strong> — a maior entre desempenho técnico, cronograma e custo (eixo C) — numa <strong>matriz de risco 5×5</strong> no formato do DoD. A posição na matriz classifica o risco em baixo (verde), moderado (amarelo) ou alto (vermelho) e orienta a necessidade de rotas duais/múltiplas de desenvolvimento e de um plano de maturação (TMP).
+        </p>
+      </div>
+
+      <div style={{ display:'flex', gap:10, alignItems:'center', flexWrap:'wrap', padding:'14px 16px', border:'1px solid var(--blue-500)', borderRadius:10, background:'var(--blue-glow)' }}>
+        <div style={{ flex:1, minWidth:220 }}>
+          <strong style={{ fontSize:14 }}>Avalie o seu caso</strong>
+          <p style={{ fontSize:12.5, color:'var(--text-3)', margin:'4px 0 0' }}>A calculadora aplica os dois perfis (Bilbro/GAO e Zhao & Wei), pontua as dimensões e devolve nível AD², matriz de risco e indicadores críticos.</p>
+        </div>
+        <button onClick={goCalc} className="btn primary">Abrir a calculadora AD² <I.arrow/></button>
+      </div>
+
+      <p style={{ fontSize:11.5, color:'var(--text-4)', lineHeight:1.5 }}>Fontes: Bilbro, J. W. (2008) — <em>Using the AD² as an Input to Risk Management</em> (DTIC ADA507591); Zhao, D. & Wei, F. (2015) — DOI 10.2991/978-94-6239-100-0_19; U.S. GAO (2020) — <em>Technology Readiness Assessment Guide</em>, GAO-20-48G; Mankins (1995; R&D³, 2002); DoD — <em>Risk Management Guide for DoD Acquisition</em> (2006).</p>
+    </div>
+  );
+}
+
+function Trl() {
+  const [secao, setSecao] = React.useState('trl');
+  const secoes = [
+    { id:'trl',  titulo:'O que é TRL',      icon:I.levels },
+    { id:'ad2',  titulo:'O que é o AD²',    icon:I.gauge },
+    { id:'calc', titulo:'Calculadora AD²',  icon:I.spark, destaque:true }
+  ];
+  return (
+    <div className="page fade-in">
+      <SectionHead num="§ TRL" kicker="Maturidade & Dificuldade" title="TRL e método AD²"
+        lede="O TRL mede a maturidade atual de uma tecnologia (onde ela está). O AD² mede a dificuldade de avançar até o TRL alvo (quão difícil é o próximo passo). Entenda os dois e avalie o seu projeto na calculadora."
+      />
+      <div style={{ display:'grid', gridTemplateColumns:'240px 1fr', gap:'var(--s-6)' }}>
+        <aside style={{ position:'sticky', top:80, alignSelf:'flex-start', display:'flex', flexDirection:'column', gap:4 }}>
+          {secoes.map(s => (
+            <button key={s.id} onClick={()=>setSecao(s.id)} style={{
+              display:'flex', alignItems:'center', gap:10, padding:'10px 12px',
+              background: secao === s.id ? 'var(--bg-2)' : (s.destaque ? 'var(--blue-glow)' : 'transparent'),
+              border:'1px solid', borderColor: secao === s.id ? 'var(--border-3)' : (s.destaque ? 'var(--blue-500)' : 'transparent'),
+              borderRadius:8, color: secao === s.id ? 'var(--text-1)' : (s.destaque ? 'var(--blue-400)' : 'var(--text-3)'),
+              fontSize:13, fontWeight: (secao === s.id || s.destaque) ? 600 : 500,
+              textAlign:'left', cursor:'pointer', transition:'all .12s ease'
+            }}>
+              {React.createElement(s.icon)}
+              {s.titulo}
+            </button>
+          ))}
+        </aside>
+        <article style={{ minWidth:0 }}>
+          {secao === 'trl'  && <TrlEscala/>}
+          {secao === 'ad2'  && <Ad2Explicacao goCalc={()=>setSecao('calc')}/>}
+          {secao === 'calc' && <Ad2Calculadora/>}
+        </article>
+      </div>
+    </div>
+  );
+}
+
 /* Banner — Agente de IA Sapiens (especialista do Atlas). Compacto; abre o GPT em nova aba. */
 function SapiensBanner() {
   return (
@@ -30450,6 +31037,7 @@ function App() {
   else if (segment === 'mapa') view = <Mapa/>;
   else if (segment === 'guia') view = <Guia/>;
   else if (segment === 'simulador') view = <Simulador/>;
+  else if (segment === 'trl')       view = <Trl/>;
   else if (segment === 'glossario') view = <Glossario/>;
   else if (segment === 'pi')        view = <Pi/>;
   else if (segment === 'agentes' && !param) view = <Agentes/>;
