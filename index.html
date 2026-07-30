@@ -29736,6 +29736,18 @@ function projetosEmbrapiiDe(ict){
   const P = window.EMBRAPII_PROJETOS || [];
   return P.filter(p => p[0] === u.nome).map(p => ({ empresa:p[1], titulo:p[2], desc:p[3] }));
 }
+/* Onda 4 — cruza projetos de P&D da ANP pela coluna 'instituicao' (nível universidade/instituto,
+   ex.: UFRJ, USP, IPT, INT). Casamento conservador por acrônimo/nome exato: só atribui quando a ICT
+   representa a instituição inteira, evitando colar projetos da universidade num instituto específico. */
+function projetosAnpDe(ict){
+  const P = window.ANP_PROJETOS || [];
+  if (!P.length) return [];
+  const a = ictAcr(ict.nome), k = ictNk(ict.nome);
+  const plain = !/[–—-]/.test(ict.nome||'');  // só casa por acrônimo quando a ICT É a instituição inteira (sem sub-unidade tipo USP-IFSC)
+  const out = [];
+  for (const p of P){ const inst = p[6]; if(!inst) continue; if (ictNk(inst)===k || (plain && a.length>=3 && ictAcr(inst)===a)) out.push({ titulo:p[1], empresa:p[2], tema:p[5], data:p[8], valor:p[9] }); }
+  return out;
+}
 
 function IctsDiretorio() {
   const ICTS = window.ATLAS_DATA.ICTS;
@@ -29743,17 +29755,24 @@ function IctsDiretorio() {
   const [q, setQ] = React.useState('');
   const [cat, setCat] = React.useState([]);
   const [reg, setReg] = React.useState([]);
+  const [dom, setDom] = React.useState([]);
+  const [area, setArea] = React.useState([]);
   const [limite, setLimite] = React.useState(96);
 
+  const grandeArea = i => i.area ? i.area.split(' · ')[0] : null;
   const catCount = React.useMemo(() => { const m={}; ICT_CATS.forEach(c=>{ m[c.slug]=ICTS.filter(i=>ictInCat(i,c.slug)).length; }); return m; }, [ICTS]);
+  const domCount = React.useMemo(() => { const m={}; ICTS.forEach(i=>(i.dominios||[]).forEach(d=>{ m[d]=(m[d]||0)+1; })); return m; }, [ICTS]);
+  const AREAS = React.useMemo(() => { const m={}; ICTS.forEach(i=>{ const g=grandeArea(i); if(g) m[g]=(m[g]||0)+1; }); return Object.entries(m).sort((a,b)=>b[1]-a[1]); }, [ICTS]);
   const regioes = ['Norte','Nordeste','Centro-Oeste','Sudeste','Sul'];
   const ql = q.trim().toLowerCase();
   const filtered = React.useMemo(() => ICTS.filter(i => {
-    if (ql && !`${i.nome} ${i.longo||''} ${i.cidade} ${i.uf}`.toLowerCase().includes(ql)) return false;
+    if (ql && !`${i.nome} ${i.longo||''} ${i.cidade} ${i.uf} ${(i.linhasPesquisa||[]).join(' ')} ${i.area||''}`.toLowerCase().includes(ql)) return false;
     if (cat.length && !cat.some(c => ictInCat(i, c))) return false;
+    if (dom.length && !dom.some(d => (i.dominios||[]).includes(d))) return false;
+    if (area.length && !area.includes(grandeArea(i))) return false;
     if (reg.length && !reg.includes(i.regiao)) return false;
     return true;
-  }).sort((a,b)=>a.nome.localeCompare(b.nome,'pt')), [ICTS, ql, cat, reg]);
+  }).sort((a,b)=>a.nome.localeCompare(b.nome,'pt')), [ICTS, ql, cat, dom, area, reg]);
 
   const toggle = (arr,set,v) => set(arr.includes(v) ? arr.filter(x=>x!==v) : [...arr, v]);
   const vis = filtered.slice(0, limite);
@@ -29766,7 +29785,7 @@ function IctsDiretorio() {
       />
       <div style={{ display:'grid', gridTemplateColumns:'260px 1fr', gap:'var(--s-6)', alignItems:'start' }}>
         <aside style={{ position:'sticky', top:80, display:'flex', flexDirection:'column', gap:16 }}>
-          <SearchInput value={q} onChange={setQ} placeholder="Buscar instituição, cidade…"/>
+          <SearchInput value={q} onChange={setQ} placeholder="Buscar instituição, cidade, linha de pesquisa…"/>
           <div>
             <div className="mono" style={{ color:'var(--text-3)', marginBottom:8, fontSize:11 }}>Categoria</div>
             <div style={{ display:'flex', flexDirection:'column', gap:5 }}>
@@ -29781,6 +29800,23 @@ function IctsDiretorio() {
             </div>
           </div>
           <div>
+            <div className="mono" style={{ color:'var(--text-3)', marginBottom:8, fontSize:11 }}>Domínio tecnológico</div>
+            <div style={{ display:'flex', flexWrap:'wrap', gap:5 }}>
+              {DOMINIOS.map(d => { const n=domCount[d.id]||0; if(!n) return null; const on=dom.includes(d.id); return (
+                <button key={d.id} onClick={()=>toggle(dom,setDom,d.id)} title={`${n} instituições`} style={{ display:'inline-flex', alignItems:'center', gap:6, padding:'5px 10px', borderRadius:99, cursor:'pointer', fontSize:11.5,
+                  color: on?'var(--bg-0)':'var(--text-2)', background: on?d.cor:'var(--bg-2)', border:'1px solid', borderColor: on?d.cor:'var(--border-2)' }}>
+                  <span style={{ width:7, height:7, borderRadius:99, background: on?'var(--bg-0)':d.cor }}/>{d.label}</button> ); })}
+            </div>
+          </div>
+          {AREAS.length>0 && <div>
+            <div className="mono" style={{ color:'var(--text-3)', marginBottom:8, fontSize:11 }}>Área do conhecimento</div>
+            <div style={{ display:'flex', flexWrap:'wrap', gap:5 }}>
+              {AREAS.map(([g,n]) => { const on=area.includes(g); return (
+                <button key={g} onClick={()=>toggle(area,setArea,g)} title={`${n} instituições`} style={{ padding:'5px 10px', borderRadius:99, cursor:'pointer', fontSize:11.5,
+                  color: on?'var(--bg-0)':'var(--text-2)', background: on?'#a78bfa':'var(--bg-2)', border:'1px solid', borderColor: on?'#a78bfa':'var(--border-2)' }}>{g} <span className="mono" style={{ fontSize:9.5, opacity:.7 }}>{n}</span></button> ); })}
+            </div>
+          </div>}
+          <div>
             <div className="mono" style={{ color:'var(--text-3)', marginBottom:8, fontSize:11 }}>Região</div>
             <div style={{ display:'flex', flexWrap:'wrap', gap:5 }}>
               {regioes.map(r => { const on=reg.includes(r); return (
@@ -29790,7 +29826,7 @@ function IctsDiretorio() {
           </div>
           <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', paddingTop:8, borderTop:'1px solid var(--border-1)' }}>
             <span className="mono" style={{ color:'var(--text-3)' }}>{filtered.length} de {ICTS.length}</span>
-            <button className="btn sm ghost" onClick={()=>{ setQ(''); setCat([]); setReg([]); }}>Limpar</button>
+            <button className="btn sm ghost" onClick={()=>{ setQ(''); setCat([]); setReg([]); setDom([]); setArea([]); }}>Limpar</button>
           </div>
         </aside>
 
@@ -29835,6 +29871,7 @@ function IctPagina({ id }) {
   );
   const unidade = unidadeEmbrapiiDe(ict);
   const projEmb = projetosEmbrapiiDe(ict);
+  const projAnp = projetosAnpDe(ict);
   const linhas = ict.linhasPesquisa || (unidade && unidade.linhas) || [];
   const areas = ict.areas || [];
   const projCur = ict.projetos || [];
@@ -29900,10 +29937,13 @@ function IctPagina({ id }) {
           <section className="card" style={{ padding:'18px 20px' }}>
             <div style={{ display:'flex', justifyContent:'space-between', alignItems:'baseline', gap:10, marginBottom:10 }}>
               <h3 className="h4">Projetos executados</h3>
-              {projEmb.length>0 && <span className="mono" style={{ fontSize:11, color:'var(--green-400)' }}>{projEmb.length} EMBRAPII</span>}
+              <div style={{ display:'flex', gap:8 }}>
+                {projEmb.length>0 && <span className="mono" style={{ fontSize:11, color:'var(--green-400)' }}>{projEmb.length} EMBRAPII</span>}
+                {projAnp.length>0 && <span className="mono" style={{ fontSize:11, color:'var(--blue-400)' }}>{projAnp.length} ANP</span>}
+              </div>
             </div>
-            {projEmb.length===0 && projCur.length===0 && (
-              <div style={{ fontSize:12.5, color:'var(--text-4)', lineHeight:1.5 }}>{unidade ? 'Sem projetos EMBRAPII listados na base para esta unidade.' : 'Cruzamento de projetos executados disponível para Unidades EMBRAPII (via base EMBRAPII). Demais fontes em ondas seguintes.'}</div>
+            {projEmb.length===0 && projCur.length===0 && projAnp.length===0 && (
+              <div style={{ fontSize:12.5, color:'var(--text-4)', lineHeight:1.5 }}>{unidade ? 'Sem projetos EMBRAPII listados na base para esta unidade.' : 'Cruzamento de projetos por Unidade EMBRAPII (base EMBRAPII) e por instituição (base de P&D da ANP). Sem projetos casados para esta instituição.'}</div>
             )}
             {projCur.length>0 && <div style={{ marginBottom:projEmb.length?14:0 }}>{projCur.map((p,i)=>(
               <div key={i} style={{ padding:'8px 0', borderBottom:'1px solid var(--border-1)' }}><div style={{ fontSize:13, color:'var(--text-1)', fontWeight:500 }}>{p.nome}</div><div style={{ fontSize:11, color:'var(--text-4)' }}>{[p.empresa,p.ano].filter(Boolean).join(' · ')}</div></div>
@@ -29916,6 +29956,16 @@ function IctPagina({ id }) {
                 </div>
               ))}
               {projEmb.length>40 && <div style={{ fontSize:11, color:'var(--text-4)', paddingTop:8 }}>+ {projEmb.length-40} outros projetos.</div>}
+            </div>}
+            {projAnp.length>0 && <div style={{ display:'flex', flexDirection:'column', gap:2, maxHeight:520, overflowY:'auto', marginTop: (projEmb.length||projCur.length)?14:0 }}>
+              <div className="mono" style={{ color:'var(--text-4)', fontSize:11, margin:'2px 0 6px' }}>P&D ANP · nível instituição</div>
+              {projAnp.slice(0,40).map((p,i)=>(
+                <div key={i} style={{ padding:'9px 0', borderBottom:'1px solid var(--border-1)' }}>
+                  <div style={{ fontSize:12.5, color:'var(--text-1)', lineHeight:1.35 }}>{p.titulo}</div>
+                  <div style={{ fontSize:10.5, color:'var(--text-4)', marginTop:2 }}>{[p.empresa, p.tema, p.data].filter(Boolean).join(' · ')}</div>
+                </div>
+              ))}
+              {projAnp.length>40 && <div style={{ fontSize:11, color:'var(--text-4)', paddingTop:8 }}>+ {projAnp.length-40} outros projetos ANP.</div>}
             </div>}
           </section>
         </div>
