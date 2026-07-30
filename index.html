@@ -2650,7 +2650,12 @@ const ICTS_EXTRAS = [
 { id:'isi-svp-rj', nome:'ISI Sistemas Virtuais', longo:'SENAI ISI Sistemas Virtuais de Produção - RJ', cidade:'Rio de Janeiro', uf:'RJ', regiao:'Sudeste', tipo:'Sistema S', dominios:['tic','energia'], credenciamentos:['ISI'], destaque:false, lat:-22.86, lng:-43.22 },
 { id:'isi-microeletr-am', nome:'ISI Microeletrônica', longo:'SENAI ISI Microeletrônica - AM', cidade:'Manaus', uf:'AM', regiao:'Norte', tipo:'Sistema S', dominios:['semic','tic'], credenciamentos:['ISI'], destaque:false, lat:-3.10, lng:-60.02 },
 { id:'isi-eolica-rn', nome:'ISI Energias Renováveis', longo:'SENAI ISI Energias Renováveis - RN', cidade:'Natal', uf:'RN', regiao:'Nordeste', tipo:'Sistema S', dominios:['energia'], credenciamentos:['ISI'], destaque:false, lat:-5.79, lng:-35.21 },
-{ id:'isi-textil-sc', nome:'IST Têxtil e Vestuário', longo:'Instituto SENAI de Tecnologia Têxtil e Vestuário - SC', cidade:'Blumenau', uf:'SC', regiao:'Sul', tipo:'Sistema S', dominios:['materiais'], credenciamentos:[], destaque:false, lat:-26.92, lng:-49.07 }
+{ id:'isi-textil-sc', nome:'IST Têxtil e Vestuário', longo:'Instituto SENAI de Tecnologia Têxtil e Vestuário - SC', cidade:'Blumenau', uf:'SC', regiao:'Sul', tipo:'Sistema S', dominios:['materiais'], credenciamentos:[], destaque:false, lat:-26.92, lng:-49.07 },
+{ id:'lamef-ufrgs', nome:'LAMEF', longo:'LAMEF – Laboratório de Metalurgia Física (UFRGS) — Unidade EMBRAPII', cidade:'Porto Alegre', uf:'RS', regiao:'Sul', tipo:'Universidade Federal', categoria:'Unidade EMBRAPII', unidadeEmbrapii:true, dominios:['materiais','og'], credenciamentos:['Embrapii'], site:'https://www.ufrgs.br/lamef/', contato:'(51) 3308-9536', lat:-30.03, lng:-51.23 },
+{ id:'cienp-sc', nome:'CIEnP', longo:'CIEnP – Centro de Inovação e Ensaios Pré-Clínicos — Unidade EMBRAPII', cidade:'Florianópolis', uf:'SC', regiao:'Sul', tipo:'Instituto de Pesquisa', categoria:'Unidade EMBRAPII', unidadeEmbrapii:true, dominios:['saude'], credenciamentos:['Embrapii'], site:'https://www.cienp.org.br/', contato:'contato@cienp.org.br · (48) 3332-8400', lat:-27.60, lng:-48.55 },
+{ id:'csem-brasil', nome:'CSEM Brasil (Oninn)', longo:'CSEM Brasil / Oninn — ex-Unidade EMBRAPII (descredenciada 2020)', cidade:'Belo Horizonte', uf:'MG', regiao:'Sudeste', tipo:'Centro de pesquisa', categoria:'Centro de Inovação', dominios:['semic','materiais','energia'], credenciamentos:[], site:'https://oninn.com.br/', contato:'contato@oninn.com · (31) 3326-1600', lat:-19.92, lng:-43.94 },
+{ id:'idor-rj', nome:'IDOR', longo:'IDOR – Instituto D\'Or de Pesquisa e Ensino — ex-Unidade EMBRAPII (descredenciada 2024)', cidade:'Rio de Janeiro', uf:'RJ', regiao:'Sudeste', tipo:'Instituto de Pesquisa', categoria:'Centro de Inovação', dominios:['saude'], credenciamentos:[], site:'https://www.rededorsaoluiz.com.br/instituto/idor/', contato:'(21) 3883-6000', lat:-22.91, lng:-43.20 },
+{ id:'powertrain-ufmg', nome:'UFMG Powertrain', longo:'Centro de Powertrain (UFMG) — ex-Unidade EMBRAPII (descredenciada 2024)', cidade:'Belo Horizonte', uf:'MG', regiao:'Sudeste', tipo:'Universidade Federal', categoria:'Centro de Inovação', dominios:['mobilidade'], credenciamentos:[], site:'https://ufmgpowertrain.eng.ufmg.br/', contato:'ufmgpowertrain@eng.ufmg.br · (31) 3409-4874', lat:-19.87, lng:-43.96 }
 ];
 
 // Capítulos adicionais do Guia (subagente PDFs raiz)
@@ -29728,11 +29733,36 @@ function unidadeEmbrapiiDe(ict){
   const ik = ictNk(ict.nome);
   return us.find(u => ictNk(u.nome) === ik) || null;
 }
+/* Onda 5 — alias de unidade EMBRAPII (nome exato em EMBRAPII_PROJETOS[0]) -> id da ICT.
+   Corrige as 39 unidades cujos projetos ficavam órfãos (nome da unidade não casava com nenhuma
+   ICT via acr/nk). 5 ids abaixo são ICTs novas adicionadas nesta onda (lamef-ufrgs, cienp-sc,
+   csem-brasil, idor-rj, powertrain-ufmg). */
+const EMBRAPII_UNIDADE_ALIAS = {
+  'Polimeros':'isi-polimeros', 'COPPE':'coppe', 'SENAI ISI ELETROQUÍMICA':'isi-eletroquim',
+  'UFV - Fibras Florestais':'ufv-fibras', 'SENAI ISI SENSORIAMENTO':'isi-sensor', 'IF-FLU':'if-flu',
+  'SENAI ISI LIGAS ESPECIAIS':'isi-ligas', 'IF-PB':'ifpb-insituto-federal-de-educacao-cienci-pb',
+  'SENAI ISI BIOSSINTÉTICOS':'isi-biossin', 'SENAI ISI BIOMASSA':'isi-biomassa',
+  'SENAI/SP - Distrito Tecnológico':'isi-distrito-sp', 'SENAI ISI EMBARCADOS':'isi-embarcados',
+  'SENAI MANUFATURA, LASER E ROBÓTICA':'isi-laser', 'SENAI ISI QUÍMICA VERDE':'isi-qverde',
+  'METRÓPOLE DIGITAL - UFRN':'metropole-ufrn', 'UFSCar - Materiais':'ufscar-mat',
+  'IF-TM':'iftm-instituto-federal-de-educacao-cienc-mg', 'IF-SP':'ifsp-instituto-federal-de-educacao-cienc-sp',
+  'IF-SC - FLN':'if-sc-fln', 'LAMEF':'lamef-ufrgs', 'LESC - UFC':'lesc-ufc',
+  'VBL IoT E INDÚSTRIA 4.0 - Von Braun':'vbl-vonbraun', 'Escola de Minas - UFOP':'ufop-minas',
+  'IF-ES':'ifes-polo-de-inovacao-vitoria-es', 'G-Bioforest - UFOPA':'bioforest-ufopa',
+  'INOVAÇÃO DE FÁRMACOS E VACINAS-UFMG':'farmacos-ufmg', 'IF-Goiás':'ifg-instituto-federal-de-educacao-cienci-go',
+  'ICMC - USP-SC':'icmc-usp-sc', 'SENAI ISI ENGENHARIA DE ESTRUTURAS':'isi-estruturas',
+  'LESC-UFC - Credenciamento 1':'lesc-ufc', 'E-RENOVA - Unicamp':'erenova-unicamp', 'SENAI ISI TICS':'isi-tics',
+  'CIEnP':'cienp-sc', 'Powertrain-UFMG':'powertrain-ufmg', 'Bioindústria e Bioinsumos - UFT':'bio-uft',
+  'CSEM':'csem-brasil', 'IDOR':'idor-rj', 'ITA':'ita', 'UFPA - BIOECONOMIA':'ufpa-bio'
+};
 function projetosEmbrapiiDe(ict){
-  const u = unidadeEmbrapiiDe(ict);
-  if (!u) return [];
   const P = window.EMBRAPII_PROJETOS || [];
-  return P.filter(p => p[0] === u.nome).map(p => ({ empresa:p[1], titulo:p[2], desc:p[3] }));
+  const nomes = new Set();
+  const u = unidadeEmbrapiiDe(ict);
+  if (u) nomes.add(u.nome);
+  for (const un in EMBRAPII_UNIDADE_ALIAS) if (EMBRAPII_UNIDADE_ALIAS[un] === ict.id) nomes.add(un);
+  if (!nomes.size) return [];
+  return P.filter(p => nomes.has(p[0])).map(p => ({ empresa:p[1], titulo:p[2], desc:p[3] }));
 }
 /* Onda 4 — cruza projetos de P&D da ANP pela coluna 'instituicao' (nível universidade/instituto,
    ex.: UFRJ, USP, IPT, INT). Casamento conservador por acrônimo/nome exato: só atribui quando a ICT
