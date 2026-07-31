@@ -26494,6 +26494,7 @@ const I = {
   flag: (p={}) => <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" {...p}><path d="M3 14V2"/><path d="M3 3h9l-2 3 2 3H3"/></svg>,
   levels: (p={}) => <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" {...p}><path d="M2 14h12"/><rect x="2.5" y="9" width="3" height="4.5" rx="0.5"/><rect x="6.5" y="6" width="3" height="7.5" rx="0.5"/><rect x="10.5" y="2.5" width="3" height="11" rx="0.5"/></svg>,
   gauge: (p={}) => <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" {...p}><path d="M2.5 12a6 6 0 1111 0"/><path d="M8 12l3-3.5"/></svg>,
+  dna: (p={}) => <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" {...p}><path d="M5 2c0 3.2 6 3 6 6s-6 2.8-6 6"/><path d="M11 2c0 3.2-6 3-6 6s6 2.8 6 6"/><path d="M5.7 4h4.6M5 8h6M5.7 12h4.6"/></svg>,
   lab: (p={}) => <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" {...p}><path d="M2 14h12"/><path d="M4 14V4a1 1 0 011-1h3a1 1 0 011 1v10"/><path d="M9 14V7a1 1 0 011-1h1a1 1 0 011 1v7"/><path d="M6 5.5h1M6 8h1M6 10.5h1"/></svg>,
 };
 
@@ -26634,6 +26635,7 @@ const NAV = [
   { id:'radar',       label:'Radar',        icon: I.radar },
   { id:'mapa',        label:'Mapa',         icon: I.map },
   { id:'icts',        label:'ICTs',         icon: I.lab },
+  { id:'dna',         label:'DNA',          icon: I.dna },
   { id:'pi',          label:'PI',           icon: I.flag },
   { id:'guia',        label:'Guia',         icon: I.book },
   { id:'simulador',   label:'Simulador',    icon: I.spark },
@@ -26794,16 +26796,20 @@ function Hub() {
       </section>
 
       {/* Hub modules */}
-      <SectionHead num="§ 01" title="Módulos" lede="Sete portas para o atlas. Cada uma é um corte distinto sobre o ecossistema." />
+      <SectionHead num="§ 01" title="Módulos" lede="Uma porta para cada aba do atlas. Cada uma é um corte distinto sobre o ecossistema." />
 
       <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(280px, 1fr))', gap:14, marginBottom:'var(--s-8)' }}>
         <ModuleCard num="01" href="#/instrumentos" icon={<I.grid/>} title="Catálogo de Instrumentos" body="Todas as leis, programas e incentivos com ficha completa, filtros por domínio, público, agência e modalidade." accent="var(--blue-400)" badge={`${INSTRUMENTOS.length} fichas`} />
-        <ModuleCard num="02" href="#/radar" icon={<I.radar/>} title="Radar de Fomento" body="Chamadas abertas com cards executivos — deadline, valor, público, urgência. Atualizado recorrentemente." accent="var(--green-400)" badge={`${abertas.length} abertas`} live />
-        <ModuleCard num="03" href="#/mapa" icon={<I.map/>} title="Mapa de ICTs" body="ICTs brasileiras por geografia, competência tecnológica e credenciamentos. Cruze região com domínio." accent="var(--amber-500)" badge={`${ICTS.length} ICTs`} />
-        <ModuleCard num="04" href="#/guia" icon={<I.book/>} title="Guia do Bom Projeto" body="Oito capítulos curados com pontos críticos e checklists — do enquadramento à prestação de contas." accent="var(--rose-500)" badge={`${GUIA.length} capítulos`} />
-        <ModuleCard num="05" href="#/simulador" icon={<I.spark/>} title="Simulador de Fomentos" body="Simule o seu projeto e use IA para o seu projeto: responda 12 perguntas, veja o ranking de instrumentos por aderência e fale com o Agente de IA Sapiens." accent="var(--blue-400)" badge="12 perguntas + IA" />
-        <ModuleCard num="06" href="#/glossario" icon={<I.abc/>} title="Dicionário da Inovação" body={`${(window.DICIONARIO||GLOSSARIO).length} verbetes do ecossistema — termo, significado e onde se usa. De TRL e subvenção a patente, glosa, PPB e encomenda tecnológica.`} accent="var(--text-2)" badge="verbetes A–Z" />
-        <ModuleCard num="07" href="#/trl" icon={<I.levels/>} title="TRL & método AD²" body="Entenda o TRL (maturidade da tecnologia) e o AD² (dificuldade de avançar) e avalie o seu projeto na calculadora AD² — nível, matriz de risco e plano de maturação." accent="var(--amber-500)" badge="calculadora" />
+        <ModuleCard num="02" href="#/agentes" icon={<I.group/>} title="Agentes de Fomento" body="As agências e agentes que financiam a inovação (FINEP, BNDES, EMBRAPII, CNPq, ANEEL, ANP e outros) — perfil, modalidades, instrumentos operados e projetos." accent="var(--green-400)" badge={`${AGENCIAS.length} agentes`} />
+        <ModuleCard num="03" href="#/radar" icon={<I.radar/>} title="Radar de Fomento" body="Chamadas abertas com cards executivos — deadline, valor, público, urgência. Atualizado recorrentemente." accent="var(--rose-500)" badge={`${abertas.length} abertas`} live />
+        <ModuleCard num="04" href="#/mapa" icon={<I.map/>} title="Mapa de ICTs" body="ICTs brasileiras por geografia, competência tecnológica e credenciamentos. Cruze região com domínio." accent="var(--amber-500)" badge={`${ICTS.length} ICTs`} />
+        <ModuleCard num="05" href="#/icts" icon={<I.lab/>} title="Diretório de ICTs" body="A ficha de cada ICT e instituto: identificação, contato, domínios, linhas de atuação e projetos EMBRAPII/ANP cruzados. Filtre por categoria, domínio e área." accent="#22d3ee" badge={`${ICTS.length} instituições`} />
+        <ModuleCard num="06" href="#/dna" icon={<I.dna/>} title="DNA da Inovação" body="O retrato de inovação de cada empresa a partir de bases públicas: projetos executados, ICTs parceiras e áreas tecnológicas inferidas por correlação. Não reflete estratégia — só dados abertos." accent="#a78bfa" badge="por empresa" />
+        <ModuleCard num="07" href="#/pi" icon={<I.flag/>} title="Propriedade Intelectual" body="Panorama de PI na inovação: pedidos de patente das ICTs no INPI (FORMICT), titularidade e um glossário de propriedade intelectual." accent="#f472b6" badge={`${(window.INPI_PATENTES||[]).length.toLocaleString('pt-BR')} pedidos`} />
+        <ModuleCard num="08" href="#/guia" icon={<I.book/>} title="Guia do Bom Projeto" body="Oito capítulos curados com pontos críticos e checklists — do enquadramento à prestação de contas." accent="var(--rose-500)" badge={`${GUIA.length} capítulos`} />
+        <ModuleCard num="09" href="#/simulador" icon={<I.spark/>} title="Simulador de Fomentos" body="Simule o seu projeto e use IA para o seu projeto: responda 12 perguntas, veja o ranking de instrumentos por aderência e fale com o Agente de IA Sapiens." accent="var(--blue-400)" badge="12 perguntas + IA" />
+        <ModuleCard num="10" href="#/trl" icon={<I.levels/>} title="TRL & método AD²" body="Entenda o TRL (maturidade da tecnologia) e o AD² (dificuldade de avançar) e avalie o seu projeto na calculadora AD² — nível, matriz de risco e plano de maturação." accent="var(--amber-500)" badge="calculadora" />
+        <ModuleCard num="11" href="#/glossario" icon={<I.abc/>} title="Dicionário da Inovação" body={`${(window.DICIONARIO||GLOSSARIO).length} verbetes do ecossistema — termo, significado e onde se usa. De TRL e subvenção a patente, glosa, PPB e encomenda tecnológica.`} accent="var(--text-2)" badge="verbetes A–Z" />
       </div>
 
       {/* Featured calls + urgent */}
@@ -31582,6 +31588,195 @@ const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
   "density": "comfortable"
 }/*EDITMODE-END*/;
 
+/* ===================== DNA da Inovação (empresas) ===================== */
+const DNA_DOM_KW = {
+  og:['petroleo','offshore','pre sal','presal','reservatorio','perfura','poco','oleo','gas natural','sismic','subsea','fpso','duto','refino','petroleum'],
+  energia:['energia','eolica','solar','hidrogen','bateria','fotovolt','renovav','biocombust','eletrica','combustao','motor','turbina','termeletr'],
+  materiais:['material','corrosao','liga','aco','metal','polimer','compos','soldagem','revestimento','nanotec','ceramic','fibra','grafeno'],
+  ambiental:['ambient','co2','carbono','emissao','residuo','efluente','descarboniz','sustentab','captura','reciclag','agua'],
+  tic:['software','ciencia de dados','inteligencia artificial','machine learning','digital','sensor','automa','simula','iot','algoritm','computac','5g'],
+  manufatura:['manufatura','industria 4','usinagem','robot','fabrica','aditiva','processo produtiv'],
+  aero:['aeronaut','aeroespac','satelite','aviao','defesa','estrutura ferrov'],
+  saude:['saude','farmac','medic','vacina','clinic','diagnostic','biosens','terapia'],
+  agro:['agro','aliment','soja','bioinsumo','floresta','pecuar','cafe'],
+  mobilidade:['veicul','automotiv','transporte','ferrov','mobilidade'],
+  semic:['semicondutor','microeletron','chip','circuito integrado']
+};
+function dnaDomsOf(text){ const t=(text||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase(); return Object.keys(DNA_DOM_KW).filter(d=>DNA_DOM_KW[d].some(k=>t.includes(k))); }
+const DNA_ALIAS = [[/PETROLEO BRASILEIRO|PETROBRAS/,'PETROBRAS'],[/SHELL/,'SHELL'],[/EQUINOR/,'EQUINOR'],[/TOTALENERGIES|TOTAL E ?P|TOTAL EXPLORA/,'TOTALENERGIES'],[/REPSOL/,'REPSOL'],[/ARCELORMITTAL/,'ARCELORMITTAL'],[/PETROGAL|\bGALP\b/,'PETROGAL'],[/EXXON/,'EXXONMOBIL'],[/PETRONAS/,'PETRONAS'],[/\bVALE\b/,'VALE'],[/CHEVRON/,'CHEVRON'],[/BRITISH PETROLEUM/,'BP'],[/WINTERSHALL/,'WINTERSHALL'],[/\bBRASKEM\b/,'BRASKEM'],[/\bWEG\b/,'WEG'],[/\bEMBRAER\b/,'EMBRAER']];
+const DNA_PRETTY = {PETROBRAS:'Petrobras',SHELL:'Shell',EQUINOR:'Equinor',TOTALENERGIES:'TotalEnergies',REPSOL:'Repsol',ARCELORMITTAL:'ArcelorMittal',PETROGAL:'Petrogal',EXXONMOBIL:'ExxonMobil',PETRONAS:'Petronas',VALE:'Vale',CHEVRON:'Chevron',BP:'BP',WINTERSHALL:'Wintershall',BRASKEM:'Braskem',WEG:'WEG',EMBRAER:'Embraer'};
+const DNA_SUF = /\b(S\s*\/?\s*A|LTDA|EIRELI|EPP|CIA|MEI|ME|INC|LTD|S\/S)\b\.?$/;
+function dnaBase(s){ let b=(s||'').normalize('NFKD').replace(/[̀-ͯ]/g,'').toUpperCase().replace(/[.,\/]/g,' ').replace(/\s+/g,' ').trim(); for(let i=0;i<3;i++) b=b.replace(DNA_SUF,'').trim(); return b; }
+function dnaPairs(cell){ const out=[]; (cell||'').split(';').forEach(x=>{ const raw=x.trim().replace(/\s+/g,' '); let b=dnaBase(x); if(b.length<=2) return; for(const [re,n] of DNA_ALIAS){ if(re.test(b)){ b=n; break; } } out.push({k:b,raw:raw}); }); return out; }
+function dnaNorm(cell){ return dnaPairs(cell).map(p=>p.k); }
+function dnaSlug(k){ return k.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,48); }
+function dnaTitle(k,raw){ if(DNA_PRETTY[k]) return DNA_PRETTY[k]; let s=(raw||k).replace(DNA_SUF,'').trim(); return s.toLowerCase().replace(/(^|[\s\-\/(])([a-z0-9à-ÿ])/g,(m,a,b)=>a+b.toUpperCase()); }
+let _dnaIctResolve=null;
+function dnaIctId(name){ if(!name) return null; if(!_dnaIctResolve){ _dnaIctResolve={nk:{},acr:{}}; window.ATLAS_DATA.ICTS.forEach(i=>{ _dnaIctResolve.nk[ictNk(i.nome)]=i.id; const a=ictAcr(i.nome); if(a.length>=3 && !_dnaIctResolve.acr[a]) _dnaIctResolve.acr[a]=i.id; }); } if(EMBRAPII_UNIDADE_ALIAS[name]) return EMBRAPII_UNIDADE_ALIAS[name]; const nk=ictNk(name); if(_dnaIctResolve.nk[nk]) return _dnaIctResolve.nk[nk]; const a=ictAcr(name); if(a.length>=3 && _dnaIctResolve.acr[a]) return _dnaIctResolve.acr[a]; return null; }
+let _dnaIdx=null, _dnaFoot=null, _dnaDir=null;
+function dnaIndex(){ if(_dnaIdx) return _dnaIdx; const idx={}; function ens(k,raw){ if(!idx[k]) idx[k]={key:k,id:dnaSlug(k),raw:raw||k,emb:[],anp:[]}; if(raw && raw.length>idx[k].raw.length) idx[k].raw=raw; return idx[k]; }
+  (window.EMBRAPII_PROJETOS||[]).forEach(r=>{ dnaPairs(r[1]).forEach(p=>{ ens(p.k,p.raw).emb.push({t:r[2],ict:r[0]}); }); });
+  (window.ANP_PROJETOS||[]).forEach(r=>{ dnaPairs(r[2]).forEach(p=>{ ens(p.k,p.raw).anp.push({t:r[1],ict:r[6],area:r[4],tema:r[5],valor:(+r[9]||0),data:r[8]}); }); });
+  _dnaIdx=idx; return idx; }
+function dnaFoot(){ if(_dnaFoot) return _dnaFoot; const S={ldb:new Set(),aneel:new Set(),finep:new Set(),leiinfo:new Set(),antt:new Set()};
+  (window.LEIDOBEM_EMPRESAS||[]).forEach(r=>dnaNorm(r[0]).forEach(k=>S.ldb.add(k)));
+  (window.ANEEL_PROJETOS||[]).forEach(r=>dnaNorm(r[1]).forEach(k=>S.aneel.add(k)));
+  (window.FINEP_PROJETOS||[]).forEach(r=>dnaNorm(r[3]).forEach(k=>S.finep.add(k)));
+  (window.LEIINFO_EMPRESAS||[]).forEach(r=>dnaNorm(r[0]).forEach(k=>S.leiinfo.add(k)));
+  (window.ANTT_PROJETOS||[]).forEach(r=>dnaNorm(r[1]).forEach(k=>S.antt.add(k)));
+  _dnaFoot=S; return S; }
+function dnaProgramas(c){ const f=dnaFoot(), k=c.key; const p=[]; if(c.emb.length) p.push('EMBRAPII'); if(c.anp.length) p.push('ANP'); if(f.ldb.has(k)) p.push('Lei do Bem'); if(f.leiinfo.has(k)) p.push('Lei da Informática'); if(f.aneel.has(k)) p.push('ANEEL'); if(f.finep.has(k)) p.push('FINEP'); if(f.antt.has(k)) p.push('ANTT'); return p; }
+function dnaCompute(c){ const icts={}, doms={}, temas={}, anos={}; let valor=0;
+  c.emb.forEach(p=>{ if(p.ict) icts[p.ict]=(icts[p.ict]||0)+1; dnaDomsOf(p.t).forEach(d=>doms[d]=(doms[d]||0)+1); });
+  c.anp.forEach(p=>{ if(p.ict) icts[p.ict]=(icts[p.ict]||0)+1; dnaDomsOf((p.t||'')+' '+(p.area||'')+' '+(p.tema||'')).forEach(d=>doms[d]=(doms[d]||0)+1); valor+=p.valor; if(p.tema) temas[p.tema]=(temas[p.tema]||0)+p.valor; const m=/(\d{4})/.exec(p.data||''); if(m) anos[m[1]]=(anos[m[1]]||0)+1; });
+  return {icts,doms,temas,anos,valor,nProj:c.emb.length+c.anp.length,nICT:Object.keys(icts).length}; }
+function dnaDir(){ if(_dnaDir) return _dnaDir; const idx=dnaIndex(); const out=Object.values(idx).map(c=>{ const a=dnaCompute(c); return {id:c.id,key:c.key,nome:dnaTitle(c.key,c.raw),nProj:a.nProj,nEmb:c.emb.length,nAnp:c.anp.length,nICT:a.nICT,doms:Object.keys(a.doms).sort((x,y)=>a.doms[y]-a.doms[x]),progs:dnaProgramas(c),valor:a.valor}; }); out.sort((x,y)=>y.nProj-x.nProj); _dnaDir=out; return out; }
+function dnaEmpresaById(id){ const idx=dnaIndex(); const c=Object.values(idx).find(x=>x.id===id); if(!c) return null; const a=dnaCompute(c); return {c,nome:dnaTitle(c.key,c.raw),a,progs:dnaProgramas(c)}; }
+function dnaMoney(v){ if(!v) return null; if(v>=1e9) return 'R$ '+(v/1e9).toFixed(1).replace('.',',')+' bi'; if(v>=1e6) return 'R$ '+(v/1e6).toFixed(1).replace('.',',')+' mi'; if(v>=1e3) return 'R$ '+Math.round(v/1e3)+' mil'; return 'R$ '+Math.round(v); }
+function DnaBars({ rows, unit, linkfn }){ const DOMINIOS=window.ATLAS_DATA.DOMINIOS; const max=Math.max.apply(null,rows.map(r=>r.v))||1; return (
+  <div>{rows.map((r,i)=>{ const w=Math.round(r.v/max*100); const cor=r.cor||'var(--blue-400)'; const id=linkfn&&linkfn(r); return (
+    <div key={i} style={{ display:'flex',alignItems:'center',gap:10,margin:'7px 0',fontSize:12.5 }}>
+      <span style={{ width:168,color:'var(--text-2)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis' }}>{id?<a href={'#/ict/'+id} style={{ color:'var(--blue-400)' }}>{r.l}</a>:r.l}</span>
+      <span style={{ flex:1,height:13,background:'var(--bg-2)',borderRadius:4,overflow:'hidden' }}><span style={{ display:'block',height:'100%',width:w+'%',background:cor,borderRadius:4 }}/></span>
+      <span style={{ width:64,textAlign:'right',color:'var(--text-3)',fontVariantNumeric:'tabular-nums' }}>{unit==='money'?(dnaMoney(r.v)||'—'):r.v}</span>
+    </div> ); })}</div> ); }
+function DnaDisclaimer(){ return (
+  <div style={{ display:'flex',gap:10,alignItems:'flex-start',background:'rgba(245,158,11,0.09)',border:'1px solid rgba(245,158,11,0.28)',borderRadius:10,padding:'11px 14px',margin:'0 0 20px' }}>
+    <span style={{ color:'#f59e0b',fontSize:15,marginTop:1 }}>ⓘ</span>
+    <p style={{ margin:0,fontSize:12.5,lineHeight:1.6,color:'var(--text-2)' }}>As informações desta página vêm de <b>bases públicas</b> (EMBRAPII, ANP, Lei do Bem, Lei da Informática, ANEEL, FINEP) e são <b>correlações inferidas</b> dos projetos já executados. <b>Não refletem a estratégia, os planos nem a posição oficial da empresa.</b> Empresas são agrupadas por nome (sem CNPJ nas bases de projeto), o que pode gerar imprecisão.</p>
+  </div> ); }
+const DNA_PROG_COR = { 'EMBRAPII':'var(--green-400)','ANP':'var(--blue-400)','Lei do Bem':'#f59e0b','Lei da Informática':'#a78bfa','ANEEL':'#22d3ee','FINEP':'#f472b6','ANTT':'var(--text-4)' };
+function DnaDiretorio(){
+  const DOMINIOS=window.ATLAS_DATA.DOMINIOS;
+  const dir=React.useMemo(dnaDir,[]);
+  const [q,setQ]=React.useState(''); const [dom,setDom]=React.useState([]); const [prog,setProg]=React.useState([]); const [minP,setMinP]=React.useState(1); const [lim,setLim]=React.useState(60);
+  const ql=q.trim().toLowerCase();
+  const filt=React.useMemo(()=>dir.filter(c=>{ if(c.nProj<minP) return false; if(ql && !c.nome.toLowerCase().includes(ql)) return false; if(dom.length && !dom.some(d=>c.doms.includes(d))) return false; if(prog.length && !prog.some(p=>c.progs.includes(p))) return false; return true; }),[dir,ql,dom,prog,minP]);
+  const toggle=(arr,set,v)=>set(arr.includes(v)?arr.filter(x=>x!==v):[...arr,v]);
+  const vis=filt.slice(0,lim);
+  return (
+    <div className="page fade-in">
+      <SectionHead num="§ DNA" kicker="Empresas" title="DNA da Inovação"
+        lede={`${dir.length.toLocaleString('pt-BR')} empresas com projetos de inovação executados em bases públicas. Veja os projetos, as ICTs parceiras e as áreas tecnológicas inferidas de cada uma — tudo por correlação de dados abertos.`}/>
+      <DnaDisclaimer/>
+      <div style={{ display:'grid',gridTemplateColumns:'250px 1fr',gap:'var(--s-6)',alignItems:'start' }}>
+        <aside style={{ position:'sticky',top:80,display:'flex',flexDirection:'column',gap:16 }}>
+          <SearchInput value={q} onChange={setQ} placeholder="Buscar empresa…"/>
+          <div>
+            <div className="mono" style={{ color:'var(--text-3)',marginBottom:8,fontSize:11 }}>Mínimo de projetos</div>
+            <div style={{ display:'flex',flexWrap:'wrap',gap:5 }}>{[1,2,5,10].map(n=>(
+              <button key={n} onClick={()=>setMinP(n)} style={{ padding:'5px 11px',borderRadius:99,cursor:'pointer',fontSize:11.5,color:minP===n?'var(--bg-0)':'var(--text-2)',background:minP===n?'var(--blue-400)':'var(--bg-2)',border:'1px solid',borderColor:minP===n?'var(--blue-400)':'var(--border-2)' }}>≥ {n}</button>))}</div>
+          </div>
+          <div>
+            <div className="mono" style={{ color:'var(--text-3)',marginBottom:8,fontSize:11 }}>Domínio tecnológico</div>
+            <div style={{ display:'flex',flexWrap:'wrap',gap:5 }}>{DOMINIOS.map(d=>{ const on=dom.includes(d.id); return (
+              <button key={d.id} onClick={()=>toggle(dom,setDom,d.id)} style={{ display:'inline-flex',alignItems:'center',gap:6,padding:'5px 10px',borderRadius:99,cursor:'pointer',fontSize:11.5,color:on?'var(--bg-0)':'var(--text-2)',background:on?d.cor:'var(--bg-2)',border:'1px solid',borderColor:on?d.cor:'var(--border-2)' }}><span style={{ width:7,height:7,borderRadius:99,background:on?'var(--bg-0)':d.cor }}/>{d.label}</button>); })}</div>
+          </div>
+          <div>
+            <div className="mono" style={{ color:'var(--text-3)',marginBottom:8,fontSize:11 }}>Programa</div>
+            <div style={{ display:'flex',flexWrap:'wrap',gap:5 }}>{Object.keys(DNA_PROG_COR).map(p=>{ const on=prog.includes(p); return (
+              <button key={p} onClick={()=>toggle(prog,setProg,p)} style={{ padding:'5px 10px',borderRadius:99,cursor:'pointer',fontSize:11.5,color:on?'var(--bg-0)':'var(--text-2)',background:on?DNA_PROG_COR[p]:'var(--bg-2)',border:'1px solid',borderColor:on?DNA_PROG_COR[p]:'var(--border-2)' }}>{p}</button>); })}</div>
+          </div>
+          <div style={{ display:'flex',justifyContent:'space-between',alignItems:'center',paddingTop:8,borderTop:'1px solid var(--border-1)' }}>
+            <span className="mono" style={{ color:'var(--text-3)' }}>{filt.length.toLocaleString('pt-BR')} de {dir.length.toLocaleString('pt-BR')}</span>
+            <button className="btn sm ghost" onClick={()=>{ setQ(''); setDom([]); setProg([]); setMinP(1); }}>Limpar</button>
+          </div>
+        </aside>
+        <div>
+          <div style={{ display:'grid',gridTemplateColumns:'repeat(auto-fill, minmax(250px, 1fr))',gap:12 }}>
+            {vis.map(c=>(
+              <a key={c.id} href={`#/dna/${c.id}`} className="card" style={{ padding:'13px 15px',display:'flex',flexDirection:'column',gap:8,textDecoration:'none' }}>
+                <div style={{ fontSize:14,fontWeight:600,color:'var(--text-1)',lineHeight:1.25 }}>{c.nome}</div>
+                <div style={{ display:'flex',gap:12,fontSize:11.5,color:'var(--text-3)' }}>
+                  <span><b style={{ color:'var(--text-1)' }}>{c.nProj}</b> projetos</span>
+                  <span><b style={{ color:'var(--text-1)' }}>{c.nICT}</b> ICTs</span>
+                </div>
+                <div style={{ display:'flex',flexWrap:'wrap',gap:4,marginTop:'auto',alignItems:'center' }}>
+                  {c.doms.slice(0,5).map(d=>{ const dm=DOMINIOS.find(x=>x.id===d); return <span key={d} title={dm&&dm.label} style={{ width:7,height:7,borderRadius:99,background:dm?dm.cor:'var(--text-5)' }}/>; })}
+                  {c.progs.slice(0,4).map(p=><span key={p} title={p} style={{ fontSize:8,color:'var(--text-4)',border:'1px solid var(--border-2)',borderRadius:4,padding:'1px 4px' }}>{p==='Lei do Bem'?'L.Bem':p==='Lei da Informática'?'L.Inf':p}</span>)}
+                </div>
+              </a>
+            ))}
+          </div>
+          {filt.length===0 && <div className="card" style={{ padding:40,textAlign:'center',color:'var(--text-3)' }}>Nenhuma empresa com esses filtros.</div>}
+          {lim<filt.length && <div style={{ textAlign:'center',marginTop:16 }}><button className="btn" onClick={()=>setLim(l=>l+60)}>Mostrar mais ({(filt.length-lim).toLocaleString('pt-BR')} restantes)</button></div>}
+        </div>
+      </div>
+    </div>
+  );
+}
+function DnaEmpresa({ id }){
+  const DOMINIOS=window.ATLAS_DATA.DOMINIOS;
+  const E=React.useMemo(()=>dnaEmpresaById(id),[id]);
+  const [lim,setLim]=React.useState(25);
+  if(!E) return (<div className="page fade-in"><div className="card" style={{ padding:40,textAlign:'center' }}><div className="serif" style={{ fontSize:24,marginBottom:8 }}>Empresa não encontrada.</div><a href="#/dna" className="btn sm">Voltar ao DNA</a></div></div>);
+  const { a, nome, progs, c }=E;
+  const domRows=Object.keys(a.doms).sort((x,y)=>a.doms[y]-a.doms[x]).map(d=>{ const dm=DOMINIOS.find(z=>z.id===d); return { l:dm?dm.label:d, v:a.doms[d], cor:dm?dm.cor:'var(--text-5)' }; });
+  const ictRows=Object.keys(a.icts).sort((x,y)=>a.icts[y]-a.icts[x]).slice(0,12).map(n=>({ l:n, v:a.icts[n], ictName:n }));
+  const temaRows=Object.keys(a.temas).sort((x,y)=>a.temas[y]-a.temas[x]).slice(0,7).map(t=>({ l:t.length>34?t.slice(0,34)+'…':t, v:a.temas[t], cor:'var(--blue-400)' }));
+  const anos=Object.keys(a.anos).filter(y=>/^(19|20)\d\d$/.test(y)).sort(); const maxAno=Math.max.apply(null,anos.map(y=>a.anos[y]))||1;
+  const projetos=[].concat(c.anp.map(p=>({ t:p.t,ict:p.ict,prog:'ANP',area:p.tema,valor:p.valor,ano:(/(\d{4})/.exec(p.data||'')||[])[1] })), c.emb.map(p=>({ t:p.t,ict:p.ict,prog:'EMBRAPII',area:'',valor:0,ano:'' }))).filter(p=>p.t);
+  return (
+    <div className="page fade-in">
+      <div style={{ marginBottom:14 }}><a href="#/dna" className="btn sm ghost">← DNA da Inovação</a></div>
+      <DnaDisclaimer/>
+      <div style={{ display:'flex',alignItems:'center',gap:14,marginBottom:20 }}>
+        <div style={{ width:46,height:46,borderRadius:12,background:'var(--bg-2)',display:'flex',alignItems:'center',justifyContent:'center',color:'var(--text-3)' }}><I.dna/></div>
+        <div><h1 className="serif" style={{ margin:0,fontSize:28,lineHeight:1.1 }}>{nome}</h1><div style={{ fontSize:12.5,color:'var(--text-3)' }}>DNA da inovação · inferido de bases públicas</div></div>
+      </div>
+      <div style={{ display:'grid',gridTemplateColumns:'repeat(auto-fit, minmax(150px,1fr))',gap:12,marginBottom:22 }}>
+        {[['Projetos',a.nProj.toLocaleString('pt-BR')],['ICTs parceiras',a.nICT],['Investimento (ANP)',dnaMoney(a.valor)||'—'],['Programas',progs.length]].map(([k,v])=>(
+          <div key={k} style={{ background:'var(--bg-1)',borderRadius:10,padding:'14px 16px' }}><div style={{ fontSize:12.5,color:'var(--text-3)',marginBottom:5 }}>{k}</div><div style={{ fontSize:24,fontWeight:600,color:'var(--text-1)' }}>{v}</div></div>
+        ))}
+      </div>
+      <div style={{ display:'flex',flexWrap:'wrap',gap:7,marginBottom:24 }}>
+        {progs.map(p=><span key={p} style={{ display:'inline-flex',alignItems:'center',gap:6,fontSize:12,padding:'5px 11px',borderRadius:99,background:'var(--bg-2)',border:'1px solid var(--border-2)',color:'var(--text-2)' }}><span style={{ width:7,height:7,borderRadius:99,background:DNA_PROG_COR[p]||'var(--text-4)' }}/>{p}</span>)}
+      </div>
+      <div style={{ display:'grid',gridTemplateColumns:'1fr 1fr',gap:'var(--s-6)',alignItems:'start' }}>
+        <section className="card" style={{ padding:'18px 20px' }}>
+          <h3 className="h4" style={{ marginBottom:4 }}>Áreas tecnológicas inferidas</h3>
+          <p style={{ fontSize:11.5,color:'var(--text-4)',margin:'0 0 12px' }}>Por correlação dos temas dos projetos e dos domínios das ICTs parceiras.</p>
+          {domRows.length?<DnaBars rows={domRows}/>:<div style={{ fontSize:12.5,color:'var(--text-4)' }}>Sem sinal de domínio nos títulos dos projetos.</div>}
+        </section>
+        <section className="card" style={{ padding:'18px 20px' }}>
+          <h3 className="h4" style={{ marginBottom:4 }}>ICTs mais utilizadas</h3>
+          <p style={{ fontSize:11.5,color:'var(--text-4)',margin:'0 0 12px' }}>Nº de projetos por instituição parceira.</p>
+          <DnaBars rows={ictRows} linkfn={r=>dnaIctId(r.ictName)}/>
+        </section>
+        {anos.length>1 && <section className="card" style={{ padding:'18px 20px' }}>
+          <h3 className="h4" style={{ marginBottom:4 }}>Linha do tempo</h3>
+          <p style={{ fontSize:11.5,color:'var(--text-4)',margin:'0 0 14px' }}>Projetos ANP por ano de contratação.</p>
+          <div style={{ display:'flex',alignItems:'flex-end',gap:3,height:120 }}>{anos.map(y=>{ const h=Math.round(a.anos[y]/maxAno*100); return (
+            <div key={y} style={{ flex:1,display:'flex',flexDirection:'column',alignItems:'center',gap:5,minWidth:0 }} title={a.anos[y]+' projetos em '+y}>
+              <div style={{ width:'70%',background:'var(--blue-400)',height:Math.max(h,2)+'%',borderRadius:'3px 3px 0 0' }}/>
+              <span style={{ fontSize:8.5,color:'var(--text-4)' }}>{y.slice(2)}</span>
+            </div>); })}</div>
+        </section>}
+        {temaRows.length>0 && <section className="card" style={{ padding:'18px 20px' }}>
+          <h3 className="h4" style={{ marginBottom:4 }}>Investimento por tema</h3>
+          <p style={{ fontSize:11.5,color:'var(--text-4)',margin:'0 0 12px' }}>Valor dos projetos ANP por tema (R$).</p>
+          <DnaBars rows={temaRows} unit="money"/>
+        </section>}
+      </div>
+      <section className="card" style={{ padding:'18px 20px',marginTop:'var(--s-5)' }}>
+        <div style={{ display:'flex',justifyContent:'space-between',alignItems:'baseline',marginBottom:10 }}><h3 className="h4">Projetos executados</h3><span className="mono" style={{ fontSize:11,color:'var(--text-4)' }}>{projetos.length.toLocaleString('pt-BR')} projetos</span></div>
+        {projetos.slice(0,lim).map((p,i)=>{ const iid=dnaIctId(p.ict); return (
+          <div key={i} style={{ padding:'10px 0',borderBottom:'1px solid var(--border-1)' }}>
+            <div style={{ fontSize:13.5,color:'var(--text-1)',lineHeight:1.35 }}>{p.t}</div>
+            <div style={{ fontSize:11.5,color:'var(--text-3)',marginTop:3,display:'flex',flexWrap:'wrap',gap:8,alignItems:'center' }}>
+              <span style={{ display:'inline-flex',alignItems:'center',gap:4 }}><span style={{ width:6,height:6,borderRadius:99,background:DNA_PROG_COR[p.prog] }}/>{p.prog}</span>
+              {p.ict && <span>· {iid?<a href={'#/ict/'+iid} style={{ color:'var(--blue-400)' }}>{p.ict}</a>:p.ict}</span>}
+              {p.area && <span>· {p.area}</span>}
+              {p.valor>0 && <span>· {dnaMoney(p.valor)}</span>}
+              {p.ano && <span>· {p.ano}</span>}
+            </div>
+          </div>); })}
+        {lim<projetos.length && <div style={{ textAlign:'center',marginTop:14 }}><button className="btn sm" onClick={()=>setLim(l=>l+50)}>Mostrar mais ({(projetos.length-lim).toLocaleString('pt-BR')})</button></div>}
+      </section>
+    </div>
+  );
+}
+
 function App() {
   const { segment, param } = useRoute();
   const [tweaks, setTweak] = useTweaks(TWEAK_DEFAULTS);
@@ -31600,6 +31795,8 @@ function App() {
   else if (segment === 'mapa') view = <Mapa/>;
   else if (segment === 'icts' && !param) view = <IctsDiretorio/>;
   else if (segment === 'ict')       view = <IctPagina id={param}/>;
+  else if (segment === 'dna' && !param) view = <DnaDiretorio/>;
+  else if (segment === 'dna')       view = <DnaEmpresa id={param}/>;
   else if (segment === 'guia') view = <Guia/>;
   else if (segment === 'simulador') view = <Simulador/>;
   else if (segment === 'trl')       view = <Trl/>;
