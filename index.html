@@ -360,6 +360,9 @@ input, select, textarea { font-family: inherit; }
   }
   /* Fase 3 CSS (fim) */
   </style>
+<!-- ATLAS-NOVIDADES-BEGIN -->
+<script>window.ATLAS_NOVIDADES = {"mes": "outubro de 2026", "itens": [{"data": "2026-10-08", "titulo": "Plataforma Inovação para a Indústria (SENAI e SESI)", "texto": "Ficha atualizada com as 11 categorias do regulamento de 2026, duas chamadas abertas no Radar (Smart Factory B+P FINEP, até 16/10, e MOVER Nacionalização de Autopeças, até 23/10) e a Plataforma no simulador.", "link": "#/agentes/senai"}, {"data": "2026-10-08", "titulo": "EMBRAPII: 4.540 projetos e números por unidade", "texto": "Base de projetos do painel oficial, com 678 projetos novos, status, ano, área de aplicação e tecnologia habilitadora. Cada Unidade EMBRAPII ganhou projetos, valor contratado, valor médio, empresas atendidas e pedidos de PI, e há um explorador por área e tecnologia.", "link": "#/agentes/embrapii"}, {"data": "2026-10-08", "titulo": "Radar: FINEP atualizada", "texto": "Prazos prorrogados do Mais Inovação Brasil, Rodada 2 (Tecnologias Digitais, Semicondutores, Mobilidade Sustentável e Transformação Mineral) e as novas chamadas COOPERAMAIS para empresas e para ICTs.", "link": "#/radar"}, {"data": "2026-10-08", "titulo": "Ecossistema: desafios de inovação aberta", "texto": "Oportunidades padronizadas, com status pela data e o novo tipo Desafio de inovação aberta. Entraram SILEMG Lab 2026, dois desafios da Nestlé, Tecnopuc Deep Tech, Inova Cemig.Lab ciclo 5 e Desafio Brasileiro de IA.", "link": "#/ecossistema"}, {"data": "2026-10-08", "titulo": "DNA da Inovação e propriedade intelectual", "texto": "Patentes e projetos atribuídos com mais precisão aos grupos empresariais, por exemplo Vale e Embraco, hoje Nidec.", "link": "#/dna"}, {"data": "2026-10-07", "titulo": "96 Unidades EMBRAPII ativas", "texto": "Lista de unidades alinhada ao cadastro oficial, com as 8 unidades credenciadas em 2026 e a identificação das ex-unidades.", "link": "#/agentes/embrapii"}, {"data": "2026-10-07", "titulo": "Privacidade nas bases de empresas", "texto": "Dados de pessoas físicas retirados dos nomes de empresas; empresários individuais aparecem sem nome.", "link": "#/dna"}, {"data": "2026-10-07", "titulo": "Redata no catálogo de instrumentos", "texto": "Novo instrumento com ficha, comparação com instrumentos parecidos, entrada no simulador e verbetes no dicionário; números da EMBRAPII atualizados pelo painel oficial.", "link": "#/instrumento/redata"}]};</script>
+<!-- ATLAS-NOVIDADES-END -->
 </head>
 <body>
   <div id="app"></div>
@@ -28067,6 +28070,26 @@ Object.assign(window, {
 
 /* Atlas da Inovação — Hub (home dashboard) */
 
+function NovidadesDoMes() {
+  const N = window.ATLAS_NOVIDADES;
+  if (!N || !N.itens || !N.itens.length) return null;
+  const fmt = iso => { const p = String(iso).split('-'); return p[2] + '/' + p[1]; };
+  return (
+    <div style={{ marginBottom:'var(--s-8)' }}>
+      <SectionHead num="Novo" title={'Novidades de ' + N.mes} lede="O que mudou no Atlas neste mês. Esta lista é atualizada a cada publicação e na revisão mensal." />
+      <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(260px, 1fr))', gap:12 }}>
+        {N.itens.map((it, i) => (
+          <a key={i} href={it.link || '#/'} className="card" style={{ padding:'14px 16px', textDecoration:'none', color:'inherit', display:'block' }}>
+            <div className="mono muted" style={{ fontSize:11, marginBottom:6 }}>{fmt(it.data)}</div>
+            <div style={{ fontWeight:600, marginBottom:6 }}>{it.titulo}</div>
+            <div className="muted" style={{ fontSize:13, lineHeight:1.45 }}>{it.texto}</div>
+          </a>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function Hub() {
   const { INSTRUMENTOS, CHAMADAS, ICTS, DOMINIOS, AGENCIAS, GLOSSARIO, GUIA } = window.ATLAS_DATA;
   const today = new Date();
@@ -28124,6 +28147,8 @@ function Hub() {
           </div>
         </div>
       </section>
+
+      <NovidadesDoMes/>
 
       {/* Hub modules */}
       <SectionHead num="§ 01" title="Módulos" lede="Uma porta para cada aba do atlas. Cada uma é um corte distinto sobre o ecossistema." />
