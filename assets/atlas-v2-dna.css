@@ -1,0 +1,198 @@
+/* Atlas v2 · rodada 10: Guia de PI, ficha do DNA, calculadora AD² e ajustes do Simulador.
+   Só tokens do tema (claro e escuro); nada de cor fixa fora dos selos de natureza. */
+
+/* ---------- Guia de PI ---------- */
+.pg-secoes{margin-top:26px}
+.pg-painel{margin-top:6px;padding-bottom:20px}
+.pg-cab{margin-top:30px;max-width:72ch}
+.pg-cab .tit-md{margin-top:8px}
+.pg-lede{margin-top:12px;font-size:16.5px;line-height:1.65;color:var(--ink-2)}
+.pg-bloco{margin-top:18px}
+.pg-checks{list-style:none;margin:14px 0 0;padding:0;display:grid;gap:12px}
+.pg-checks li{position:relative;padding-left:26px;font-size:15px;line-height:1.6;color:var(--ink-2)}
+.pg-checks li::before{content:"";position:absolute;left:3px;top:.45em;width:12px;height:7px;border-left:2px solid var(--verde);border-bottom:2px solid var(--verde);transform:rotate(-45deg) translateY(-30%)}
+.pg-checks b{color:var(--ink);font-weight:500}
+.pg-grade{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,320px),1fr));gap:14px;margin-top:20px}
+.pg-grade.pg-tres{grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr))}
+.pg-card{display:flex;flex-direction:column;gap:10px;min-width:0}
+.pg-card h3{font:500 17px/1.35 var(--f-sans)}
+.pg-sigla{font:500 11.5px/1.3 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--azul-txt)}
+.pg-prot{font-size:14.5px;line-height:1.6;color:var(--ink-2)}
+.pg-duas{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px 14px;padding-top:10px;border-top:1px solid var(--line)}
+.pg-campo{min-width:0}
+.pg-campo span{display:block;font:500 11px/1.4 var(--f-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3)}
+.pg-campo p{margin-top:3px;font-size:13.5px;line-height:1.55;color:var(--ink);overflow-wrap:anywhere}
+.pg-pega{margin-top:auto;padding:10px 12px;border-radius:8px;background:var(--ambar-bg);color:var(--ink);font-size:13.5px;line-height:1.55}
+.pg-pega b{color:var(--ambar);font-weight:600}
+.pg-dica{padding:10px 12px;border-radius:8px;background:var(--azul-suave);font-size:13.5px;line-height:1.55;color:var(--ink)}
+.pg-dica b{color:var(--azul-txt);font-weight:600}
+.pg-formula{padding:9px 11px;border-radius:8px;background:var(--bg-2);font:400 13px/1.5 var(--f-mono);color:var(--ink);overflow-wrap:anywhere}
+.pg-passos{list-style:none;margin:20px 0 0;padding:0;display:grid;gap:12px}
+.pg-passos li.bloco{display:grid;grid-template-columns:40px minmax(0,1fr);gap:14px;align-items:start}
+.pg-n{display:grid;place-items:center;width:36px;height:36px;border-radius:50%;background:var(--azul-suave);color:var(--azul-txt);font:500 15px var(--f-mono)}
+.pg-passos h3{font:500 16.5px/1.35 var(--f-sans)}
+.pg-passos p{margin-top:6px;font-size:14.5px;line-height:1.6;color:var(--ink-2)}
+.pg-passos .pg-dica{margin-top:10px}
+.pg-acord{display:grid;gap:10px;margin-top:20px}
+.pg-det{padding:0}
+.pg-det summary{display:flex;flex-direction:column;gap:3px;padding:16px 18px;cursor:pointer;list-style:none;position:relative;padding-right:44px}
+.pg-det summary::-webkit-details-marker{display:none}
+.pg-det summary::after{content:"+";position:absolute;right:18px;top:14px;font:400 22px/1 var(--f-mono);color:var(--ink-3)}
+.pg-det[open] summary::after{content:"\2212"}
+.pg-det summary span{font:500 16px/1.4 var(--f-sans)}
+.pg-det summary small{font-size:12.5px;line-height:1.45;color:var(--ink-3)}
+.pg-corpo{display:grid;gap:12px;padding:0 18px 18px}
+.pg-erros{margin:20px 0 0;padding:18px 18px 18px 40px;display:grid;gap:12px;font-size:15px;line-height:1.6;color:var(--ink-2)}
+.pg-erros li::marker{color:var(--verm);font-family:var(--f-mono)}
+.pg-gloss{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:12px;margin:20px 0 18px}
+.pg-gloss dt{font:500 16px/1.35 var(--f-sans)}
+.pg-gloss dt small{display:block;margin-top:2px;font:400 12.5px/1.4 var(--f-sans);color:var(--ink-3)}
+.pg-gloss dd{margin:8px 0 0;font-size:14px;line-height:1.6;color:var(--ink-2)}
+
+/* ---------- Simulador ---------- */
+.sim-cont{padding:2px 2px 0}
+.sim-cont h2 b{color:var(--azul-num);font-family:var(--f-mono);font-weight:500}
+
+/* ---------- Calculadora AD² ---------- */
+.f-area{width:100%;min-height:58px;resize:vertical;font:inherit;font-size:13.5px;line-height:1.5;padding:9px 11px;background:var(--sup);border:1px solid var(--line-2);border-radius:8px;color:var(--ink)}
+.f-area:focus{outline:2px solid var(--azul-borda);outline-offset:1px}
+.ad2-pesos{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-top:12px}
+.ad2-pesos label{display:grid;gap:5px;font-size:12.5px;color:var(--ink-3)}
+.ad2-pesos input{width:100%;padding:7px 9px;border:1px solid var(--line-2);border-radius:6px;background:var(--sup);color:var(--ink);font:inherit;font-size:14px}
+.ad2-acoes{display:flex;flex-wrap:wrap;gap:8px}
+.ad2-refs{margin:10px 0 0;padding-left:20px;display:grid;gap:6px;font-size:13px;line-height:1.55;color:var(--ink-2)}
+.ind details.ev{margin-top:4px}
+.ind details.ev summary{cursor:pointer;font-size:12.5px;color:var(--azul-txt);width:max-content;max-width:100%}
+.ind details.ev textarea{margin-top:6px}
+.pa-acao{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr) 110px 90px 130px auto;gap:6px 10px;align-items:end;padding:12px 0;border-top:1px solid var(--line)}
+.pa-acao .campo-f{margin-top:0}
+.pa-acao .campo-f>span{font-size:12px;color:var(--ink-3);font-weight:400}
+.pa-acao .campo-f input[type=text],.pa-acao .campo-f input[type=number]{padding:8px 9px;font-size:13.5px}
+.pa-acao .f-sel{padding:8px 28px 8px 9px;font-size:13.5px}
+.pa-rm{white-space:nowrap;padding-bottom:9px;font-size:13px;color:var(--verm)}
+.pa-tot{margin-top:12px;padding:10px 12px;border-radius:8px;background:var(--bg-2);font-size:14px;line-height:1.5;color:var(--ink-2)}
+.pa-tot b{color:var(--ink);font-weight:500}
+@media (max-width:1100px){.pa-acao{grid-template-columns:minmax(0,1fr) minmax(0,1fr);}.pa-acao .pa-desc{grid-column:1/-1}.pa-rm{justify-self:start}}
+@media (max-width:900px){.ad2-fixo{position:static;max-height:none;overflow:visible}}
+@media (max-width:520px){.pa-acao{grid-template-columns:minmax(0,1fr)}}
+
+/* ---------- DNA: lista e ficha ---------- */
+.nat-peq{display:block;margin-top:2px;font:400 11px/1.3 var(--f-mono);letter-spacing:.03em;color:var(--ink-3)}
+.selo-t.defesa{background:var(--ink);color:var(--bg)}
+.mono{font-family:var(--f-mono)}
+.dna-aviso{margin-top:18px}
+.dna-defesa{display:flex;gap:14px;align-items:center;margin-top:18px;padding:14px 18px;border-left:3px solid var(--azul)}
+.dna-defesa p{font-size:14.5px;line-height:1.5;color:var(--ink-2)}
+.dna-defesa p b{color:var(--ink);font-weight:500}
+.dna-nota{display:block;margin-top:3px;font-size:12px;line-height:1.45;color:var(--ink-3)}
+.nat{display:inline-block;margin-left:4px;padding:2px 6px;border-radius:4px;font:500 10px/1.3 var(--f-mono);letter-spacing:.04em;text-transform:uppercase;font-style:normal;vertical-align:1px;background:var(--bg-2);color:var(--ink-3)}
+.nat-anp{background:var(--ambar-bg);color:var(--ambar)}
+.nat-finep{background:var(--azul-suave);color:var(--azul-txt)}
+.nat-aneel_antt{background:var(--bg-2);color:var(--ink-2)}
+.nat-bndes{background:var(--verde-bg);color:var(--verde)}
+.dna-det{margin-top:12px}
+.dna-det summary{cursor:pointer;font-size:13.5px;color:var(--azul-txt)}
+.dna-det .lista-pontos li{font-size:13px}
+.dna-sec{margin-top:18px}
+.dna-lin{padding:11px 0;border-top:1px solid var(--line);min-width:0}
+.dna-lin:first-of-type{margin-top:8px}
+.dna-lin p{font-size:14.5px;line-height:1.5;color:var(--ink);overflow-wrap:anywhere}
+.dna-lin small{display:block;margin-top:3px;font-size:12.5px;line-height:1.5;color:var(--ink-3);overflow-wrap:anywhere}
+.dna-lin small a{color:var(--azul-txt)}
+.dna-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-top:12px}
+.dna-kpis div{background:var(--bg-2);border-radius:8px;padding:11px 14px;min-width:0}
+.dna-kpis span{display:block;font-size:12px;color:var(--ink-3)}
+.dna-kpis b{display:block;margin-top:4px;font:500 19px/1.2 var(--f-mono);letter-spacing:-.02em;overflow-wrap:anywhere}
+.proj-ferr-dna{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center}
+.proj-ferr-dna .ordem{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink-3)}
+.proj-ferr-dna .f-sel{padding:7px 28px 7px 10px;font-size:13px}
+#dna-pi .tabela,#dna-proj .tabela{display:block;overflow-x:auto}
+@media (max-width:600px){.pg-duas{grid-template-columns:minmax(0,1fr)}.dna-defesa{flex-direction:column;align-items:flex-start}.pg-passos li.bloco{grid-template-columns:34px minmax(0,1fr);gap:10px}}
+
+/* ---------- Impressão da calculadora ---------- */
+@media print{
+  .lateral,.flut-esq,.faixa-pag canvas,.abas,.ad2-acoes,.pa-rm,.ind details.ev:not([open]){display:none!important}
+  .fixo,.ad2-fixo{position:static!important;max-height:none!important;overflow:visible!important}
+  .duas-lay,.duas-lay.inv{display:block}
+  .bloco{break-inside:avoid;box-shadow:none}
+  body{background:#fff}
+}
+
+.dna-corpo{margin-top:18px;min-width:0}
+.dna-abas{margin-top:18px}
+.dna-corpo>.dna-aviso:first-child{margin-top:0}
+
+/* Cabeçalho da empresa: projetos por fonte à direita */
+.ficha-cab.dna-cab{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,340px);gap:24px;align-items:center}
+.dna-cab-dir{border:1px solid var(--line);border-radius:12px;background:var(--sup-2);padding:14px 16px}
+.dna-cab-tot{display:flex;align-items:baseline;gap:8px;margin:0 0 10px}
+.dna-cab-tot b{font:500 30px/1 var(--f-mono);letter-spacing:-.02em;color:var(--ink)}
+.dna-cab-tot span{font-size:13px;color:var(--ink-3)}
+.dna-cab-fontes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+.dna-cab-fontes button{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--sup);color:var(--ink);font:500 12px var(--f-mono);letter-spacing:.04em;text-transform:uppercase;cursor:pointer;text-align:left;min-width:0}
+.dna-cab-fontes button span{overflow-wrap:anywhere}
+.dna-cab-fontes button b{font:500 14px var(--f-mono);color:var(--azul-num);letter-spacing:0}
+.dna-cab-fontes button:hover{border-color:var(--azul)}
+@media (max-width:900px){.ficha-cab.dna-cab{grid-template-columns:minmax(0,1fr)}}
+
+.dna-corpo .ficha-tres{grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr))}
+
+/* Resumo da empresa: valores e ICTs na largura toda, em grade (sem colunas compridas) */
+.dna-corpo .ficha-tres{grid-template-columns:minmax(0,1fr)}
+.dna-corpo .ficha-tres>.bloco{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,210px),1fr));gap:12px 18px;align-items:start}
+.dna-corpo .ficha-tres>.bloco>h4,.dna-corpo .ficha-tres>.bloco>.aviso-txt,.dna-corpo .ficha-tres>.bloco>.linhas-l{grid-column:1/-1}
+.dna-corpo .ficha-tres>.bloco>.dado{border:1px solid var(--line);border-radius:10px;padding:12px 14px;background:var(--sup-2);margin:0}
+.dna-corpo .ficha-tres .linhas-l{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,200px),1fr));gap:8px}
+.dna-corpo .ficha-tres .linhas-l>*{border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--sup-2);margin:0}
+
+/* Simulador: perguntas em grade de largura inteira, resultado abaixo */
+.sim-lay{display:grid;gap:24px;margin-top:28px;padding-bottom:110px}
+.form-sim .sim-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:4px 18px}
+.sim-sap{display:grid;grid-template-columns:52px minmax(0,1fr);gap:12px 16px;align-items:center;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.18);border-radius:14px;padding:20px 22px;color:var(--marinho-ink)}
+.sim-sap h4{color:#fff;font-size:16px;margin:0}
+.sim-sap p{font-size:13.5px;line-height:1.5;color:var(--marinho-ink-2);margin-top:4px}
+.sim-sap .btn-azul{grid-column:2;justify-self:start}
+.sim-sap.pulsa{animation:simpulsa 1.2s ease 2}
+@keyframes simpulsa{50%{box-shadow:0 0 0 6px rgba(37,99,235,.45)}}
+@media (max-width:600px){.sim-sap{grid-template-columns:minmax(0,1fr)}.sim-sap .btn-azul{grid-column:1}}
+/* Avisos de metodologia: uma linha discreta */
+.f-aviso:has(.nota-met){background:none;border:0;padding:0;margin-top:10px;font-size:12px;color:var(--ink-3)}
+.f-aviso .nota-met a,.dna-nota-met a{color:var(--azul-txt);text-decoration:underline}
+.dna-nota-met{margin:14px 0 0;font-size:12.5px;line-height:1.5;color:var(--ink-3)}
+
+/* Sapiens no hero do Simulador: mais visibilidade */
+.sim-sap{display:block;position:relative;background:linear-gradient(160deg,rgba(37,99,235,.22),rgba(124,58,237,.18) 60%,rgba(255,255,255,.05));border:1px solid rgba(147,197,253,.35);border-radius:18px;padding:22px 24px;box-shadow:0 18px 48px rgba(15,23,42,.35)}
+.sim-sap .sap-topo{display:flex;gap:14px;align-items:center}
+.sim-sap .sap-sel{display:flex;gap:8px;align-items:center;font:500 12px var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:#C7D2FE;margin:0 0 3px}
+.sim-sap .sap-sel span{padding:3px 8px;border-radius:999px;background:linear-gradient(135deg,#2563EB,#7C3AED);color:#fff;letter-spacing:.04em}
+.sim-sap h4{color:#fff;font-size:19px;line-height:1.25;margin:0}
+.sim-sap .sap-txt{font-size:14px;line-height:1.55;color:#DBE4F5;margin:14px 0 0}
+.sap-nums{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:14px}
+.sap-nums div{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:8px 10px}
+.sap-nums b{display:block;font:500 20px/1.1 var(--f-mono);color:#fff}
+.sap-nums span{display:block;font-size:11.5px;color:#C7D2FE;margin-top:2px}
+.sap-ex-tit{font:500 11px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:#A5B4FC;margin:16px 0 6px}
+.sap-ex{display:grid;gap:6px}
+.sap-ex button{text-align:left;background:rgba(255,255,255,.06);border:1px dashed rgba(199,210,254,.4);border-radius:10px;padding:8px 12px;color:#E0E7FF;font-size:13.5px;cursor:pointer;transition:background .2s,border-color .2s}
+.sap-ex button:hover{background:rgba(255,255,255,.12);border-color:#A5B4FC}
+.sim-sap .sap-btn{margin-top:16px;width:100%;justify-content:center;font-size:15px;padding:12px 16px}
+.sap-nota{font-size:12px;color:#A5B4FC;margin:8px 0 0;text-align:center}
+@media (max-width:600px){.sap-nums{grid-template-columns:repeat(2,minmax(0,1fr))}}
+/* selo IA no menu */
+.lat-nav a .novo.ia{background:linear-gradient(135deg,#2563EB,#7C3AED);color:#fff}
+
+/* Simulador: 4 colunas, campos homogêneos (mesma altura, select alinhado embaixo) */
+.form-sim .sim-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:14px 18px;align-items:stretch}
+.form-sim .sim-grid>.campo-f{display:flex;flex-direction:column;gap:4px;margin:0;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--sup-2)}
+.form-sim .sim-grid>.campo-f>span{font-weight:500;font-size:14px;line-height:1.3;color:var(--ink);min-height:2.6em}
+.form-sim .sim-grid>.campo-f>small{font-size:12px;line-height:1.4;color:var(--ink-3);min-height:2.8em;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.form-sim .sim-grid>.campo-f>.f-sel,.form-sim .sim-grid>.campo-f>select{margin-top:auto;width:100%;height:42px}
+@media (max-width:1100px){.form-sim .sim-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:600px){.form-sim .sim-grid{grid-template-columns:minmax(0,1fr)}}
+/* Simulador: explicação vira dica (ⓘ) e o seletor fica colado ao rótulo */
+.form-sim .sim-grid>.campo-f{position:relative;gap:8px;justify-content:flex-start}
+.form-sim .sim-grid>.campo-f>span{min-height:2.6em;display:flex;align-items:flex-start;gap:6px}
+.form-sim .sim-grid>.campo-f:has(>small)>span::after{content:"ⓘ";font-size:13px;color:var(--azul-txt);cursor:help;flex:none;margin-left:auto}
+.form-sim .sim-grid>.campo-f>small{display:none;position:absolute;z-index:5;left:10px;right:10px;top:calc(2.6em + 18px);-webkit-line-clamp:unset;min-height:0;background:var(--ink);color:var(--bg);padding:8px 10px;border-radius:8px;font-size:12.5px;line-height:1.45;box-shadow:0 8px 24px rgba(0,0,0,.25)}
+.form-sim .sim-grid>.campo-f:hover>small,.form-sim .sim-grid>.campo-f:focus-within>small{display:block}
+.form-sim .sim-grid>.campo-f>.f-sel,.form-sim .sim-grid>.campo-f>select{margin-top:0}

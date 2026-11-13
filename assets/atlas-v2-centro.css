@@ -1,0 +1,131 @@
+/* Atlas v2 · centralização geral (pedido do Bruno): títulos, abas, números, cabeçalhos de bloco e cartões
+   ficam centralizados; parágrafos longos, listas, checklists e tabelas seguem alinhados à esquerda. */
+
+/* Títulos de seção e cabeçalhos de lista */
+.secao-tit{justify-content:center;text-align:center;flex-direction:column;align-items:center;gap:8px}
+.secao-tit>*{text-align:center}
+h2.tit-md,.tit-md{text-align:center}
+.secao-tit .barra-esq{justify-content:center}
+
+/* Barras de abas */
+.fin-abas,.ins-abas,.ict-abas,nav.abas,.sub-abas{justify-content:center}
+
+/* Blocos e cartões: cabeçalho e números ao centro */
+.bloco>h4,.bloco>.olho,.bloco>h3{text-align:center}
+.bloco .dado{text-align:center}
+.op-nums,.dna-kpis,.kpis,.kpis4,.fin-nums{justify-content:center;text-align:center}
+.op-nums>*,.dna-kpis>*,.kpis>*,.kpis4>*,.fin-nums>*{text-align:center}
+.tldr-cab,.tl-cab,.ficha-tres>.bloco>h4{text-align:center}
+.contagem{text-align:center}
+.vazio{text-align:center}
+
+/* Leitura longa continua à esquerda (legibilidade) */
+.bloco .txt,.bloco p.txt,.bloco ul,.bloco ol,.lista-pontos,table,.tab-rola,.hg-chk,.op-det .op-linhas,.metodo p,.aviso-txt{text-align:left}
+
+/* Página do financiador */
+.sb-tit,.sb-sec-cab{justify-content:center;text-align:center;flex-direction:column;align-items:center;gap:4px}
+.sb-at{display:flex;flex-direction:column;align-items:center;text-align:center;gap:2px}
+.sb-at>*{text-align:center}
+.sb-side,.sb-side .bloco,.sb-dl,.sb-dl dt,.sb-dl dd{text-align:center}
+.sb-side .tags,.sb-lista{justify-content:center}
+.nat-cab{justify-content:center;gap:10px}
+.nat-grupo{text-align:center}
+.nat-grupo ul{text-align:center;padding-left:0}
+.mod,.mod-ticket,.mod-lead{text-align:center}
+.fin-sec-cab{justify-content:center;text-align:center;flex-direction:column;align-items:center}
+.fin-graf>h4,.fin-graf>h3{text-align:center}
+/* Fichas (empresa, ICT, instrumento, chamada): títulos de bloco e fatos ao centro */
+.dna-cab-tot{justify-content:center}
+.ficha-cab .tags{justify-content:flex-start}
+.tl-item,.tldr .tl-item{text-align:center}
+.tl-item .tl-ico{margin-left:auto;margin-right:auto}
+.ict-fatos .dado{text-align:center}
+/* Resumo executivo (instrumento e chamada): ícone em cima, tudo ao centro, etiquetas em linha */
+.tldr-cab{flex-direction:column;align-items:center;text-align:center;gap:10px}
+.tldr-cab .olho,.tldr-cab h2{text-align:center}
+.tldr-selos{justify-content:center}
+.tl-item{display:flex!important;flex-direction:column;align-items:center;text-align:center;gap:8px}
+.tl-item>div{width:100%}
+.tl-chips{display:flex;flex-wrap:wrap;justify-content:center;gap:6px}
+.tl-chips>span{display:inline-flex}
+.tl-item ul{display:inline-block;text-align:left;margin:6px auto 0}
+.tldr-alerta{justify-content:center;text-align:center}
+/* Ficha da empresa (DNA) */
+.dna-nota-met,.aviso-txt,.nota-base,.uf-nota{text-align:center!important}
+.dna-corpo .ficha-tres>.bloco{display:flex!important;flex-wrap:wrap;justify-content:center}
+.dna-corpo .ficha-tres>.bloco>h4,.dna-corpo .ficha-tres>.bloco>.aviso-txt,.dna-corpo .ficha-tres>.bloco>.linhas-l{flex:1 1 100%}
+.dna-corpo .ficha-tres>.bloco>.dado{flex:1 1 210px;max-width:270px}
+.dna-corpo .ficha-tres .linhas-l{justify-content:center}
+.dna-corpo .ficha-tres .linhas-l>*{text-align:center}
+.dna-corpo .bloco>h4{text-align:center}
+/* Cabeçalhos de ficha centralizados (chamada, instrumento, empresa, ICT, financiador) */
+.ficha-cab,.ficha-cab .cab-esq{text-align:center}
+.ficha-cab h1,.ficha-cab .olho,.ficha-cab p.ag{text-align:center}
+.ficha-cab .tags,.ficha-cab.ficha-cab .tags{justify-content:center!important}
+.ficha-cab .cab-nat{display:block}
+.cab-esq p.ag .cab-lbl{min-width:0;margin-right:6px}
+.cab-fato{text-align:center}
+.ict-fatos{justify-items:center}
+.fin-hero,.fin-sobre{text-align:center}
+.fin-mods{justify-content:center}
+.ficha-acoes{flex-wrap:wrap}
+/* Ficha de ICT */
+.ict-fatos{display:flex!important;flex-wrap:wrap;justify-content:center;gap:12px 28px}
+.ict-fatos>.dado{flex:0 1 180px}
+.ficha-tres.ict-uma .bloco{text-align:center}
+.ficha-tres.ict-uma .bloco .tags{justify-content:center}
+.ict-lp{text-align:center}
+.ict-lp h5{text-align:center}
+.ict-lp ul{display:inline-block;text-align:left;margin:0 auto}
+/* Bloco de números do cabeçalho: cabe qualquer quantidade */
+.faixa-num>.faixa-quebra>div{min-width:0!important;flex:1 1 0!important;padding:0 6px!important}
+.faixa-num>.faixa-quebra b{font-size:clamp(17px,1.6vw,22px)!important}
+.faixa-num>.faixa-quebra span{font-size:11.5px!important;max-width:110px}
+/* Topo das listas: título ao centro, busca centralizada abaixo */
+.lista-lay>.barra,.wrap>.barra,section>.barra{flex-direction:column;align-items:center;text-align:center;gap:12px}
+.barra>.barra-esq{justify-content:center;flex-wrap:wrap}
+.barra>.busca{width:min(520px,100%)}
+/* 4+ números secundários: descem para uma linha própria, centralizada */
+.faixa-grade>div:first-child>.faixa-num:has(.faixa-quebra>div:nth-child(4)){grid-template-columns:minmax(0,1fr)}
+.faixa-grade>div:first-child>.faixa-num:has(.faixa-quebra>div:nth-child(4))>.faixa-quebra{grid-column:1;grid-row:3;border-left:0;border-top:1px solid var(--marinho-line);padding:14px 0 0;margin-top:14px}
+.faixa-num:has(.faixa-quebra>div:nth-child(4))>.faixa-quebra span{max-width:130px}
+.faixa-num>.faixa-quebra{gap:12px!important}
+.faixa-num>.faixa-quebra>div{padding:0 2px!important}
+.faixa-num>.faixa-quebra span{line-height:1.3}
+.faixa-grade>div:first-child>.faixa-num>b{padding:0 18px!important}
+/* Celular */
+@media (max-width:760px){
+  [data-view="radar"] #radar-num,.faixa-grade>div:first-child>.faixa-num{grid-template-columns:minmax(0,1fr)!important}
+  [data-view="radar"] #radar-num>.faixa-quebra:not(.faixa-vol),.faixa-grade>div:first-child>.faixa-num>.faixa-quebra{grid-column:1!important;grid-row:3!important;border-left:0!important;border-top:1px solid var(--marinho-line);padding:12px 0 0!important;margin-top:12px!important}
+  .faixa-nums-dir .faixa-quebra b,.faixa-num>.faixa-quebra b{font-size:16px!important;overflow-wrap:anywhere}
+  .faixa-nums-dir .faixa-quebra>div{flex:1 1 0;min-width:0}
+  .ficha-cab.ict-cab{grid-template-columns:minmax(0,1fr)!important}
+  .ficha-cab.dna-cab,.ficha-cab.cab-cham{grid-template-columns:minmax(0,1fr)!important}
+}
+
+/* Abas: centralizadas quando cabem, roláveis sem cortar o início quando não cabem */
+.fin-abas,.ins-abas,.ict-abas,nav.abas{justify-content:flex-start!important}
+.fin-abas>:first-child,.ins-abas>:first-child,.ict-abas>:first-child,nav.abas>:first-child{margin-left:auto}
+.fin-abas>:last-child,.ins-abas>:last-child,.ict-abas>:last-child,nav.abas>:last-child{margin-right:auto}
+
+/* Números do cabeçalho com muitos dígitos (DNA): nunca se sobrepõem */
+.faixa-num>.faixa-quebra>div{flex:1 1 auto!important}
+.faixa-num>.faixa-quebra b{white-space:nowrap;font-size:clamp(15px,1.35vw,20px)!important}
+.faixa-grade>div:first-child>.faixa-num>b{white-space:nowrap}
+
+/* Cabeçalho da empresa: totais sem quebrar dígitos */
+.dna-cab-tot b,.dna-cab-dir b{white-space:nowrap}
+.dna-cab-tot{flex-wrap:nowrap;align-items:center}
+.dna-cab-tot b{font-size:clamp(22px,2.2vw,30px)!important}
+.dna-cab-tot+.dna-cab-tot b{font-size:18px!important}
+/* Cartões da Visão geral: só nome, valor e prazo (curtos) */
+.cartao h3{display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+.cartao .cartao-fatos{display:flex;flex-direction:column;gap:2px;margin-top:12px}
+.cartao .cartao-fatos b{font:500 22px/1.15 var(--f-mono);color:var(--azul-num)}
+.cartao .cartao-fatos span{font-size:13px;color:var(--ink-3)}
+/* Cartões da Visão geral mais baixos e centralizados */
+.cartao{min-height:0!important;padding:24px 24px 20px!important;text-align:center;align-items:center}
+.cartao .cartao-ico{margin:0 auto}
+.cartao .cartao-data{margin-top:14px!important}
+.cartao .btn-txt{align-self:center!important;margin-top:14px!important}
+.cartao .cartao-fatos{align-items:center}

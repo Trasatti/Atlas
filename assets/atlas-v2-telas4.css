@@ -1,0 +1,58 @@
+/* Atlas v2 · rodada 4: busca geral, tema no menu, natureza do recurso, Sapiens, Internacional, projetos e consulta de PI */
+.busca-geral{position:fixed;z-index:62;top:calc(14px + env(safe-area-inset-top,0px));right:max(14px,env(safe-area-inset-right,0px));width:min(440px,calc(100vw - 260px));display:flex;align-items:center;gap:8px;background:var(--sup);border:1px solid var(--line);border-radius:12px;box-shadow:var(--sombra);padding:0 12px}
+.busca-geral:focus-within{border-color:var(--azul);box-shadow:0 0 0 3px var(--azul-suave),var(--sombra)}
+.busca-geral>svg{width:16px;height:16px;color:var(--ink-3);flex:none}
+.busca-geral input{flex:1;min-width:0;border:0;background:transparent;padding:11px 0;font-size:14.5px;outline:none;color:var(--ink)}
+.busca-geral kbd{font:500 11px var(--f-mono);color:var(--ink-3);border:1px solid var(--line-2);border-radius:5px;padding:2px 6px}
+.busca-geral:focus-within kbd{display:none}
+.bg-res{position:absolute;top:calc(100% + 6px);right:0;width:min(560px,calc(100vw - 28px));max-height:min(70vh,620px);overflow:auto;background:var(--sup);border:1px solid var(--line);border-radius:12px;box-shadow:var(--sombra-forte);padding:8px;scrollbar-width:thin}
+.bg-grupo+.bg-grupo{margin-top:4px;padding-top:4px;border-top:1px solid var(--line)}
+.bg-grupo h5{margin:0;padding:8px 10px 4px;font:500 11px/1.4 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);display:flex;justify-content:space-between}
+.bg-it{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 12px;padding:8px 10px;border-radius:8px;text-decoration:none;color:var(--ink)}
+.bg-it b{font-weight:500;font-size:14px;line-height:1.35;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bg-it small{grid-column:1;font-size:12px;color:var(--ink-3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bg-it em{grid-row:1/3;grid-column:2;align-self:center;font:400 11px var(--f-mono);font-style:normal;color:var(--ink-3)}
+.bg-it:hover,.bg-it.sel{background:var(--azul-suave)}
+.bg-it mark{background:transparent;color:var(--azul-txt);font-weight:600}
+.bg-todos{display:block;margin-top:6px;padding:10px;border-radius:8px;text-align:center;font-size:13.5px;font-weight:500;color:var(--azul-txt);text-decoration:none;background:var(--bg-2)}
+.bg-todos:hover,.bg-todos.sel{background:var(--azul-suave)}
+.bg-vazio{padding:16px 10px;font-size:14px;color:var(--ink-3)}
+.menu-aberto .busca-geral{width:min(440px,calc(100vw - var(--lat) - 40px))}
+@media (max-width:760px){.busca-geral{left:auto;width:calc(100vw - 150px)}.busca-geral kbd{display:none}.flut-esq .marca{display:none}}
+
+/* Tema dentro do menu lateral */
+.tema-lat{display:grid;grid-template-columns:1fr 1fr;gap:4px;background:var(--bg-2);border-radius:10px;padding:4px}
+.tema-lat button{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:9px 8px;border-radius:7px;border:0;background:transparent;cursor:pointer;font:500 13.5px/1 var(--f-sans);color:var(--ink-2)}
+.tema-lat button:hover{color:var(--ink)}
+.tema-lat button[aria-pressed="true"]{background:var(--sup);color:var(--ink);box-shadow:var(--sombra)}
+.tema-lat svg{width:15px;height:15px}
+.lat-nav a.lat-ia span:first-child{color:var(--ink)}
+
+/* Natureza do recurso */
+.tag-nat{gap:6px}
+.tag-nat i{display:inline-block;width:8px;height:8px;border-radius:50%}
+
+/* Sapiens */
+.sapiens.destaque{display:grid;grid-template-columns:52px minmax(0,1fr);gap:14px 16px;align-items:center;padding:20px 22px}
+.sapiens.destaque .sap-acoes{grid-column:2;display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center}
+.sapiens.destaque .btn-txt{color:#cfe0ff}
+.sap-ico{width:52px;height:52px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(135deg,#2563EB,#7C3AED);color:#fff;font:500 16px var(--f-mono);box-shadow:0 8px 24px rgba(37,99,235,.35)}
+.sap-ico.grande{width:88px;height:88px;border-radius:22px;font-size:26px}
+.sap-perguntas{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:16px}
+.sap-p{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;text-align:left;background:var(--sup);border:1px solid var(--line);border-radius:10px;padding:14px 16px;font-size:14.5px;line-height:1.5;cursor:pointer;color:var(--ink);transition:border-color .2s}
+.sap-p:hover{border-color:var(--azul)}
+.sap-p span{font:500 12px var(--f-mono);color:var(--azul-txt);white-space:nowrap}
+
+/* Projetos */
+.proj-cab{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px 16px}
+.proj-ferr{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;margin-top:12px}
+.proj-ferr .busca{flex:1;min-width:240px}
+.tabela a{color:var(--azul-txt);text-decoration:none}
+.tabela a:hover{text-decoration:underline}
+.tabela td small{color:var(--ink-3)}
+.proj-resumo{display:flex;flex-wrap:wrap;gap:22px;margin-top:6px}
+.proj-resumo div span{display:block;font-size:12px;color:var(--ink-3)}
+.proj-resumo div b{display:block;font:500 22px/1.1 var(--f-mono);letter-spacing:-.02em}
+.nota-base{margin-top:10px;font-size:12.5px;color:var(--ink-3);line-height:1.5}
+
+@media (max-width:900px){.sap-perguntas{grid-template-columns:minmax(0,1fr)}.sapiens.destaque{grid-template-columns:minmax(0,1fr)}.sapiens.destaque .sap-acoes{grid-column:1}.tabela{display:block;overflow-x:auto}}

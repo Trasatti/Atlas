@@ -1,0 +1,61 @@
+/* Atlas v2 · listas: painel "Detalhes" nos cartões e Guia em abas de capítulos */
+
+/* ---------- Painel "Detalhes" dentro do cartão (fica acima do link esticado do título) ---------- */
+.op-det{position:relative;z-index:2;border-top:1px dashed var(--line);padding-top:10px}
+.op-det>summary{list-style:none;cursor:pointer;display:inline-flex;align-items:center;gap:6px;font:500 13px/1.3 var(--f-sans);color:var(--azul-txt);padding:4px 2px;border-radius:6px}
+.op-det>summary::-webkit-details-marker{display:none}
+.op-det>summary::after{content:"";width:7px;height:7px;border-right:1.6px solid currentColor;border-bottom:1.6px solid currentColor;transform:rotate(45deg) translateY(-2px);transition:transform .2s}
+.op-det[open]>summary::after{transform:rotate(-135deg) translate(-2px,-1px)}
+.op-det>summary:hover{text-decoration:underline}
+.op-det>summary:focus-visible{outline:2px solid var(--azul);outline-offset:2px}
+.op-det-corpo{margin-top:10px;display:grid;gap:12px;cursor:auto}
+.op-det-corpo dl{margin:0;display:grid;gap:10px}
+.op-det-corpo dl>div{display:grid;grid-template-columns:104px minmax(0,1fr);gap:4px 12px;align-items:baseline}
+.op-det-corpo dt{font:500 11.5px/1.4 var(--f-mono);letter-spacing:.05em;text-transform:uppercase;color:var(--ink-3)}
+.op-det-corpo dd{margin:0;font-size:13.5px;line-height:1.55;color:var(--ink-2);overflow-wrap:anywhere}
+.op-det-corpo .btn-azul{justify-self:start}
+@media (max-width:480px){.op-det-corpo dl>div{grid-template-columns:minmax(0,1fr)}}
+
+/* ---------- Guia do Bom Projeto: abas de capítulos ---------- */
+.guia-lay{align-items:start}
+.guia-indice a{align-items:baseline;justify-content:flex-start;gap:10px;line-height:1.35}
+.guia-indice a b{flex:none;min-width:22px;font:500 11.5px/1.6 var(--f-mono);color:var(--ink-3)}
+.guia-indice a span{flex:1 1 auto;min-width:0}
+.guia-indice a em{flex:none;margin-left:auto}
+.guia-indice a.ativo{background:var(--azul-suave);color:var(--ink);box-shadow:inset 3px 0 0 var(--azul)}
+.guia-indice a.ativo b{color:var(--azul-txt)}
+.guia-indice a:focus-visible{outline:2px solid var(--azul);outline-offset:-2px}
+.guia-painel{min-height:420px;padding:28px 30px}
+.guia-painel:focus{outline:none}
+.gc-cab{display:flex;gap:16px;align-items:center}
+.gc-num{flex:none;display:grid;place-items:center;width:46px;height:46px;border-radius:12px;background:var(--azul-suave);color:var(--azul-txt);font:500 20px/1 var(--f-mono)}
+.gc-cab h2{font:500 24px/1.25 var(--f-sans);letter-spacing:-.01em;margin-top:2px}
+.gc-resumo{margin-top:18px;font-size:16px;line-height:1.7;color:var(--ink-2);max-width:68ch}
+.gc-duas{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:28px;margin-top:24px;padding-top:22px;border-top:1px solid var(--line)}
+.gc-duas h4{font:500 12px/1.4 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:12px}
+.gc-prog{font:500 12px var(--f-mono);letter-spacing:0;color:var(--verde)}
+.gc-pontos{list-style:none;counter-reset:gp;margin:0;padding:0;display:grid;gap:10px}
+.gc-pontos li{counter-increment:gp;position:relative;padding:10px 12px 10px 42px;border:1px solid var(--line);border-radius:10px;background:var(--sup-2);font-size:14.5px;line-height:1.55;color:var(--ink-2)}
+.gc-pontos li::before{content:counter(gp);position:absolute;left:12px;top:10px;width:20px;height:20px;border-radius:50%;background:var(--azul-suave);color:var(--azul-txt);font:500 11.5px/20px var(--f-mono);text-align:center}
+.gc-duas .check{display:grid;gap:8px}
+.gc-duas .check label{display:flex;gap:10px;align-items:flex-start;font-size:14.5px;line-height:1.5;color:var(--ink-2);cursor:pointer}
+.gc-duas .check input{flex:none;margin-top:3px;width:16px;height:16px;accent-color:var(--azul)}
+.gc-duas .progresso{margin-top:14px}
+.gc-nav{display:flex;justify-content:space-between;gap:12px;margin-top:28px;padding-top:20px;border-top:1px solid var(--line)}
+.gc-nav .btn-linha,.gc-nav .btn-azul{max-width:48%;text-align:left;white-space:normal;line-height:1.35}
+.gc-nav .btn-azul{margin-left:auto;text-align:right}
+
+@media (max-width:1100px){
+  .guia-indice{display:flex;gap:6px;overflow-x:auto;padding:8px;scrollbar-width:thin;-webkit-overflow-scrolling:touch}
+  .guia-indice h4{display:none}
+  .guia-indice a{flex:none;white-space:nowrap;border:1px solid var(--line);padding:8px 12px}
+  .guia-indice a span{flex:none;max-width:220px;overflow:hidden;text-overflow:ellipsis}
+  .guia-indice a.ativo{box-shadow:none;border-color:var(--azul)}
+}
+@media (max-width:900px){.gc-duas{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:600px){
+  .guia-painel{padding:20px 16px;min-height:0}
+  .gc-cab h2{font-size:20px}
+  .gc-nav{flex-direction:column}
+  .gc-nav .btn-linha,.gc-nav .btn-azul{max-width:none;width:100%;text-align:center;margin-left:0}
+}

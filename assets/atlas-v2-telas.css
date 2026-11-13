@@ -1,0 +1,120 @@
+/* Atlas v2 · rodada 2: Instrumentos, Agentes, ICTs, Inovação aberta, Agenda, Compras, Guia e Dicionário */
+.faixa-barras{display:grid;gap:9px;max-width:460px;margin-left:auto;width:100%}
+.faixa-barras h4{font:500 12px/1.4 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--marinho-ink-2);margin-bottom:4px}
+.faixa-barras a,.faixa-barras div.fb{display:grid;grid-template-columns:150px minmax(0,1fr) 34px;gap:10px;align-items:center;font-size:13px;color:var(--marinho-ink-2);text-decoration:none;background:none;border:0;padding:0;text-align:left;cursor:pointer}
+.faixa-barras a:hover{color:#fff}
+.faixa-barras i{display:block;height:8px;border-radius:2px;background:linear-gradient(90deg,#4D7DCC,#9EC1F2)}
+.faixa-barras b{font:500 13px var(--f-mono);color:#fff;text-align:right}
+.faixa-barras span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.op .op-sigla{font:500 12px/1.3 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--azul-txt)}
+.op-txt{font-size:13.5px;line-height:1.55;color:var(--ink-2);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.op-nums{display:flex;flex-wrap:wrap;gap:22px;padding:4px 0 2px}
+.op-nums div span{display:block;font-size:12px;color:var(--ink-3)}
+.op-nums div b{display:block;font:500 22px/1.1 var(--f-mono);letter-spacing:-.02em}
+.op-nums div b.azul{color:var(--azul-num)}
+.ponto-cat{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;vertical-align:1px}
+.passos{list-style:none;counter-reset:p;margin:14px 0 0;padding:0;display:grid;gap:12px}
+.passos li{counter-increment:p;display:grid;grid-template-columns:34px minmax(0,1fr);gap:12px;align-items:start;font-size:15px;line-height:1.6;color:var(--ink-2)}
+.passos li::before{content:counter(p);display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--azul-suave);color:var(--azul-txt);font:500 13px var(--f-mono)}
+.lista-pontos{margin:12px 0 0;padding-left:18px;display:grid;gap:8px;font-size:15px;line-height:1.6;color:var(--ink-2)}
+.lista-pontos li::marker{color:var(--azul-num)}
+.ficha .bloco h4{font:500 12px/1.4 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)}
+.bloco.alerta{border-left:3px solid var(--ambar)}
+.bloco.alerta h4{color:var(--ambar)}
+.bloco.largo{margin-top:18px}
+.bloco>p.txt{margin-top:12px;font-size:15px;line-height:1.7;color:var(--ink-2)}
+.links-of{list-style:none;margin:10px 0 0;padding:0}
+.links-of a{display:flex;justify-content:space-between;gap:12px;padding:11px 0;border-top:1px solid var(--line);text-decoration:none;font-size:14.5px}
+.links-of a:hover{color:var(--azul-txt)}
+.links-of a span{color:var(--ink-3);font-size:12.5px;white-space:nowrap}
+.linhas-l{margin-top:8px}
+.linha-l{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 14px;padding:12px 0;border-top:1px solid var(--line);text-decoration:none}
+.linha-l b{font-weight:500;font-size:14.5px;line-height:1.4}
+.linha-l:hover b{color:var(--azul-txt)}
+.linha-l small{grid-column:1;font-size:12.5px;color:var(--ink-3)}
+.linha-l .status{grid-row:1/3;grid-column:2;align-self:center}
+.tabela{width:100%;border-collapse:collapse;margin-top:12px;font-size:14px}
+.tabela th{text-align:left;font:500 11.5px var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);padding:8px 10px 8px 0;border-bottom:1px solid var(--line)}
+.tabela td{padding:10px 10px 10px 0;border-bottom:1px solid var(--line);color:var(--ink-2);vertical-align:top}
+.ficha-mapa svg{display:block;width:100%;max-width:280px;height:auto;margin:12px auto 0}
+.ficha-mapa .uf{fill:var(--uf-0);stroke:var(--line-2);stroke-width:1.5}
+.ficha-mapa .uf.sel{fill:var(--azul-suave);stroke:var(--azul);stroke-width:2.5}
+.ficha-mapa circle{fill:var(--azul);stroke:#fff;stroke-width:4}
+.secao-tit{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px 12px;margin-top:44px}
+.secao-tit+.grade,.secao-tit+.bloco{margin-top:16px}
+.grade.tres{grid-template-columns:repeat(3,minmax(0,1fr))}
+
+/* Agenda */
+.agenda-lay{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:22px;align-items:start;margin-top:28px;padding-bottom:110px}
+.cal-topo{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.cal-topo h3{font:500 20px/1.2 var(--f-sans)}
+.cal-nav{display:flex;gap:6px}
+.cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px;margin-top:16px}
+.cal-dow{font:500 11px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);text-align:center;padding-bottom:4px}
+.cal-dia{min-height:88px;border:1px solid var(--line);border-radius:8px;padding:6px 6px;background:var(--sup);display:flex;flex-direction:column;gap:3px;overflow:hidden;min-width:0}
+.cal-dia.fora-mes{background:transparent;border-style:dashed;opacity:.5}
+.cal-dia.hoje{border-color:var(--azul);box-shadow:inset 0 0 0 1px var(--azul)}
+.cal-dia>span{font:500 12px var(--f-mono);color:var(--ink-3)}
+.cal-dia.hoje>span{color:var(--azul-txt)}
+.cal-ev{display:block;font-size:11.5px;line-height:1.3;padding:3px 5px;border-radius:4px;background:var(--azul-suave);color:var(--ink);text-decoration:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cal-ev:hover{filter:brightness(.95)}
+.cal-ev.urg{background:var(--verm-bg);color:var(--verm)}
+.cal-ev.eco{background:var(--verde-bg);color:var(--verde)}
+.cal-ev.fav{box-shadow:inset 3px 0 0 #E3A008}
+.cal-mais{font-size:11px;color:var(--ink-3);background:none;border:0;padding:0;text-align:left;cursor:pointer}
+.cal-leg{display:flex;flex-wrap:wrap;gap:14px;margin-top:14px;font-size:12.5px;color:var(--ink-2)}
+.cal-leg i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+
+/* Guia */
+.guia-lay{display:grid;grid-template-columns:270px minmax(0,1fr);gap:28px;align-items:start;margin-top:28px;padding-bottom:110px}
+.guia-indice{position:sticky;top:84px;background:var(--sup);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sombra);padding:14px 10px;max-height:calc(100vh - 100px);overflow:auto;scrollbar-width:thin}
+.guia-indice h4{font:500 12px/1.4 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);padding:2px 10px 8px}
+.guia-indice a{display:flex;justify-content:space-between;gap:8px;padding:7px 10px;border-radius:7px;font-size:13.5px;color:var(--ink-2);text-decoration:none}
+.guia-indice a em{font:400 11px var(--f-mono);font-style:normal;color:var(--verde)}
+.guia-indice a:hover,.guia-indice a.ativo{background:var(--azul-suave);color:var(--ink)}
+.guia-cap{scroll-margin-top:90px}
+.guia-cap+.guia-cap{margin-top:18px}
+.guia-cap h2{font:500 22px/1.3 var(--f-sans);letter-spacing:-.01em}
+.guia-cap>p{margin-top:10px;font-size:15.5px;line-height:1.7;color:var(--ink-2)}
+.guia-duas{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:22px;margin-top:16px}
+.guia-duas h4{font:500 12px/1.4 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)}
+.check{display:grid;gap:4px;margin-top:10px}
+.check label{display:flex;gap:10px;align-items:flex-start;font-size:14.5px;line-height:1.5;color:var(--ink-2);cursor:pointer;padding:5px 6px;border-radius:6px}
+.check label:hover{background:var(--bg-2)}
+.check input{accent-color:var(--azul);width:16px;height:16px;margin-top:3px;flex:none}
+.check input:checked+span{text-decoration:line-through;color:var(--ink-3)}
+.progresso{height:6px;border-radius:3px;background:var(--line);overflow:hidden;margin-top:12px}
+.progresso i{display:block;height:100%;background:var(--verde);transition:width .3s}
+
+/* Dicionário */
+.letras{display:flex;flex-wrap:wrap;gap:4px;margin-top:18px}
+.letras button{width:34px;height:34px;border-radius:8px;border:1px solid var(--line);background:var(--sup);font:500 13px var(--f-mono);cursor:pointer;color:var(--ink)}
+.letras button:hover:not(:disabled){border-color:var(--ink-3)}
+.letras button[aria-pressed="true"]{background:var(--chip-on);color:var(--on-chip);border-color:var(--chip-on)}
+.letras button:disabled{opacity:.3;cursor:default}
+.verbetes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:22px;padding-bottom:110px}
+.verbete h3{font:500 18px/1.3 var(--f-sans)}
+.verbete h3 small{display:block;margin-top:3px;font:400 13.5px/1.4 var(--f-sans);color:var(--ink-3)}
+.verbete p{margin-top:10px;font-size:14.5px;line-height:1.65;color:var(--ink-2)}
+.verbete mark{background:var(--azul-suave);color:inherit;border-radius:3px;padding:0 2px}
+
+.tres-cols{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-top:28px}
+.tres-cols .bloco h3{font:500 17px/1.35 var(--f-sans);margin-top:8px}
+.tres-cols .bloco p{margin-top:8px;font-size:14.5px;line-height:1.6;color:var(--ink-2)}
+
+@media (max-width:1100px){.agenda-lay,.guia-lay{grid-template-columns:minmax(0,1fr)}.guia-indice{position:static;max-height:none}.faixa-barras{margin-left:0}.grade.tres{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:900px){.verbetes,.guia-duas,.tres-cols,.grade.tres{grid-template-columns:minmax(0,1fr)}.cal{gap:3px}.cal-dia{min-height:58px;padding:4px}.cal-ev{font-size:0;height:6px;padding:0}}
+
+/* Por estado: mapa e resumo em cima, oportunidades embaixo na largura toda */
+.uf-lay{padding-bottom:28px!important}
+.uf-mapa{position:static!important}
+.uf-baixo{padding-bottom:110px}
+.uf-baixo:empty{padding-bottom:80px}
+.uf-duas{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px;margin-top:28px;align-items:start}
+.uf-ranking{max-height:420px;overflow:auto;scrollbar-width:thin}
+@media (max-width:900px){.uf-duas{grid-template-columns:minmax(0,1fr)}}
+
+/* Mapa de ICTs: mapa e indicadores em cima, cartões das ICTs embaixo */
+.mapa-lay{height:max(560px,86vh)!important}
+.mapa-lay .kpi-col{border-bottom:1px solid var(--line)}
+.mapa-area{border-bottom:1px solid var(--line)}
