@@ -2,7 +2,7 @@
 (function () {
   'use strict';
   var T = window.AV2_TELAS, D = window.ATLAS2, IDX = window.ATLAS2_IDX || {dna: [], raiz: {}};
-  var V = '?v=r90';
+  var V = '?v=r91';
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]; }); }
   function sem(s) { return String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase(); }
   function br(n, c) { return Number(n || 0).toLocaleString('pt-BR', {minimumFractionDigits: c || 0, maximumFractionDigits: c || 0}); }
@@ -558,7 +558,7 @@
     var r = linhas(x.TB.LEIRECICLAGEM_PROJETOS_COLS, x.TB.LEIRECICLAGEM_PROJETOS || []), m = x.TB.LEIRECICLAGEM_META || {}, V = function (f) { return function (p) { return p[f]; }; }, vv = V('valor');
     pagina(el, {titulo: 'Propostas em captação', kpis: [['Propostas', br(r.length)], ['Valor das propostas', reais(somaV(r, vv))], ['UFs', br(distintos(r, V('uf')))], ['Municípios', br(distintos(r, V('municipio')))]],
       sobre: '<p class="txt" style="margin-top:0">Propostas da Lei de Incentivo à Reciclagem que buscam apoiadores, com valor, objetivo e público-alvo.</p>', nota: esc(m.fonte || 'SINIR+, Lei de Incentivo à Reciclagem') + (m.atualizado ? ', atualizado em ' + esc(m.atualizado) : (m.gerado ? ', atualizado em ' + A.fdata(m.gerado) : '')) + '. ' + br(r.length) + ' propostas em captação.',
-      graficos: gradeG([blocoG('Propostas por UF', barras(top(soma(r, V('uf')), 10), null, 'data-gf0')), blocoG('Valor por UF', barras(top(soma(r, V('uf'), vv), 10), reais, 'data-gf0'))]),
+      graficos: gradeG([blocoG('Propostas por UF (todas as ' + distintos(r, V('uf')) + ')', barras(top(soma(r, V('uf')), 30), null, 'data-gf0')), blocoG('Valor por UF (todas as ' + distintos(r, V('uf')) + ')', barras(top(soma(r, V('uf'), vv), 30), reais, 'data-gf0'))]),
       cfg: {rows: r, rot: 'propostas', ph: 'Solicitante, município, objetivo ou público-alvo', ord: 0, desc: false, soma: vv, busca: function (p) { return [p.proponente, p.municipio, p.uf, p.objeto, p.publico].join(' '); },
         filtros: [{t: 'UF', v: V('uf'), ordem: 'alfa'}],
         cols: [{t: 'Solicitante', v: V('proponente')}, {t: 'UF', v: V('uf')}, {t: 'Município', v: V('municipio')}, {t: 'Valor', num: 1, v: function (p) { return +p.valor || 0; }, h: function (p) { return reais(p.valor); }}, {t: 'Objetivo', v: V('objeto'), h: function (p) { return '<div class="fin-celdesc">' + detalhe(p.objeto, 150) + '</div>'; }}, {t: 'Público-alvo', v: V('publico'), h: function (p) { return '<div class="fin-celdesc">' + detalhe(p.publico, 110) + '</div>'; }}, {t: 'Proposta', v: V('link'), h: function (p) { return p.link ? '<a href="' + esc(p.link) + '" target="_blank" rel="noopener">ver ↗</a>' : ''; }}]}});

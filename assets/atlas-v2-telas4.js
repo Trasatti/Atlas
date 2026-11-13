@@ -78,7 +78,7 @@
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', iniciaBusca); else iniciaBusca();
 
   /* ================= PROJETOS (financiados e executados) ================= */
-  function carregaProj(feito) { carrega('assets/atlas-v2-projetos.js?v=r90', function () { return !!window.ATLAS2_PROJ; }, feito); }
+  function carregaProj(feito) { carrega('assets/atlas-v2-projetos.js?v=r91', function () { return !!window.ATLAS2_PROJ; }, feito); }
   var DNA_NOME = {}; IDX.dna.forEach(function (e) { DNA_NOME[e[0]] = e[1]; });
   function projetosBloco(A, el, filtro, opt) {
     opt = opt || {};
@@ -265,7 +265,7 @@
   var TIPOS_PI = ['Patente', 'Desenho industrial', 'Programa de computador', 'Contrato de tecnologia'];
   window.AV2_PIX = function (A, aba, el, trocaAba) {
     el.innerHTML = '<div class="carregando" style="padding:40px 0"><i></i><span>Carregando os registros de PI das organizações do Atlas (cerca de 6 MB)…</span></div>';
-    carrega('assets/atlas-v2-pi-registros.js?v=r90', function () { return !!window.ATLAS2_PIREG; }, function () {
+    carrega('assets/atlas-v2-pi-registros.js?v=r91', function () { return !!window.ATLAS2_PIREG; }, function () {
       var P = window.ATLAS2_PIREG, O = P.orgs, R = P.r;
       function orgLink(o) { return '<a href="' + (o[0] === 'ict' ? '#/icts/' : '#/dna/') + encodeURIComponent(o[1]) + '">' + esc(o[2]) + '</a> <span class="selo-t' + (o[0] === 'ict' ? ' ict' : '') + '">' + (o[0] === 'ict' ? 'ICT' : 'empresa') + '</span>'; }
       if (aba === 'orgs') {

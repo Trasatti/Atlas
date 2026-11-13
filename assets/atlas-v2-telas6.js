@@ -56,7 +56,7 @@
         var v = e.target.closest('[data-pi-ver]'); if (!v) return;
         v.disabled = true; v.textContent = 'Carregando os registros…';
         if (window.ATLAS2_PIREG) { achaPI(); return; }
-        var sc = document.createElement('script'); sc.src = 'assets/atlas-v2-pi-registros.js?v=r90'; sc.onload = achaPI; sc.onerror = function () { v.disabled = false; v.textContent = 'Não carregou. Tentar de novo'; }; document.body.appendChild(sc);
+        var sc = document.createElement('script'); sc.src = 'assets/atlas-v2-pi-registros.js?v=r91'; sc.onload = achaPI; sc.onerror = function () { v.disabled = false; v.textContent = 'Não carregou. Tentar de novo'; }; document.body.appendChild(sc);
       });
       pib.addEventListener('change', function (e) { if (e.target.hasAttribute('data-pi-tipo')) { pst.tipo = e.target.value; pst.lim = 15; pintaPI(); } });
     }
@@ -66,7 +66,7 @@
     var div = document.createElement('div');
     div.innerHTML = '<div class="secao-tit"><h2 class="tit-md">EMBRAPII em números</h2><a class="btn-txt" href="#/agentes/embrapii?aba=numeros">Todas as unidades</a></div><div class="bloco" data-emb><div class="carregando" style="padding:20px 0"><i></i><span>Carregando o painel da EMBRAPII…</span></div></div>';
     var alvo = f.querySelector('.ficha-duas'); f.insertBefore(div, alvo || null);
-    var s = document.createElement('script'); s.src = 'assets/atlas-v2-financiadores.js?v=r90';
+    var s = document.createElement('script'); s.src = 'assets/atlas-v2-financiadores.js?v=r91';
     function pinta() {
       var F = window.ATLAS2_FIN, M = F && F.EMBRAPII_METRICAS; var el = div.querySelector('[data-emb]'); if (!M) { el.innerHTML = '<p class="txt">Painel indisponível.</p>'; return; }
       var nomes = [t.nome, t.longo].filter(Boolean).map(sem), u = null;

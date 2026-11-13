@@ -320,7 +320,7 @@
   function carregaDNA(feito) {
     if (window.ATLAS2_DNA && window.ATLAS2_DNA_PROJ) return feito();
     if (carregandoDNA) return; carregandoDNA = true;
-    var arqs = ['assets/atlas-v2-dna-empresas.js?v=r90', 'assets/atlas-v2-dna-projetos.js?v=r90'], i = 0;
+    var arqs = ['assets/atlas-v2-dna-empresas.js?v=r91', 'assets/atlas-v2-dna-projetos.js?v=r91'], i = 0;
     (function prox() { if (i >= arqs.length) { carregandoDNA = false; return feito(); } var s = document.createElement('script'); s.src = arqs[i++]; s.onload = prox; s.onerror = function () { carregandoDNA = false; }; document.body.appendChild(s); })();
   }
   var FONTE_ROT = {embrapii: 'EMBRAPII', anp: 'ANP', finep: 'FINEP', aneel: 'ANEEL', antt: 'ANTT', bndes_operacoes: 'BNDES (operações)'};
@@ -370,7 +370,7 @@
     if (teste()) return feito(false);
     var s = document.createElement('script'); s.src = src; s.onload = function () { feito(false); }; s.onerror = function () { feito(true); }; document.body.appendChild(s);
   }
-  var PIREG_SRC = 'assets/atlas-v2-pi-registros.js?v=r90', FIN_SRC = 'assets/atlas-v2-financiadores.js?v=r90';
+  var PIREG_SRC = 'assets/atlas-v2-pi-registros.js?v=r91', FIN_SRC = 'assets/atlas-v2-financiadores.js?v=r91';
   var TIPOS_PIREG = ['Patente', 'Desenho industrial', 'Programa de computador', 'Contrato de tecnologia'];
   function dvCnpj(b, pesos) { var s = 0; for (var i = 0; i < pesos.length; i++) s += (+b[i]) * pesos[i]; var r = s % 11; return r < 2 ? 0 : 11 - r; }
   function cnpjMatriz(r8) { var b = r8 + '0001', b2 = b + dvCnpj(b, [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]), c = b2 + dvCnpj(b2, [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]); return c.slice(0, 2) + '.' + c.slice(2, 5) + '.' + c.slice(5, 8) + '/' + c.slice(8, 12) + '-' + c.slice(12, 14); }

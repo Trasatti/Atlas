@@ -51,7 +51,7 @@
     if (window.ATLAS2_FIN) return cb();
     var fila = window.__finFila = window.__finFila || [];
     fila.push(cb); if (fila.length > 1) return;
-    var sc = document.createElement('script'); sc.src = 'assets/atlas-v2-financiadores.js?v=r90';
+    var sc = document.createElement('script'); sc.src = 'assets/atlas-v2-financiadores.js?v=r91';
     sc.onload = function () { var l = window.__finFila; window.__finFila = null; l.forEach(function (f) { f(); }); };
     sc.onerror = function () { window.__finFila = null; };
     document.body.appendChild(sc);
