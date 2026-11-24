@@ -4,7 +4,11 @@
   var D = window.ATLAS2, root = document.documentElement;
   var MOVER = !(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
   root.classList.add('anim');
+  /* "Hoje" é a data real de quem abre o Atlas (nunca anterior à data dos dados): prazos e selos andam sozinhos. */
+  (function () { var n = new Date(), iso = n.getFullYear() + '-' + String(n.getMonth() + 1).padStart(2, '0') + '-' + String(n.getDate()).padStart(2, '0'); D.dataDados = D.hoje; if (iso > D.hoje) D.hoje = iso; })();
   var HOJE = new Date(D.hoje + 'T12:00:00');
+  /* Chamada com encerramento já passado vira encerrada em todas as telas, mesmo antes da próxima atualização da base. */
+  D.chamadas.forEach(function (c) { if (c.status === 'aberta' && c.encerramento && c.encerramento < D.hoje) { c.status = 'encerrada'; c.encerradaAuto = true; } });
   var UFS = Object.keys(D.ufGeo).sort();
 
   /* ================= Utilidades ================= */
@@ -28,7 +32,7 @@
     if (c.status === 'em-breve') return {cls: 'breve', rot: c.abertura ? 'Abre em ' + fdata(c.abertura).slice(0, 5) : 'Em breve', k: 'breve'};
     var d = dias(c.encerramento);
     if (d === null) return {cls: 'cont', rot: 'Fluxo contínuo', k: 'ab'};
-    if (d <= 15) return {cls: 'urg', rot: d <= 0 ? 'Fecha hoje' : 'Fecha em ' + d + ' dia' + (d > 1 ? 's' : ''), k: 'urg'};
+    if (d <= 15) return {cls: 'urg', rot: d === 0 ? 'Fecha hoje' : 'Fecha em ' + d + ' dia' + (d > 1 ? 's' : ''), k: 'urg'};
     return {cls: 'ab', rot: 'Aberta até ' + fdata(c.encerramento).slice(0, 5), k: 'ab'};
   }
   var ABERTAS = D.chamadas.filter(function (c) { return c.status === 'aberta'; });

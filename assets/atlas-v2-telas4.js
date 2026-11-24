@@ -219,7 +219,7 @@
       return U.detalhes(A, l, x.url, 'Fonte oficial');
     }
     function cartaoPI(x) {
-      var d = x.enc ? A.dias(x.enc) : null, st = x.k === 'incentivo' ? ['cont', x.vig ? U.primeiro(String(x.vig), 60) : 'Regime permanente'] : !x.enc ? ['cont', 'Sem prazo publicado'] : d < 0 ? ['', 'Encerrado'] : d <= 15 ? ['urg', 'Fecha em ' + d + ' dia' + (d === 1 ? '' : 's')] : ['ab', 'Aberto até ' + data(x.enc)];
+      var d = x.enc ? A.dias(x.enc) : null, vm = /at[ée]\s+(\d{1,2}\/\d{1,2}\/\d{4}|\d{4})/.exec(String(x.vig || '')), st = x.k === 'incentivo' ? ['cont', vm ? 'Vigente até ' + vm[1] : 'Em vigor'] : !x.enc ? ['cont', 'Sem prazo publicado'] : d < 0 ? ['', 'Encerrado'] : d <= 15 ? ['urg', 'Fecha em ' + d + ' dia' + (d === 1 ? '' : 's')] : ['ab', 'Aberto até ' + data(x.enc)];
       return '<article class="op entra"><div class="op-topo"><div><p class="op-sigla">' + esc(x.pais) + (x.regiao && x.regiao !== 'Nacional' ? ' · ' + esc(x.regiao) : '') + ' · ' + (x.k === 'programa' ? 'programa' : 'incentivo fiscal') + '</p><h3>' + (x.url ? '<a href="' + esc(x.url) + '" target="_blank" rel="noopener">' + esc(x.nome) + '</a>' : esc(x.nome)) + '</h3><p class="op-inst">' + esc(x.orgao || '') + '</p>' + (x.orig && x.orig !== x.nome ? '<p class="op-inst op-orig">' + esc(x.orig) + '</p>' : '') + '</div></div>' +
         '<p class="op-txt">' + esc(x.resumo || '') + '</p>' +
         '<div class="op-linhas"><div class="op-linha"><span>Recurso</span><div class="tags">' + A.natTag(x.nat) + '</div></div>' + (x.valor ? '<div class="op-linha"><span>' + (x.k === 'programa' ? 'Valor' : 'Benefício') + '</span><div style="font-size:13px;color:var(--ink-2)">' + esc(U.primeiro(x.valor, 120)) + '</div></div>' : '') +
@@ -228,7 +228,7 @@
     }
     function cartaoEco(x) {
       var e = x.e, d = e.encerramento ? A.dias(e.encerramento) : null, ab = e.abertura ? A.dias(e.abertura) : null;
-      var st = ab != null && ab > 0 ? ['cont', 'Abre em ' + data(e.abertura)] : e.prazoTipo !== 'data' || !e.encerramento ? ['cont', e.prazoTipo === 'fluxo-continuo' ? 'Fluxo contínuo' : 'Sem prazo definido'] : d <= 15 ? ['urg', 'Fecha em ' + d + ' dia' + (d === 1 ? '' : 's')] : ['ab', 'Aberto até ' + data(e.encerramento)];
+      var st = ab != null && ab > 0 ? ['cont', 'Abre em ' + data(e.abertura)] : e.prazoTipo !== 'data' || !e.encerramento ? ['cont', e.prazoTipo === 'fluxo-continuo' ? 'Fluxo contínuo' : 'Sem prazo definido'] : d < 0 ? ['', 'Encerrado'] : d === 0 ? ['urg', 'Fecha hoje'] : d <= 15 ? ['urg', 'Fecha em ' + d + ' dia' + (d === 1 ? '' : 's')] : ['ab', 'Aberto até ' + data(e.encerramento)];
       return '<article class="op entra"><div class="op-topo"><div><p class="op-sigla">' + esc(ROT_ECO_I[e.tipo] || e.tipo) + ' · Inovação aberta</p><h3><a href="' + esc(e.url) + '" target="_blank" rel="noopener">' + esc(e.nome) + '</a></h3><p class="op-inst">' + esc(e.promotor || '') + '</p></div></div>' +
         '<p class="op-txt">' + esc(e.resumo || '') + '</p>' +
         '<div class="op-linhas"><div class="op-linha"><span>Recurso</span><div class="tags">' + A.natTag(e.nat) + '</div></div>' + (e.valor ? '<div class="op-linha"><span>Aporte</span><div style="font-size:13px;color:var(--ink-2)">' + esc(U.primeiro(e.valor, 100)) + '</div></div>' : '') + (e.publico ? '<div class="op-linha"><span>Para quem</span><div style="font-size:13px;color:var(--ink-2)">' + esc(U.primeiro(e.publico, 100)) + '</div></div>' : '') + '</div>' +
